@@ -1,0 +1,46 @@
+{
+  "name": "atlassian-tools",
+  "productName": "AtlassianTools",
+  "version": "0.0.1",
+  "description": "Electron Toolkit for Atlassian",
+  "main": "src/js/app.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "rimraf AtlassianTools-* && electron-packager . --platform=win32 --arch=x64 --icon=app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/InViN/atlassian-tools.git"
+  },
+  "keywords": [
+    "atlassian",
+    "jira",
+    "crucible",
+    "electron"
+  ],
+  "author": {
+    "name": "Neil Pathare",
+    "email": "neil.pathare@outlook.com",
+    "url": "https://github.com/InViN"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/InViN/atlassian-tools/issues"
+  },
+  "homepage": "https://github.com/InViN/atlassian-tools#readme",
+  "devDependencies": {
+    "electron-packager": "^11.1.0",
+    "rimraf": "^2.6.2"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free-webfonts": "^1.0.4",
+    "bootstrap": "^4.0.0",
+    "electron": "^1.8.4",
+    "google-charts": "^1.0.0",
+    "jquery": "^3.3.1",
+    "nedb": "^1.8.0",
+    "popper.js": "^1.14.1",
+    "request": "^2.85.0",
+    "request-promise": "^4.2.2"
+  }
+}

@@ -1,0 +1,42 @@
+/* Bootstrap Nav Bar */
+.navbar {
+  background-color: #000000;
+}
+
+.nav-btn-first {
+  margin-top: -5px;
+}
+
+.nav-btn-mid {
+  margin-top: 5px;
+}
+
+.nav-btn-last {
+  margin-top: 10px;
+}
+
+.nav-btn {
+  width: 225px;
+  margin-bottom: 5px;
+  margin-left: 10px;
+}
+
+.nav-btn-sml {
+  width: 50px;
+  margin-top: -5px;
+  margin-bottom: 5px;
+  margin-left: 20px;
+}
+
+.navbar-btn {
+  box-shadow: none;
+  outline: none !important;
+  border: none;
+}
+
+.navbar-brand-label {
+  font-family: 'Mina', sans-serif; /* Apply Google's Font */
+  color: white;
+  display: inline-block;
+  font-size: 1.2em;
+}

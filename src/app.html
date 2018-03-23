@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- HTML5 META Tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Atlassian Tools">
+  <meta name="author" content="Neil Pathare">
+
+  <title>Atlassian Tools</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Mina" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+
+  <!-- Vendor Imports (CSS) -->
+  <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../node_modules/@fortawesome/fontawesome-free-webfonts/css/fa-solid.css" rel="stylesheet">
+  <link href="../node_modules/@fortawesome/fontawesome-free-webfonts/css/fontawesome.css" rel="stylesheet">
+
+  <!-- App CSS -->
+  <link href="../src/css/app.css" rel="stylesheet">
+  <link href="../src/css/navbar.css" rel="stylesheet">
+  <link href="../src/css/sidebar.css" rel="stylesheet">
+  <link href="../src/css/modal.css" rel="stylesheet">
+
+  <!-- 
+    jQuery (Required by Bootstrap)
+    Should be declared before other JS imports
+   -->
+  <script>
+    var $ = jQuery = require("jquery")
+  </script>
+
+  <!-- Vendor Imports (JS) -->
+  <script src="../node_modules/jquery/dist/jquery.slim.min.js"></script>
+  <script src="../node_modules/popper.js/dist/umd/popper.min.js"></script>
+  <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+  <!-- App JS -->
+  <script src="../src/js/app-renderer.js"></script>
+</head>
+
+<body>
+  <!-- App Wrapper (includes everything except the Modals -->
+  <div class="app-wrapper">
+    <!-- App Side Nav Bar -->
+    <nav id="sidebar">
+      <div class="sidebar-header"></div>
+
+      <!-- App Side Nav Bar Components -->
+      <ul class="list-unstyled list-components">
+        <li><button class="btn btn-primary nav-btn nav-btn-first">Create JIRA</button></li>
+        <li><button class="btn btn-primary nav-btn nav-btn-mid">Create Review</button></li>
+        <li><button class="btn btn-primary nav-btn nav-btn-mid">Pending Reviews</button></li>
+        <li><button class="btn btn-primary nav-btn nav-btn-mid">Open Reviews</button></li>
+      </ul>
+
+      <!-- App Side Nav Bar Settings & Logout -->
+      <ul class="list-unstyled list-components">
+        <li>
+          <button class="btn btn-dark nav-btn-sml" onclick="launchServerModal()" title="Server Instances"><i class="fas fa-server"></i></button>
+          <button class="btn btn-dark nav-btn-sml" title="Settings"><i class="fas fa-cog"></i></button>
+          <button class="btn btn-dark nav-btn-sml" onclick="reloadPage()" title="Reload"><i class="fas fa-sync-alt"></i></button>
+        </li>
+        <li><button class="btn btn-danger nav-btn nav-btn-last">Logout</button></li>
+      </ul>
+
+    </nav>
+
+    <!-- App Top Nav Bar Header -->
+    <header>
+      <nav class="navbar navbar-expand-md fixed-top">
+        <div id="sideNavContent">
+          <!-- App Side Nav Bar Toggle -->
+          <button type="button" id="sidebarCollapse" class="navbar-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+        <!-- Centered App Brand Label -->
+        <ul class="nav navbar-nav mx-auto">
+          <li class="nav-item">
+            <span class="navbar-brand-label">Atlassian Tools</span>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main role="main" class="container content">
+      Content Goes Here.
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <span class="text-muted">
+          node.js:
+          <script>
+            document.write(process.versions.node)
+          </script> | Chromium:
+          <script>
+            document.write(process.versions.chrome)
+          </script> | Electron:
+          <script>
+            document.write(process.versions.electron)
+          </script> | Atlassian Tools ©
+          <script type="text/javascript">
+            document.write(new Date().getFullYear())
+          </script>
+        </span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Server Instances Modal -->
+  <div class="modal fade bd-example-modal-lg" id="serverModal" tabindex="-1" role="dialog" aria-labelledby="serverModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="serverModalLabel">Server Instances</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p class="lead">Crucible server instance(s): <button type="button" class="btn btn-primary btn-sm btn-modal">&nbsp;+&nbsp;</button></p>
+          <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon3">https://</span>
+              </div>
+              <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary">Save</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Self executing function for 'active' class toggle on Side Bar Collapse
+    // jQuery:
+    $(document).ready(function () {
+      $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+        $(this).toggleClass('active');
+      });
+    });
+    // JavaScript:
+    // (function() {
+    //   document.getElementById("sidebarCollapse").addEventListener("click", function(event){
+    //     document.querySelector('#sidebar').classList.toggle('active');
+    //     event.target.classList.toggle('active');
+    //   });
+    // })();
+  </script>
+</body>
+
+</html>
