@@ -51,20 +51,36 @@
 
       <!-- App Side Nav Bar Components -->
       <ul class="list-unstyled list-components">
-        <li><button class="btn btn-primary nav-btn nav-btn-first">Create JIRA</button></li>
-        <li><button class="btn btn-primary nav-btn nav-btn-mid">Create Review</button></li>
-        <li><button class="btn btn-primary nav-btn nav-btn-mid">Pending Reviews</button></li>
-        <li><button class="btn btn-primary nav-btn nav-btn-mid">Open Reviews</button></li>
+        <li>
+          <button class="btn btn-primary nav-btn nav-btn-first">Create JIRA</button>
+        </li>
+        <li>
+          <button class="btn btn-primary nav-btn nav-btn-mid">Create Review</button>
+        </li>
+        <li>
+          <button class="btn btn-primary nav-btn nav-btn-mid">Pending Reviews</button>
+        </li>
+        <li>
+          <button class="btn btn-primary nav-btn nav-btn-mid">Open Reviews</button>
+        </li>
       </ul>
 
       <!-- App Side Nav Bar Settings & Logout -->
       <ul class="list-unstyled list-components">
         <li>
-          <button class="btn btn-dark nav-btn-sml" onclick="launchServerModal()" title="Server Instances"><i class="fas fa-server"></i></button>
-          <button class="btn btn-dark nav-btn-sml" title="Settings"><i class="fas fa-cog"></i></button>
-          <button class="btn btn-dark nav-btn-sml" onclick="reloadPage()" title="Reload"><i class="fas fa-sync-alt"></i></button>
+          <button class="btn btn-dark nav-btn-sml" onclick="launchServerModal()" title="Server Instances">
+            <i class="fas fa-server"></i>
+          </button>
+          <button class="btn btn-dark nav-btn-sml" title="Settings">
+            <i class="fas fa-cog"></i>
+          </button>
+          <button class="btn btn-dark nav-btn-sml" onclick="reloadPage()" title="Reload">
+            <i class="fas fa-sync-alt"></i>
+          </button>
         </li>
-        <li><button class="btn btn-danger nav-btn nav-btn-last">Logout</button></li>
+        <li>
+          <button class="btn btn-danger nav-btn nav-btn-last">Logout</button>
+        </li>
       </ul>
 
     </nav>
@@ -117,7 +133,8 @@
   </div>
 
   <!-- Server Instances Modal -->
-  <div class="modal fade bd-example-modal-lg" id="serverModal" tabindex="-1" role="dialog" aria-labelledby="serverModalLabel" aria-hidden="true">
+  <div class="modal fade bd-example-modal-lg" id="serverModal" tabindex="-1" role="dialog" aria-labelledby="serverModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -127,16 +144,20 @@
           </button>
         </div>
         <div class="modal-body">
-          <p class="lead">Crucible server instance(s): <button type="button" class="btn btn-primary btn-sm btn-modal">&nbsp;+&nbsp;</button></p>
-          <div class="input-group mb-3">
+          <p class="lead">Crucible server instance(s):
+            <button type="button" class="btn btn-primary btn-sm btn-modal" onclick="addServerInstanceInput()">&nbsp;+&nbsp;</button>
+          </p>
+          <div class="crucible-server-input" id="crucibleServerInputDiv">
+            <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text" id="basic-addon3">https://</span>
               </div>
-              <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+              <input type="text" class="form-control crucible-server" id="basic-url" aria-describedby="basic-addon3">
             </div>
+          </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary">Save</button>
+          <button type="button" class="btn btn-primary" onclick="saveServerInput()" data-dismiss="modal">Save</button>
           <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
         </div>
       </div>
