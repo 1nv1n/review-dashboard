@@ -20,6 +20,7 @@ function launchServerModal() {
  * Adds an Input (text) field for additional Server inputs
  */
 function addServerInstanceInput() {
+  console.log(new Date().toJSON(), AppConstants.LOG_INFO, "Adding Server Instance.");
   var serverContainer = document.getElementById("crucibleServerInputDiv");
 
   var outerDiv = document.createElement("div");
@@ -51,7 +52,7 @@ function addServerInstanceInput() {
  * Saves Server list
  */
 function saveServerInput() {
-  console.log('Saving Server Input')
+  console.log(new Date().toJSON(), AppConstants.LOG_INFO, "Saving Server Input.");
   var serverList = [];
   var crucibleServerCollection = document.getElementsByClassName('crucible-server');
   for (var serverIdx = 0; serverIdx < crucibleServerCollection.length; serverIdx++) {

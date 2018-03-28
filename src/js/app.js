@@ -20,7 +20,7 @@ const Datastore = require("nedb");
 const RequestPromise = require("request-promise");
 
 // App Constants
-const APPConstants = require("../constants/app-constants");
+const AppConstants = require("../constants/app-constants");
 const APIConstants = require("../constants/api-constants");
 const Strings = require("../constants/app-strings");
 
@@ -34,7 +34,7 @@ console.log = function() {
   logStdout.write(Util.format.apply(null, arguments) + "\n");
 };
 console.error = console.log;
-console.log(new Date().toJSON(), APPConstants.LOG_INFO, "Log Started.");
+console.log(new Date().toJSON(), AppConstants.LOG_INFO, "Log Started.");
 
 const contextMenu = Menu.buildFromTemplate([
   {
