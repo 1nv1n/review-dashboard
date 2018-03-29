@@ -10,7 +10,7 @@ function reloadPage() {
  */
 function launchServerModal() {
   // jQuery
-  $("#serverModal").modal({backdrop: false, keyboard: false, show: true});
+  $("#serverModal").modal({ backdrop: false, keyboard: false, show: true });
   // JavaScript
   // var serverModal = new Modal('#serverModal', {backdrop: true});
   // serverModal.show();
@@ -32,7 +32,7 @@ function addServerInstanceInput() {
 
   var span = document.createElement("span");
   span.className = "input-group-text";
-  span.id = "basic-addon3"
+  span.id = "basic-addon3";
   span.innerHTML = "https://";
 
   var input = document.createElement("input");
@@ -40,8 +40,8 @@ function addServerInstanceInput() {
   input.classList.add("form-control");
   input.classList.add("crucible-server");
   input.id = "basic-url";
-  input.setAttribute("aria-describedby","basic-addon3");
-  
+  input.setAttribute("aria-describedby", "basic-addon3");
+
   innerDiv.appendChild(span);
   outerDiv.appendChild(innerDiv);
   outerDiv.appendChild(input);
@@ -54,10 +54,11 @@ function addServerInstanceInput() {
 function saveServerInput() {
   console.log(new Date().toJSON(), AppConstants.LOG_INFO, "Saving Server Input.");
   var currentServerList = [];
-  var crucibleServerCollection = document.getElementsByClassName('crucible-server');
+  var crucibleServerCollection = document.getElementsByClassName("crucible-server");
   for (var serverIdx = 0; serverIdx < crucibleServerCollection.length; serverIdx++) {
     currentServerList.push(crucibleServerCollection[serverIdx].value);
   }
-  console.log(currentServerList);
+
+  // Send the server list to the main process
   ipc.send("save-server-list", currentServerList);
 }

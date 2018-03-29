@@ -24,6 +24,9 @@ const AppConstants = require("../js/constants/app-constants");
 const APIConstants = require("../js/constants/api-constants");
 const Strings = require("../js/constants/app-strings");
 
+// Main (Background) Processes
+const serverProcess = require("../js/main/server");
+
 // Log Constants
 const logFile = FS.createWriteStream("debug.log", {
   flags: "w"
@@ -168,3 +171,6 @@ App.on("activate", appActivate => {
   }
 });
 
+IPC.on("save-server-list", function(event, serverList) {
+  serverProcess.saveServerList(neDB, AppConstants, serverList);
+});
