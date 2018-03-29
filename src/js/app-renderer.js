@@ -53,10 +53,11 @@ function addServerInstanceInput() {
  */
 function saveServerInput() {
   console.log(new Date().toJSON(), AppConstants.LOG_INFO, "Saving Server Input.");
-  var serverList = [];
+  var currentServerList = [];
   var crucibleServerCollection = document.getElementsByClassName('crucible-server');
   for (var serverIdx = 0; serverIdx < crucibleServerCollection.length; serverIdx++) {
-    serverList.push(crucibleServerCollection[serverIdx].value);
+    currentServerList.push(crucibleServerCollection[serverIdx].value);
   }
-  console.log(serverList);
+  console.log(currentServerList);
+  ipc.send("save-server-list", currentServerList);
 }

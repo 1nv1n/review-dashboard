@@ -20,9 +20,9 @@ const Datastore = require("nedb");
 const RequestPromise = require("request-promise");
 
 // App Constants
-const AppConstants = require("../constants/app-constants");
-const APIConstants = require("../constants/api-constants");
-const Strings = require("../constants/app-strings");
+const AppConstants = require("../js/constants/app-constants");
+const APIConstants = require("../js/constants/api-constants");
+const Strings = require("../js/constants/app-strings");
 
 // Log Constants
 const logFile = FS.createWriteStream("debug.log", {
@@ -70,7 +70,7 @@ var createMainWindow = function() {
   mainWindow = new BrowserWindow({
     width: 1920,
     height: 1080,
-    icon: Path.join(__dirname, "../resources/icons", "favicon-rocket.ico"),
+    icon: Path.join(__dirname, "../../resources/icons", "favicon-rocket.ico"),
     show: false,
     backgroundColor: "#333333",
     toolbar: false
@@ -79,7 +79,7 @@ var createMainWindow = function() {
   //const menu = Menu.buildFromTemplate(null);
   Menu.setApplicationMenu(null);
 
-  appTray = new Tray(Path.join(__dirname, "../resources/icons", "favicon-rocket.ico"));
+  appTray = new Tray(Path.join(__dirname, "../../resources/icons", "favicon-rocket.ico"));
   appTray.setContextMenu(contextMenu);
   appTray.setToolTip("Atlassian Tools");
   appTray.on("click", () => {
