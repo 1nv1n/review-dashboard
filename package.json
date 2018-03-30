@@ -6,7 +6,7 @@
   "main": "src/js/app.js",
   "scripts": {
     "start": "electron .",
-    "build": "rimraf AtlassianTools-* && electron-packager . --platform=win32 --arch=x64 --icon=app"
+    "build": "rimraf AtlassianTools-* && electron-packager . --platform=win32,darwin,linux --arch=x64 --icon=app"
   },
   "repository": {
     "type": "git",
