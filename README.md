@@ -37,13 +37,15 @@ Electron Toolkit for Atlassian's JIRA & Crucible
 
 ---
 
-### To Run From Source:
+### Run From Source:
 ```
 npm install
 npm start
 ```
 
-### To Build
+---
+
+### Build:
 ```
 npm install
 npm run build
@@ -53,6 +55,9 @@ This will create the following executable containing directories:
  - AtlassianTools-linux-x64
  - AtlassianTools-darwin-x64
 
+---
 
-### Work-In-Progress
+#### Work-In-Progress
 ![atlassian-tools](https://i.imgur.com/fQK6hCr.gif)
+
+---
