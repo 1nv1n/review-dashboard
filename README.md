@@ -27,8 +27,8 @@ Electron Toolkit for Atlassian's JIRA & Crucible
  <a href="https://snyk.io/test/github/InViN/atlassian-tools">
   <img src="https://snyk.io/test/github/InViN/atlassian-tools/badge.svg" alt="Known Vulnerabilities" data-canonical-src="https://snyk.io/test/github/InViN/atlassian-tools" style="max-width:100%;" />
  </a>
- <a href="https://travis-ci.org/InViN/atlassian-tools/">
-  <img src="https://travis-ci.org/InViN/atlassian-tools.svg?branch=master" alt="travis-ci" />
+ <a href="https://circleci.com/">
+  <img src="https://circleci.com/gh/InViN/atlassian-tools.svg?style=svg" alt="circle-ci" />
  </a>
  <a href="https://david-dm.org">
   <img src="https://david-dm.org/InViN/atlassian-tools.svg" alt="davis-dm" />
