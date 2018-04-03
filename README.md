@@ -39,6 +39,8 @@ Electron Toolkit for Atlassian's JIRA & Crucible
 
 ### Run From Source:
 ```
+git clone https://github.com/InViN/atlassian-tools.git
+cd atlassian-tools
 npm install
 npm start
 ```
@@ -47,6 +49,8 @@ npm start
 
 ### Build:
 ```
+git clone https://github.com/InViN/atlassian-tools.git
+cd atlassian-tools
 npm install
 npm run build
 ```
