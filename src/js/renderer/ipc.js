@@ -5,22 +5,17 @@
 const electron = require("electron");
 const ipc = electron.ipcRenderer;
 
-ipc.on("initial-state", function(event, statusFlag) {
-  
+ipc.on("initial-crucible-server-list", function(event, crucibleServerList) {
+  console.log(new Date().toJSON(), AppConstants.LOG_INFO, "Retrieved: " + crucibleServerList.length + " Crucible Instances!");
+
+  // Remove existing elements
+  var crucibleServerInputDivNode = document.getElementById("crucibleServerInputDiv");
+  while (crucibleServerInputDivNode.firstChild) {
+    crucibleServerInputDivNode.removeChild(crucibleServerInputDivNode.firstChild);
+  }
+
+  // Add elements from the database
+  for (var serverIdx in crucibleServerList) {
+    addServerInstanceInput(crucibleServerList[serverIdx]);
+  }
 });
-
-// // Export all IPC functions.
-// module.exports = {
-//   // Fired when "initial-state" is sent up
-//   initialState_IPC: ipc.on("initial-state", function(event, savedCrucibleRecords, savedReviewerList) {
-
-//   }),
-
-//   loginResponse_IPC: ipc.on("login-response", function(event, statusFlag) {
-
-//   }),
-
-//   retrievedCrucibleRecords_IPC: ipc.on("retrieved-crucible-records", function(event, savedCrucibleRecords, savedReviewerList) {
-    
-//   })
-// }

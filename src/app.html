@@ -146,14 +146,14 @@
         </div>
         <div class="modal-body">
           <p class="lead">Crucible server instance(s):
-            <button type="button" class="btn btn-primary btn-sm btn-modal" onclick="addServerInstanceInput()">&nbsp;+&nbsp;</button>
+            <button type="button" class="btn btn-primary btn-sm btn-modal" onclick="addServerInstanceInput(null)">&nbsp;+&nbsp;</button>
           </p>
           <div class="crucible-server-input" id="crucibleServerInputDiv">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text" id="basic-addon3">https://</span>
               </div>
-              <input type="text" class="form-control crucible-server" id="basic-url" aria-describedby="basic-addon3">
+              <input type="text" class="form-control crucible-server" id="basic-url" aria-describedby="basic-addon3" autofocus>
             </div>
           </div>
         </div>

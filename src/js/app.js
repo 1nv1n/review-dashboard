@@ -37,7 +37,7 @@ console.log = function() {
   logStdout.write(Util.format.apply(null, arguments) + "\n");
 };
 console.error = console.log;
-console.log(new Date().toJSON(), AppConstants.LOG_INFO, "Log Started.");
+console.log(new Date().toJSON(), AppConstants.LOG_INFO, "Logging Initialized.");
 
 const contextMenu = Menu.buildFromTemplate([
   {
@@ -63,8 +63,9 @@ var appTray;
 let mainWindow;
 
 // Create/Autoload the Database at the 'User Data' directory.
+// On Windows: "C:\Users\<USER>\AppData\Roaming\AtlassianTools"
 let neDB = new Datastore({
-  filename: App.getPath("userData") + "atlassian-tools.db",
+  filename: App.getPath("userData") + "/atlassian-tools.db",
   autoload: true
 });
 
@@ -103,6 +104,7 @@ var createMainWindow = function() {
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
     mainWindow.focus();
+    initialize();
   });
 
   // Launch DevTools
@@ -171,6 +173,10 @@ App.on("activate", appActivate => {
   }
 });
 
-IPC.on("save-server-list", function(event, serverList) {
-  serverProcess.saveServerList(neDB, AppConstants, serverList);
+function initialize() {
+  serverProcess.pushCrucibleServerList(neDB, AppConstants, mainWindow);
+}
+
+IPC.on("save-crucible-server-list", function(event, crucibleServerList) {
+  serverProcess.saveCrucibleServerList(neDB, AppConstants, crucibleServerList);
 });
