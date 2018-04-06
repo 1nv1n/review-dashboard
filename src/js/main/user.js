@@ -5,7 +5,7 @@
 // Export all functions.
 module.exports = {
   // Retrieve User
-  retrieveUser: function(neDB, AppConstants) {
+   retrieveUser: function(neDB, AppConstants) {
     return new Promise(function(resolve, reject) {
       neDB.find({ type: "User" }, function(err, user) {
         if (err) {

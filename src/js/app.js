@@ -199,6 +199,16 @@ function initialize() {
   );
 }
 
+/**
+ * Save the input Crucible server list
+ */
 IPC.on("save-crucible-server-list", function(event, crucibleServerList) {
   serverProcess.saveCrucibleServerList(neDB, AppConstants, crucibleServerList);
+});
+
+/**
+ * Attemt to log the user in & save the authentication token.
+ */
+IPC.on("login-attempt", function(event, userID, password) {
+  authProcess.authenticateUser(neDB, APIConstants, AppConstants, userID, password, mainWindow);
 });
