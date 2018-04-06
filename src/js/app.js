@@ -26,6 +26,8 @@ const Strings = require("../js/constants/app-strings");
 
 // Main (Background) Processes
 const serverProcess = require("../js/main/server");
+const authProcess = require("../js/main/authentication");
+const userProcess = require("../js/main/user");
 
 // Log Constants
 const logFile = FS.createWriteStream("debug.log", {
@@ -63,9 +65,9 @@ var appTray;
 let mainWindow;
 
 // Create/Autoload the Database at the 'User Data' directory.
-// On Windows: "C:\Users\<USER>\AppData\Roaming\AtlassianTools"
+// On Windows: "C:\Users\<USER>\AppData\Roaming\CrucibleDashboard"
 let neDB = new Datastore({
-  filename: App.getPath("userData") + "/atlassian-tools.db",
+  filename: App.getPath("userData") + "/crucible-dash.db",
   autoload: true
 });
 
@@ -85,7 +87,7 @@ var createMainWindow = function() {
 
   appTray = new Tray(Path.join(__dirname, "../../resources/icons", "favicon-rocket.ico"));
   appTray.setContextMenu(contextMenu);
-  appTray.setToolTip("Atlassian Tools");
+  appTray.setToolTip("Crucible Dashboard");
   appTray.on("click", () => {
     mainWindow.show();
   });
@@ -173,8 +175,28 @@ App.on("activate", appActivate => {
   }
 });
 
+/**
+ * Launched when the Main Window is "ready-to-show".
+ */
 function initialize() {
-  serverProcess.pushCrucibleServerList(neDB, AppConstants, mainWindow);
+  // Start by attempting to retrieve the list of Crucible Servers
+  serverProcess.retrieveCrucibleServerList(neDB, AppConstants).then(
+    function(crucibleServerList) {
+      userProcess.retrieveUser(neDB, AppConstants).then(
+        function(user) {
+          mainWindow.webContents.send("initial-state", crucibleServerList, user);
+        },
+        function(err) {
+          console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "initialize()", err);
+          mainWindow.webContents.send("initial-state", [], null);
+        }
+      );
+    },
+    function(err) {
+      console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "initialize()", err);
+      mainWindow.webContents.send("initial-state", [], null);
+    }
+  );
 }
 
 IPC.on("save-crucible-server-list", function(event, crucibleServerList) {

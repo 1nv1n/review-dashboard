@@ -4,16 +4,18 @@
 
 // Export all functions.
 module.exports = {
-  // Retrieve Server list & push it up to the renderer
-  pushCrucibleServerList: function(neDB, AppConstants, mainWindow) {
-    neDB.find({ type: "CrucibleServerInstance" }, function(err, crucibleServerList) {
-      if (err) {
-        console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "pushCrucibleServerList()", err);
-        mainWindow.webContents.send("initial-crucible-server-list", []);
-      } else {
-        console.log(new Date().toJSON(), AppConstants.LOG_INFO, "pushCrucibleServerList(): Retrieved:", crucibleServerList.length, "Crucible Instances!");
-        mainWindow.webContents.send("initial-crucible-server-list", crucibleServerList);
-      }
+  // Retrieve Crucible Server list
+  retrieveCrucibleServerList: function(neDB, AppConstants) {
+    return new Promise(function(resolve, reject) {
+      neDB.find({ type: "CrucibleServerInstance" }, function(err, crucibleServerList) {
+        if (err) {
+          console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "retrieveCrucibleServerList()", err);
+          reject([]);
+        } else {
+          console.log(new Date().toJSON(), AppConstants.LOG_INFO, "retrieveCrucibleServerList(): Retrieved:", crucibleServerList.length, "Crucible Instances!");
+          resolve(crucibleServerList);
+        }
+      });
     });
   },
 

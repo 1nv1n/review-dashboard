@@ -17,6 +17,14 @@ function launchServerModal() {
 }
 
 /**
+ * Launch the 'Login' modal.
+ */
+function launchLoginModal() {
+  // jQuery
+  $("#loginModal").modal({ backdrop: false, keyboard: false, show: true });
+}
+
+/**
  * Adds an Input (text) field for additional Server inputs
  */
 function addServerInstanceInput(server) {

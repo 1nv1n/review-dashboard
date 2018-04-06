@@ -1,0 +1,3 @@
+/**
+ * Handle authentication operations.
+ */

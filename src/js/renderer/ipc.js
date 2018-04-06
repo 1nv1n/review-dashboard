@@ -5,7 +5,13 @@
 const electron = require("electron");
 const ipc = electron.ipcRenderer;
 
-ipc.on("initial-crucible-server-list", function(event, crucibleServerList) {
+// Main list of Crucible Server instances
+var crucibleServerList;
+
+// Main user object
+var user;
+
+ipc.on("initial-state", function(event, crucibleServerList, currentUser) {
   console.log(new Date().toJSON(), AppConstants.LOG_INFO, "Retrieved: " + crucibleServerList.length + " Crucible Instances!");
 
   // Remove existing elements
@@ -14,8 +20,16 @@ ipc.on("initial-crucible-server-list", function(event, crucibleServerList) {
     crucibleServerInputDivNode.removeChild(crucibleServerInputDivNode.firstChild);
   }
 
-  // Add elements from the database
-  for (var serverIdx in crucibleServerList) {
-    addServerInstanceInput(crucibleServerList[serverIdx]);
+  // If we have a valid user, populate related data
+  if (typeof currentUser !== "undefined" && currentUser !== null) {
+    user = currentUser;
+
+    // Add elements from the database
+    for (var serverIdx in crucibleServerList) {
+      addServerInstanceInput(crucibleServerList[serverIdx]);
+    }
+  } else {
+    // If user does not exist, or is invalid; open the login prompt
+    launchLoginModal();
   }
 });
