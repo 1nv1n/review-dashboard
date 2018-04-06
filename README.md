@@ -1,4 +1,4 @@
-# atlassian-tools
+# crucible-dashboard
 Crucible Dashboard built with Electron.
 
 ---
