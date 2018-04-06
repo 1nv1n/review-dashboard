@@ -1,12 +1,12 @@
 {
-  "name": "atlassian-tools",
-  "productName": "AtlassianTools",
+  "name": "crucible-dash",
+  "productName": "Crucible Dashboard",
   "version": "0.0.1",
-  "description": "Electron Toolkit for Atlassian",
+  "description": "Crucible Dashboard built with Electron",
   "main": "src/js/app.js",
   "scripts": {
     "start": "electron .",
-    "build": "rimraf AtlassianTools-* && electron-packager . --platform=win32,darwin,linux --arch=x64 --icon=app"
+    "build": "rimraf CrucibleDashboard-* && electron-packager . --platform=win32,darwin,linux --arch=x64 --icon=app"
   },
   "repository": {
     "type": "git",

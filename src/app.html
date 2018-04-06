@@ -5,10 +5,10 @@
   <!-- HTML5 META Tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Atlassian Tools">
+  <meta name="description" content="Crucible Dashboard">
   <meta name="author" content="Neil Pathare">
 
-  <title>Atlassian Tools</title>
+  <title>Crucible Dashboard</title>
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Mina" rel="stylesheet">
@@ -100,7 +100,7 @@
         <!-- Centered App Brand Label -->
         <ul class="nav navbar-nav mx-auto">
           <li class="nav-item">
-            <span class="navbar-brand-label">Atlassian Tools</span>
+            <span class="navbar-brand-label">Crucible Dashboard</span>
           </li>
         </ul>
       </nav>
@@ -124,7 +124,7 @@
           </script> | Electron:
           <script>
             document.write(process.versions.electron)
-          </script> | Atlassian Tools ©
+          </script> | Crucible Dashboard ©
           <script type="text/javascript">
             document.write(new Date().getFullYear())
           </script>
@@ -160,6 +160,31 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" onclick="saveServerInput()" data-dismiss="modal">Save</button>
           <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Modal -->
+  <div class="modal fade bd-example-modal-sm" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="margin:0 auto; text-align: center;">
+          <!-- <h4 class="modal-title" id="loginModalLabel">Login</h4> -->
+        </div>
+        <div class="modal-body" style="margin:0 auto; text-align: center;">
+          <div class="login-input" id="loginInputDiv">
+            <div class="input-group mb-3">
+              <input id="userID" class="form-control" type="text" autofocus="true" placeholder="User ID" style="margin:0 auto; width:200px;">
+            </div>
+            <div class="input-group mb-3">
+              <input id="password" class="form-control" type="password" placeholder="Password" style="margin:0 auto; width:200px;">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="margin:0 auto; text-align: center;">
+          <button type="button" class="btn btn-primary" onclick="login()">Login</button>
         </div>
       </div>
     </div>
