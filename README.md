@@ -1,5 +1,5 @@
 # atlassian-tools
-Electron Toolkit for Atlassian's JIRA & Crucible
+Crucible Dashboard built with Electron.
 
 ---
 
@@ -30,7 +30,7 @@ Electron Toolkit for Atlassian's JIRA & Crucible
  <a href="https://snyk.io/test/github/InViN/atlassian-tools">
   <img src="https://snyk.io/test/github/InViN/atlassian-tools/badge.svg" alt="Known Vulnerabilities" data-canonical-src="https://snyk.io/test/github/InViN/atlassian-tools" style="max-width:100%;" />
  </a>
- <a href="https://david-dm.org">
+ <a href="https://david-dm.org/InViN/atlassian-tools">
   <img src="https://david-dm.org/InViN/atlassian-tools.svg" alt="davis-dm" />
  </a>
 </p>
@@ -39,7 +39,7 @@ Electron Toolkit for Atlassian's JIRA & Crucible
 
 ### Run From Source:
 ```
-git clone https://github.com/InViN/atlassian-tools.git
+git clone https://github.com/InViN/crucible-dashboard.git
 cd atlassian-tools
 npm install
 npm start
@@ -49,19 +49,19 @@ npm start
 
 ### Build:
 ```
-git clone https://github.com/InViN/atlassian-tools.git
+git clone https://github.com/InViN/crucible-dashboard.git
 cd atlassian-tools
 npm install
 npm run build
 ```
 This will create the following executable containing directories:
- - AtlassianTools-win32-x64
- - AtlassianTools-linux-x64
- - AtlassianTools-darwin-x64
+ - CrucibleDashboard-win32-x64
+ - CrucibleDashboard-linux-x64
+ - CrucibleDashboard-darwin-x64
 
 ---
 
 #### Work-In-Progress
-![atlassian-tools](https://i.imgur.com/fQK6hCr.gif)
+![crucible-dash](https://i.imgur.com/fQK6hCr.gif)
 
 ---
