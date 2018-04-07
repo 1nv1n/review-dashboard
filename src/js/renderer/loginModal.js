@@ -17,6 +17,7 @@ function launchLoginModal() {
  * Dismiss the 'Login' modal.
  */
 function dismissLoginModal() {
+  // jQuery
   $("#loginModal").modal('hide');
 }
 

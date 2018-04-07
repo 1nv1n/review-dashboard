@@ -5,14 +5,14 @@
 // Export all functions.
 module.exports = {
   // Retrieve Crucible Server list
-  retrieveCrucibleServerList: function(neDB, AppConstants) {
+  retrieveCrucibleServerList: function(neDB, appConstants) {
     return new Promise(function(resolve, reject) {
       neDB.find({ type: "CrucibleServerInstance" }, function(err, crucibleServerList) {
         if (err) {
-          console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "retrieveCrucibleServerList()", err);
+          console.log(new Date().toJSON(), appConstants.LOG_ERROR, "retrieveCrucibleServerList()", err);
           reject([]);
         } else {
-          console.log(new Date().toJSON(), AppConstants.LOG_INFO, "retrieveCrucibleServerList(): Retrieved:", crucibleServerList.length, "Crucible Instances!");
+          console.log(new Date().toJSON(), appConstants.LOG_INFO, "retrieveCrucibleServerList(): Retrieved:", crucibleServerList.length, "Crucible Instances!");
           resolve(crucibleServerList);
         }
       });
@@ -20,13 +20,13 @@ module.exports = {
   },
 
   // Saves the list of servers to the database
-  saveCrucibleServerList: function(neDB, AppConstants, crucibleServerList) {
+  saveCrucibleServerList: function(neDB, appConstants, crucibleServerList) {
     // Remove existing servers
     neDB.remove({ type: "CrucibleServerInstance" }, { multi: true }, function(err, numRemoved) {
       if (err) {
-        console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "saveCrucibleServerList", err);
+        console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveCrucibleServerList", err);
       } else {
-        console.log(new Date().toJSON(), AppConstants.LOG_INFO, "saveCrucibleServerList: Removed:", numRemoved, "entry(s)!");
+        console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveCrucibleServerList: Removed:", numRemoved, "entry(s)!");
       }
     });
 
@@ -40,9 +40,9 @@ module.exports = {
         },
         function(err, insertedRecord) {
           if (err) {
-            console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "saveCrucibleServerList", err);
+            console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveCrucibleServerList", err);
           } else {
-            console.log(new Date().toJSON(), AppConstants.LOG_INFO, "saveCrucibleServerList: Saved:", insertedRecord.instance);
+            console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveCrucibleServerList: Saved:", insertedRecord.instance);
           }
         }
       );
