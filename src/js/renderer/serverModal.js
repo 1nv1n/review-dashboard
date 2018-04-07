@@ -19,10 +19,10 @@ function launchServerModal() {
 function addServerInstanceInput(server) {
   var isServerInputProvided = false;
   if((typeof(server) !== 'undefined') && (server !== null) && server.instance.length > 0) {
-    console.log(new Date().toJSON(), AppConstants.LOG_INFO, "Adding Server: "+server.instance);
+    console.log(new Date().toJSON(), appConstants.LOG_INFO, "Adding Server: "+server.instance);
     isServerInputProvided = true;
   } else {
-    console.log(new Date().toJSON(), AppConstants.LOG_INFO, "Adding Server Instance Input.");
+    console.log(new Date().toJSON(), appConstants.LOG_INFO, "Adding Server Instance Input.");
   }
 
   var serverContainer = document.getElementById("crucibleServerInputDiv");
@@ -65,10 +65,21 @@ function addServerInstanceInput(server) {
 }
 
 /**
+ * Remove existing server input elements & add a default one.
+ */
+function removeServerInput() {
+  var crucibleServerInputDivNode = document.getElementById("crucibleServerInputDiv");
+  while (crucibleServerInputDivNode.firstChild) {
+    crucibleServerInputDivNode.removeChild(crucibleServerInputDivNode.firstChild);
+  }
+  addServerInstanceInput(null);
+}
+
+/**
  * Saves Server list
  */
 function saveServerInput() {
-  console.log(new Date().toJSON(), AppConstants.LOG_INFO, "Saving Server Input.");
+  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Saving Server Input.");
   var currentServerList = [];
   var crucibleServerCollection = document.getElementsByClassName("crucible-server");
   

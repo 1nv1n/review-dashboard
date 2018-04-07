@@ -15,7 +15,7 @@ var user;
  * Triggered on App launch.
  */
 ipc.on("initial-state", function(event, crucibleServerList, currentUser) {
-  console.log(new Date().toJSON(), AppConstants.LOG_INFO, "Retrieved: " + crucibleServerList.length + " Crucible Instances!");
+  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Retrieved: " + crucibleServerList.length + " Crucible Instances!");
 
   var doesUserExist = false;
   if (typeof currentUser !== "undefined" && currentUser !== null) {
@@ -24,10 +24,7 @@ ipc.on("initial-state", function(event, crucibleServerList, currentUser) {
   }
 
   // Remove existing elements
-  var crucibleServerInputDivNode = document.getElementById("crucibleServerInputDiv");
-  while (crucibleServerInputDivNode.firstChild) {
-    crucibleServerInputDivNode.removeChild(crucibleServerInputDivNode.firstChild);
-  }
+  removeServerInput();
 
   // If any saved Crucible server instances were sent up, populate them onto the modal.
   // Else, prompt for them
@@ -49,8 +46,11 @@ ipc.on("initial-state", function(event, crucibleServerList, currentUser) {
   }
 });
 
+/**
+ * Triggered on attempted authentication.
+ */
 ipc.on("log-in-attempted", function(event, isAuthenticated) {
-  console.log(new Date().toJSON(), AppConstants.LOG_INFO, "log-in-attempted: " + isAuthenticated);
+  console.log(new Date().toJSON(), appConstants.LOG_INFO, "log-in-attempted: " + isAuthenticated);
   if(isAuthenticated) {
     dismissLoginModal();
   } else {
