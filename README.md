@@ -4,16 +4,16 @@ Crucible Dashboard built with Electron.
 ---
 
 <p align="center">
- <a href="https://badge.fury.io/gh/InViN%2Fcrucible-dashboard.svg">
-  <img src="https://badge.fury.io/gh/InViN%2Fcrucible-dashboard.svg" alt="GitHub version" />
+ <a href="https://raw.githubusercontent.com/InViN/crucible-dashboard/master/package.json">
+  <img src="https://badge.fury.io/gh/InViN%2Fcrucible-dashboard.svg" alt="version" />
  </a>
  <a href="https://opensource.org/licenses/Apache-2.0">
-  <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="gitter" />
+  <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="license-apache-2.0" />
  </a>
  <a href="https://gitter.im/crucible-dashboard">
   <img src="https://badges.gitter.im/Join%20Chat.svg" alt="gitter" />
  </a>
- <a href="https://github.com/InViN/crucible-dashboard">
+ <a href="https://github.com/InViN/crucible-dashboard/pulls">
   <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="pr-welcome" />
  </a>
   <a href="https://flattr.com/submit/auto?user_id=1nv1n&url=https://github.com/InViN/crucible-dashboard&title=crucible-dashboard&language=javascript&tags=github&category=software">
@@ -37,6 +37,32 @@ Crucible Dashboard built with Electron.
 
 ---
 
+### Built With
+
+<p align="center">
+ <a href="https://electronjs.org/">
+  <img src="https://raw.githubusercontent.com/InViN/crucible-dashboard/master/resources/logo/electron-logo.svg?sanitize=true" alt="ElectronJS" height="100" width="100" />
+ </a>
+ <a href="https://getbootstrap.com/">
+  <img src="https://raw.githubusercontent.com/InViN/crucible-dashboard/master/resources/logo/bootstrap-logo.svg?sanitize=true" alt="ElectronJS" height="100" width="100" />
+ </a>
+</p>
+
+---
+
+### Features
+
+| Feature                     | Implemention Progress        |
+| --------------------------- | ---------------------------- |
+| Graph Review Statistics     | <ul><li>[ ] In Progress</li> |
+| Display Open Reviews        | <ul><li>[ ] In Progress</li> |
+| Display Pending Reviews     | <ul><li>[ ] In Progress</li> |
+| Create Review               | <ul><li>[ ] Planned</li>     |
+| Diff. Change Sets           | <ul><li>[ ] Planned</li>     |
+| Multi Server Authentication | <ul><li>[x] Implemented</li> |
+
+---
+
 ### Run From Source:
 ```
 git clone https://github.com/InViN/crucible-dashboard.git
@@ -47,7 +73,7 @@ npm start
 
 ---
 
-### Build:
+### Build Executable:
 ```
 git clone https://github.com/InViN/crucible-dashboard.git
 cd crucible-dashboard
