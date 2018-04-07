@@ -1,7 +1,4 @@
 # crucible-dashboard
-Crucible Dashboard built with Electron.
-
----
 
 <p align="center">
  <a href="https://raw.githubusercontent.com/InViN/crucible-dashboard/master/package.json">
@@ -49,8 +46,6 @@ Crucible Dashboard built with Electron.
 </p>
 
 ---
-
-### Features
 
 | Feature                     | Implemention Progress        |
 | --------------------------- | ---------------------------- |
