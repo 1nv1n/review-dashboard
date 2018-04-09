@@ -6,7 +6,7 @@
   transition: all 0.5s cubic-bezier(0.945, 0.020, 0.270, 0.665);
   transition-delay: 0.1s;
   transform-origin: bottom left;
-  height: 100vh
+  height: 100vh;
 }
 
 #sidebar.active {

@@ -36,9 +36,14 @@ function addServerInstanceInput(server) {
   innerDiv.className = "input-group-prepend";
 
   var span = document.createElement("span");
-  span.className = "input-group-text";
+  span.classList.add("input-group-text");
+  span.classList.add("server-modal-input-https-span");
   span.id = "basic-addon3";
-  span.innerHTML = "https://";
+  if(document.getElementById("httpsCheckBox").checked == true) {
+    span.innerHTML = "https://";
+  } else {
+    span.innerHTML = "http://";
+  }
 
   var input = document.createElement("input");
   input.type = "text";
@@ -53,9 +58,22 @@ function addServerInstanceInput(server) {
   
   input.setAttribute("aria-describedby", "basic-addon3");
 
+  var removeButton = document.createElement("button");
+  removeButton.classList.add("btn");
+  removeButton.classList.add("btn-sm");
+  removeButton.classList.add("btn-danger");
+  removeButton.classList.add("btn-modal");
+  removeButton.setAttribute("onclick", removeCurrentServerInput);
+  removeButton.innerHTML = "&nbsp;-&nbsp;";
+
   innerDiv.appendChild(span);
   outerDiv.appendChild(innerDiv);
   outerDiv.appendChild(input);
+
+  if(crucibleServerListLength > 0) {
+    //outerDiv.appendChild(removeButton);
+  }
+
   serverContainer.appendChild(outerDiv);
 
   // Set focus to added input
@@ -80,20 +98,28 @@ function removeServerInput() {
  */
 function saveServerInput() {
   console.log(new Date().toJSON(), appConstants.LOG_INFO, "Saving Server Input.");
+  var httpProtocol;
   var currentServerList = [];
   var crucibleServerCollection = document.getElementsByClassName("crucible-server");
+
+  // Prepend HTTP/S
+  if(document.getElementById("httpsCheckBox").checked == true) {
+    httpProtocol = "https://";
+  } else {
+    httpProtocol = "http://";
+  }
   
   if(crucibleServerCollection.length > 0) {
     for (var serverIdx = 0; serverIdx < crucibleServerCollection.length; serverIdx++) {
       // TODO: Add URL validation here.
       if(crucibleServerCollection[serverIdx].value.length > 0) {
-        currentServerList.push(crucibleServerCollection[serverIdx].value);
+        currentServerList.push(httpProtocol+crucibleServerCollection[serverIdx].value);
       }
     }
   }
 
   // Send the server list to the main process
-  ipc.send("save-crucible-server-list", currentServerList);
+  IPC.send("save-crucible-server-list", currentServerList);
 
   normalizeServerInput();
 }
@@ -114,4 +140,30 @@ function normalizeServerInput() {
   } else {
     addServerInstanceInput(null);
   }
+}
+
+/**
+ * Remove current server input element
+ */
+function removeCurrentServerInput() {
+  console.log(this);
+}
+
+/**
+ * Toggle HTTP-HTTPS checked.
+ * 
+ * @param {*} checkbox 
+ */
+function checkServerModalHTTPS(checkbox) {
+  if(checkbox.checked == true){
+    var httpsSpanCollection = document.getElementsByClassName("server-modal-input-https-span");
+    for (var spanIdx = 0; spanIdx < httpsSpanCollection.length; spanIdx++) {
+      httpsSpanCollection[spanIdx].innerHTML = "https://";
+    }
+  }else{
+    var httpsSpanCollection = document.getElementsByClassName("server-modal-input-https-span");
+    for (var spanIdx = 0; spanIdx < httpsSpanCollection.length; spanIdx++) {
+      httpsSpanCollection[spanIdx].innerHTML = "http://";
+    }
+ }
 }

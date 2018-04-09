@@ -47,7 +47,7 @@
 
 <body>
   <!-- App Wrapper (includes everything except the Modals -->
-  <div class="app-wrapper">
+  <div id="appWrapper" class="app-wrapper blackout">
     <!-- App Side Nav Bar -->
     <nav id="sidebar">
       <div class="sidebar-header"></div>
@@ -91,7 +91,7 @@
     <!-- App Top Nav Bar Header -->
     <header>
       <nav class="navbar navbar-expand-md fixed-top">
-        <div id="sideNavContent">
+        <div id="sideNavContent" class="side-nav-content">
           <!-- App Side Nav Bar Toggle -->
           <button type="button" id="sidebarCollapse" class="navbar-btn">
             <span></span>
@@ -99,10 +99,22 @@
             <span></span>
           </button>
         </div>
+        <img src="" height="45" width="45" id="profilePicture" style="display: none;">
         <!-- Centered App Brand Label -->
         <ul class="nav navbar-nav mx-auto">
           <li class="nav-item">
             <span class="navbar-brand-label">Crucible Dashboard</span>
+          </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <button type="button" class="pull-right app-title-btn top-nav-content" onclick="minimizeApp()">&nbsp;&#8722;&nbsp;</button>
+          </li>
+          <li>
+            <button type="button" class="pull-right app-title-btn top-nav-content" onclick="maximizeApp()">&nbsp;&#2109;&nbsp;</button>
+          </li>
+          <li>
+            <button type="button" class="pull-right app-title-btn top-nav-content" onclick="closeApp()">&nbsp;X&nbsp;</button>
           </li>
         </ul>
       </nav>
@@ -116,21 +128,19 @@
     <!-- Footer -->
     <footer class="footer">
       <div class="container">
-        <span class="text-muted">
-          node.js:
-          <script>
-            document.write(process.versions.node)
-          </script> | Chromium:
-          <script>
-            document.write(process.versions.chrome)
-          </script> | Electron:
-          <script>
-            document.write(process.versions.electron)
-          </script> | Crucible Dashboard ©
-          <script type="text/javascript">
-            document.write(new Date().getFullYear())
-          </script>
-        </span>
+        node.js:
+        <script>
+          document.write(process.versions.node)
+        </script> | Chromium:
+        <script>
+          document.write(process.versions.chrome)
+        </script> | Electron:
+        <script>
+          document.write(process.versions.electron)
+        </script> | Crucible Dashboard ©
+        <script type="text/javascript">
+          document.write(new Date().getFullYear())
+        </script>
       </div>
     </footer>
   </div>
@@ -140,26 +150,28 @@
     aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header modal-background">
           <h5 class="modal-title" id="serverModalLabel">Server Instances</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body modal-background">
           <p class="lead">Crucible server instance(s):
             <button type="button" class="btn btn-primary btn-sm btn-modal" onclick="addServerInstanceInput(null)">&nbsp;+&nbsp;</button>
+            <div class="form-check form-check-inline">
+              <label class="form-check-label">
+                <input type="checkbox" class="form-check-input" value="" onchange="checkServerModalHTTPS(this);" id="httpsCheckBox">HTTPS
+              </label>
+            </div>
           </p>
           <div class="crucible-server-input" id="crucibleServerInputDiv">
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-                <span class="input-group-text" id="basic-addon3">https://</span>
+                <span class="input-group-text server-modal-input-https-span" id="basic-addon3">http://</span>
               </div>
               <input type="text" class="form-control crucible-server" id="basic-url" aria-describedby="basic-addon3" autofocus>
             </div>
           </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer modal-background">
           <button type="button" class="btn btn-primary" onclick="saveServerInput()" data-dismiss="modal">Save</button>
           <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
         </div>
@@ -171,20 +183,16 @@
   <div class="modal fade bd-example-modal-sm" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header" style="margin:0 auto; text-align: center;">
-        </div>
-        <div class="modal-body" style="margin:0 auto; text-align: center;">
+      <div class="modal-content modal-background">
+        <div class="modal-body modal-background" style="margin:0 auto; text-align: center;">
           <div class="login-input" id="loginInputDiv">
             <div class="input-group mb-3">
-              <input id="userID" class="form-control" type="text" autofocus="true" placeholder="User ID" style="margin:0 auto; width:200px;">
+              <input id="userID" class="form-control credential-input" type="text" autofocus="true" placeholder="User ID" style="margin:0 auto; width:200px;">
             </div>
             <div class="input-group mb-3">
-              <input id="password" class="form-control" type="password" placeholder="Password" style="margin:0 auto; width:200px;">
+              <input id="password" class="form-control credential-input" type="password" placeholder="Password" style="margin:0 auto; width:200px;">
             </div>
           </div>
-        </div>
-        <div class="modal-footer" style="margin:0 auto; text-align: center;">
           <button type="button" class="btn btn-primary" onclick="login()">Login</button>
         </div>
       </div>

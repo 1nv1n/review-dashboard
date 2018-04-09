@@ -19,6 +19,9 @@ function launchLoginModal() {
 function dismissLoginModal() {
   // jQuery
   $("#loginModal").modal('hide');
+
+  // Display App Wrapper
+  removeBlackout();
 }
 
 /**
@@ -26,9 +29,11 @@ function dismissLoginModal() {
  */
 function login() {
    // Send the user:pass to the background process for authentication
-  ipc.send("login-attempt", document.getElementById("userID").value, document.getElementById("password").value);
+   IPC.send("login-attempt", document.getElementById("userID").value, document.getElementById("password").value);
 
   // Clear username & password values
   document.getElementById("userID").value = "";
   document.getElementById("password").value = "";
+
+  dismissLoginModal();
 }

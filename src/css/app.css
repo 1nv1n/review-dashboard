@@ -14,11 +14,17 @@ html {
   perspective: 2000px;
 }
 
+.blackout {
+  color: black;
+  background-color: black;
+  visibility: hidden;
+}
+
 /* Apply style to Body */
 body {
   font-family: 'Poppins', sans-serif; /* Apply Google's Font */
   margin-bottom: 60px; /* Margin bottom to accomodate footer height */
-  background: white;
+  background-color: black;
   height: 100%;
 }
 
@@ -29,10 +35,21 @@ body>.app-wrapper>.container {
 
 /* Apply style to the App content */
 #content {
+  /* -webkit-app-region: no-drag; */
   padding: 20px;
   min-height: 100vh;
   transition: all 0.3;
   transition-delay: 0.1s;
+}
+
+.app-title-btn {
+  color: white;
+  background-color: black;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  outline: none;
 }
 
 /* Bootstrap Footer */
@@ -52,4 +69,9 @@ body>.app-wrapper>.container {
   padding-right: 15px;
   padding-left: 15px;
   text-align: center;
+}
+
+/* Center Align Input Text */
+.credential-input { 
+  text-align: center; 
 }

@@ -1,6 +1,15 @@
 /* Bootstrap Nav Bar */
 .navbar {
   background-color: #000000;
+  -webkit-app-region: drag;
+}
+
+.side-nav-content {
+  -webkit-app-region: no-drag;
+}
+
+.top-nav-content {
+  -webkit-app-region: no-drag;
 }
 
 .nav-btn-first {

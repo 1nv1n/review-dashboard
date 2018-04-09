@@ -6,7 +6,6 @@ const UTIL = require("util");
 const URL = require("url");
 const PATH = require("path");
 const ELECTRON = require("electron");
-const REQUEST_PROMISE = require("request-promise");
 
 // Electron Module Imports
 const APP = ELECTRON.app;
@@ -61,6 +60,9 @@ const CONTEXT_MENU = MENU.buildFromTemplate([
 // App's system tray variable
 var appTray;
 
+// App's titlebar
+var appTitlebar;
+
 // Keep a global reference of the window object otherwise the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
@@ -76,11 +78,15 @@ let neDB = new NEDB_DATA_STORE({
 var createMainWindow = function() {
   mainWindow = new BROWSER_WINDOW({
     width: 1920,
+    minWidth: 1280,
     height: 1080,
+    minHeight: 720,
     icon: PATH.join(__dirname, "../../resources/icons", "app.ico"),
     show: false,
     backgroundColor: "#333333",
-    toolbar: false
+    toolbar: false,
+    frame: false,
+    titleBarStyle: 'hidden-inset'
   });
 
   //const menu = Menu.buildFromTemplate(null);
