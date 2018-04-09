@@ -75,6 +75,10 @@ IPC.on("initial-state", function(event, crucibleServerList, currentUser) {
       launchLoginModal();
     })
   }
+
+  if(($("#serverModal").data('bs.modal') === undefined) || (($("#serverModal").data('bs.modal'))._isShown == false) && ($("##loginModal").data('bs.modal') === undefined) || (($("##loginModal").data('bs.modal'))._isShown == false)) {
+    removeBlackout();
+  }
 });
 
 /**
