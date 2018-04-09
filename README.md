@@ -83,6 +83,6 @@ This will create the following executable containing directories:
 ---
 
 #### Work-In-Progress
-![crucible-dash](https://i.imgur.com/fQK6hCr.gif)
+![crucible-dash](https://i.imgur.com/exBc6QZ.gif)
 
 ---
