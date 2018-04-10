@@ -47,12 +47,13 @@
 
 ---
 
-| Feature                     | Implemention Progress        |
+| Feature                     | Progress                     |
 | --------------------------- | ---------------------------- |
 | Graph Review Statistics     | <ul><li>[ ] In Progress</li> |
 | Display Open Reviews        | <ul><li>[ ] In Progress</li> |
 | Display Pending Reviews     | <ul><li>[ ] In Progress</li> |
 | Create Review               | <ul><li>[ ] Planned</li>     |
+| Review Reminders            | <ul><li>[ ] Planned</li>     |
 | Diff. Change Sets           | <ul><li>[ ] Planned</li>     |
 | Multi Server Authentication | <ul><li>[x] Implemented</li> |
 
