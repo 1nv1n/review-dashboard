@@ -117,7 +117,7 @@ var createMainWindow = function() {
   });
 
   // Launch DevTools
-  //mainWindow.webContents.openDevTools("undocked");
+  mainWindow.webContents.openDevTools("undocked");
 
   // Emitted when external links are clicked
   mainWindow.webContents.on("new-window", function(functionEvent, url) {

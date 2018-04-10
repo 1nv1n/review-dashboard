@@ -42,6 +42,14 @@ body>.app-wrapper>.container {
   transition-delay: 0.1s;
 }
 
+.borderless-table {
+  border: none !important;
+}
+
+.table-app-info-header {
+  text-align: center;
+}
+
 /* Apply style to the App titlebar buttons (-,o,x) */
 .app-title-btn {
   color: white;
@@ -55,7 +63,7 @@ body>.app-wrapper>.container {
 
 /* Center Align Input Text */
 .credential-input { 
-  text-align: center; 
+  text-align: center;
 }
 
 /* Bootstrap Footer */

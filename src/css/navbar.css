@@ -13,7 +13,7 @@
 }
 
 .nav-btn-first {
-  margin-top: -5px;
+  margin-top: 5px;
 }
 
 .nav-btn-mid {
@@ -35,6 +35,7 @@
   margin-top: -5px;
   margin-bottom: 5px;
   margin-left: 20px;
+  background-color: black;
 }
 
 .navbar-btn {
@@ -48,4 +49,5 @@
   color: white;
   display: inline-block;
   font-size: 1.2em;
+  margin-left: 5px;
 }

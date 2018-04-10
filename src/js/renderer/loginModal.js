@@ -9,8 +9,8 @@ function launchLoginModal() {
   // jQuery
   $("#loginModal").modal({ backdrop: false, keyboard: false, show: true });
   // JavaScript
-  // var serverModal = new Modal('#serverModal', {backdrop: true});
-  // serverModal.show();
+  // var loginModal = new Modal('#loginModal', {backdrop: true});
+  // loginModal.show();
 }
 
 /**

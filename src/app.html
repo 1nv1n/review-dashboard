@@ -43,6 +43,8 @@
   <script src="../src/js/renderer/app-renderer.js"></script>
   <script src="../src/js/renderer/serverModal.js"></script>
   <script src="../src/js/renderer/loginModal.js"></script>
+  <script src="../src/js/renderer/settingsModal.js"></script>
+  <script src="../src/js/renderer/infoModal.js"></script>
 </head>
 
 <body>
@@ -55,37 +57,35 @@
       <!-- App Side Nav Bar Components -->
       <ul class="list-unstyled list-components">
         <li>
-          <button class="btn btn-primary nav-btn nav-btn-first">Create JIRA</button>
+          <button class="btn btn-dark nav-btn-sml" onclick="launchServerModal()" title="Server Instances">
+            <i class="fas fa-server"></i>
+          </button>
+          <button class="btn btn-dark nav-btn-sml" onclick="launchSettingsModal()" title="Settings">
+            <i class="fas fa-wrench"></i>
+          </button>
+          <button class="btn btn-dark nav-btn-sml" onclick="launchInfoModal()" title="Info">
+            <i class="fas fa-info"></i>
+          </button>
+        </li>
+        <li>
+          <button class="btn btn-primary nav-btn nav-btn-first">Pending Reviews</button>
+        </li>
+        <li>
+          <button class="btn btn-primary nav-btn nav-btn-mid">Open Reviews</button>
+        </li>
+        <li>
+          <button class="btn btn-primary nav-btn nav-btn-mid">Review Statistics</button>
         </li>
         <li>
           <button class="btn btn-primary nav-btn nav-btn-mid">Create Review</button>
         </li>
         <li>
-          <button class="btn btn-primary nav-btn nav-btn-mid">Pending Reviews</button>
-        </li>
-        <li>
-          <button class="btn btn-primary nav-btn nav-btn-mid">Open Reviews</button>
-        </li>
-      </ul>
-
-      <!-- App Side Nav Bar Settings & Logout -->
-      <ul class="list-unstyled list-components">
-        <li>
-          <button class="btn btn-dark nav-btn-sml" onclick="launchServerModal()" title="Server Instances">
-            <i class="fas fa-server"></i>
-          </button>
-          <button class="btn btn-dark nav-btn-sml" title="Settings">
-            <i class="fas fa-cog"></i>
-          </button>
-          <button class="btn btn-dark nav-btn-sml" onclick="reloadPage()" title="Reload">
-            <i class="fas fa-sync-alt"></i>
-          </button>
+          <button class="btn btn-primary nav-btn nav-btn-mid">Create JIRA</button>
         </li>
         <li>
           <button class="btn btn-danger nav-btn nav-btn-last">Logout</button>
         </li>
       </ul>
-
     </nav>
 
     <!-- App Top Nav Bar Header -->
@@ -103,7 +103,7 @@
         <!-- Centered App Brand Label -->
         <ul class="nav navbar-nav mx-auto">
           <li class="nav-item">
-              <img class="brand-header-logo" src="../resources/icons/app.png" height="20" width="20" id="brandHeaderNavImg">
+            <img class="brand-header-logo" src="../resources/icons/app.png" height="20" width="20" id="brandHeaderNavImg">
           </li>
           <li class="nav-item">
             <span class="navbar-brand-label">Crucible Dashboard</span>
@@ -176,7 +176,6 @@
         </div>
         <div class="modal-footer modal-background">
           <button type="button" class="btn btn-primary" onclick="saveServerInput()" data-dismiss="modal">Save</button>
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
         </div>
       </div>
     </div>
@@ -197,6 +196,93 @@
             </div>
           </div>
           <button type="button" class="btn btn-primary" onclick="login()">Login</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal fade bd-example-modal-lg" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="settingsModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-body modal-background">
+          Needs Implementation
+        </div>
+        <div class="modal-footer modal-background">
+          <button type="button" class="btn btn-primary" onclick="saveSettings()" data-dismiss="modal">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info Modal -->
+  <div class="modal fade bd-example-modal-lg" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-body modal-background">
+          <table class="table table-app-info borderless-table">
+            <thead>
+              <tr>
+                <th class="borderless-table table-app-info-header" scope="col">Version Information</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th class="borderless-table" scope="row">App</th>
+                <td class="borderless-table" id="appVersion"></td>
+              </tr>
+              <tr>
+                <th class="borderless-table table-app-info-header" scope="col">Process Memory Information</th>
+              </tr>
+              <tr>
+                <th class="borderless-table" scope="row">CPU Usage</th>
+                <td class="borderless-table" id="cpuUsage"></td>
+              </tr>
+              <tr>
+                <th class="borderless-table" scope="row">Working Set Size
+                  <small id="totalMemoryHelpText" class="form-text text-muted">Amount of memory currently pinned to physical RAM</small>
+                </th>
+                <td class="borderless-table" id="workingSetSize"></td>
+              </tr>
+              <tr>
+                <th class="borderless-table" scope="row">Peak Working Set Size
+                  <small id="totalMemoryHelpText" class="form-text text-muted">Maximum amount of memory that has ever been pinned to actual physical RAM</small>
+                </th>
+                <td class="borderless-table" id="peakWorkingSetSize"></td>
+              </tr>
+              <tr>
+                <th class="borderless-table" scope="row">Private Bytes
+                  <small id="totalMemoryHelpText" class="form-text text-muted">Amount of memory in heap (JavaScript, HTML), not shared by other processes</small>
+                </th>
+                <td class="borderless-table" id="privateBytes"></td>
+              </tr>
+              <tr>
+                <th class="borderless-table" scope="row">Shared Bytes
+                  <small id="totalMemoryHelpText" class="form-text text-muted">Amount of memory shared between processes</small>
+                </th>
+                <td class="borderless-table" id="sharedBytes"></td>
+              </tr>
+              <tr>
+                <th class="borderless-table table-app-info-header" scope="col">System Memory Information</th>
+              </tr>
+              <tr>
+                <th class="borderless-table" scope="row">Total Memory
+                  <small id="totalMemoryHelpText" class="form-text text-muted">Total amount of physical memory available to the system</small>
+                </th>
+                <td class="borderless-table" id="totalMemory"></td>
+              </tr>
+              <tr>
+                <th class="borderless-table" scope="row">Free Memory
+                  <small id="totalMemoryHelpText" class="form-text text-muted">Total amount of memory not being used by applications or disk cache</small>
+                </th>
+                <td class="borderless-table" id="freeMemory"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer modal-background">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Back</button>
         </div>
       </div>
     </div>
