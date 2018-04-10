@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/InViN/atlassian-tools.git"
+    "url": "git+https://github.com/InViN/crucible-dashboard.git"
   },
   "keywords": [
     "atlassian",
@@ -25,9 +25,9 @@
   },
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/InViN/atlassian-tools/issues"
+    "url": "https://github.com/InViN/crucible-dashboard/issues"
   },
-  "homepage": "https://github.com/InViN/atlassian-tools#readme",
+  "homepage": "https://github.com/InViN/crucible-dashboard#readme",
   "devDependencies": {
     "electron-packager": "^11.1.0",
     "rimraf": "^2.6.2"
