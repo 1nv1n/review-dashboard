@@ -2,27 +2,27 @@ console.time("Init Time");
 
 // Constants
 const FS = require("fs");
-const UTIL = require("util");
+const Util = require("util");
 const URL = require("url");
-const PATH = require("path");
-const ELECTRON = require("electron");
+const Path = require("path");
+const Electron = require("electron");
 
 // Electron Module Imports
-const APP = ELECTRON.app;
-const IPC = ELECTRON.ipcMain;
-const MENU = ELECTRON.Menu;
-const TRAY = ELECTRON.Tray;
-const SHELL = ELECTRON.shell;
-const BROWSER_WINDOW = ELECTRON.BrowserWindow;
+const App = Electron.app;
+const IPC = Electron.ipcMain;
+const ElectronMenu = Electron.Menu;
+const ElectronTray = Electron.Tray;
+const ElectronShell = Electron.shell;
+const ElectronBroswerWindow = Electron.BrowserWindow;
 
 // Vendor Imports
-const NEDB_DATA_STORE = require("nedb");
-const REQUEST_PROMISE = require("request-promise");
+const NEDB = require("nedb");
+const Request_Promise = require("request-promise");
 
 // App Constants
-const API_CONSTANTS = require("../js/constants/api-constants");
-const APP_CONSTANTS = require("../js/constants/app-constants");
-const APP_STRING_CONSTANTS = require("../js/constants/app-strings");
+const APIConstants = require("../js/constants/api-constants");
+const AppConstants = require("../js/constants/app-constants");
+const AppStringConstants = require("../js/constants/app-strings");
 
 // Main (Background) Processes
 const serverProcess = require("../js/main/server");
@@ -30,20 +30,20 @@ const authProcess = require("../js/main/authentication");
 const userProcess = require("../js/main/user");
 
 // Log Constants
-const LOG_FILE = FS.createWriteStream("debug.log", {
+const LogFile = FS.createWriteStream("debug.log", {
   flags: "w"
 });
-const LOG_STD_OUT = process.stdout;
+const LogStdOut = process.stdout;
 console.log = function() {
-  LOG_FILE.write(UTIL.format.apply(null, arguments) + "\n");
-  LOG_STD_OUT.write(UTIL.format.apply(null, arguments) + "\n");
+  LogFile.write(Util.format.apply(null, arguments) + "\n");
+  LogStdOut.write(Util.format.apply(null, arguments) + "\n");
 };
 console.error = console.log;
-console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "Logging Initialized.");
+console.log(new Date().toJSON(), AppConstants.LOG_INFO, "Logging Initialized.");
 
-const CONTEXT_MENU = MENU.buildFromTemplate([
+const ElectronContextMenu = ElectronMenu.buildFromTemplate([
   {
-    label: APP_STRING_CONSTANTS.APP_NAME,
+    label: AppStringConstants.APP_NAME,
     click: function() {
       mainWindow.show();
     }
@@ -51,8 +51,8 @@ const CONTEXT_MENU = MENU.buildFromTemplate([
   {
     label: "Quit",
     click: function() {
-      APP.isQuiting = true;
-      APP.quit();
+      App.isQuiting = true;
+      App.quit();
     }
   }
 ]);
@@ -69,19 +69,19 @@ let mainWindow;
 
 // Create/Autoload the Database at the 'User Data' directory.
 // On Windows: "C:\Users\<USER>\AppData\Roaming\CrucibleDashboard"
-let neDB = new NEDB_DATA_STORE({
-  filename: APP.getPath("userData") + "/crucible-dash.db",
+let neDB = new NEDB({
+  filename: App.getPath("userData") + "/crucible-dash.db",
   autoload: true
 });
 
 // Create the main browser window
 var createMainWindow = function() {
-  mainWindow = new BROWSER_WINDOW({
+  mainWindow = new ElectronBroswerWindow({
     width: 1920,
     minWidth: 1280,
     height: 1080,
     minHeight: 720,
-    icon: PATH.join(__dirname, "../../resources/icons", "app.ico"),
+    icon: Path.join(__dirname, "../../resources/icons", "app.ico"),
     show: false,
     backgroundColor: "#333333",
     toolbar: false,
@@ -90,10 +90,10 @@ var createMainWindow = function() {
   });
 
   //const menu = Menu.buildFromTemplate(null);
-  MENU.setApplicationMenu(null);
+  ElectronMenu.setApplicationMenu(null);
 
-  appTray = new TRAY(PATH.join(__dirname, "../../resources/icons", "app.ico"));
-  appTray.setContextMenu(CONTEXT_MENU);
+  appTray = new ElectronTray(Path.join(__dirname, "../../resources/icons", "app.ico"));
+  appTray.setContextMenu(ElectronContextMenu);
   appTray.setToolTip("Crucible Dashboard");
   appTray.on("click", () => {
     mainWindow.show();
@@ -104,7 +104,7 @@ var createMainWindow = function() {
 
   mainWindow.loadURL(
     URL.format({
-      pathname: PATH.join(__dirname, "../app.html"),
+      pathname: Path.join(__dirname, "../app.html"),
       protocol: "file:",
       slashes: true
     })
@@ -117,20 +117,20 @@ var createMainWindow = function() {
   });
 
   // Launch DevTools
-  mainWindow.webContents.openDevTools("undocked");
+  //mainWindow.webContents.openDevTools("undocked");
 
   // Emitted when external links are clicked
   mainWindow.webContents.on("new-window", function(functionEvent, url) {
     var urlToOpen;
     var appURL = URL.format({
-      pathname: PATH.join(__dirname, "/"),
+      pathname: Path.join(__dirname, "/"),
       protocol: "file:",
       slashes: true
     }).replace(/\\/g, "/");
     url = url.substring(appURL.length + 3);
     url = url.slice(0, -3);
     functionEvent.preventDefault();
-    SHELL.openExternal(url);
+    ElectronShell.openExternal(url);
   });
 
   // Emitted on '-' (Minimize) Click on the Main Window
@@ -147,8 +147,8 @@ var createMainWindow = function() {
     // }
     // return false;
 
-    APP.isQuiting = true;
-    APP.quit();
+    App.isQuiting = true;
+    App.quit();
   });
 
   // Emitted when the window is closed.
@@ -156,25 +156,30 @@ var createMainWindow = function() {
     // Dereference the window object.
     mainWindow = null;
   });
+
+  mainWindow.webContents.on('will-navigate', (event, url) => {
+    event.preventDefault();
+    ElectronShell.openExternal(url);
+  });
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
-APP.on("ready", appReady => {
+App.on("ready", appReady => {
   createMainWindow();
   console.timeEnd("Init Time");
 });
 
 // Quit when all windows are closed.
-APP.on("window-all-closed", appAllWindowsClosed => {
+App.on("window-all-closed", appAllWindowsClosed => {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== "darwin") {
-    APP.quit();
+    App.quit();
   }
 });
 
-APP.on("activate", appActivate => {
+App.on("activate", appActivate => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (process.platform === "darwin" && mainWindow === null) {
@@ -187,20 +192,20 @@ APP.on("activate", appActivate => {
  */
 function initialize() {
   // Start by attempting to retrieve the list of Crucible Servers
-  serverProcess.retrieveCrucibleServerList(neDB, APP_CONSTANTS).then(
+  serverProcess.retrieveCrucibleServerList(neDB, AppConstants).then(
     function(crucibleServerList) {
-      userProcess.retrieveUser(neDB, APP_CONSTANTS).then(
+      userProcess.retrieveUser(neDB, AppConstants).then(
         function(user) {
           mainWindow.webContents.send("initial-state", crucibleServerList, user);
         },
         function(err) {
-          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "initialize()", err);
+          console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "initialize()", err);
           mainWindow.webContents.send("initial-state", [], null);
         }
       );
     },
     function(err) {
-      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "initialize()", err);
+      console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "initialize()", err);
       mainWindow.webContents.send("initial-state", [], null);
     }
   );
@@ -210,12 +215,12 @@ function initialize() {
  * Save the input Crucible server list
  */
 IPC.on("save-crucible-server-list", function(event, crucibleServerList) {
-  serverProcess.saveCrucibleServerList(neDB, APP_CONSTANTS, crucibleServerList);
+  serverProcess.saveCrucibleServerList(neDB, AppConstants, crucibleServerList);
 });
 
 /**
  * Attemt to log the user in & save the authentication token.
  */
 IPC.on("login-attempt", function(event, userID, password) {
-  authProcess.authenticateUser(neDB, API_CONSTANTS, APP_CONSTANTS, userID, password, mainWindow, REQUEST_PROMISE, serverProcess);
+  authProcess.authenticateUser(neDB, APIConstants, AppConstants, userID, password, mainWindow, Request_Promise, serverProcess);
 });

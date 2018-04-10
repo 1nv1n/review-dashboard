@@ -76,7 +76,7 @@ IPC.on("initial-state", function(event, crucibleServerList, currentUser) {
     })
   }
 
-  if(($("#serverModal").data('bs.modal') === undefined) || (($("#serverModal").data('bs.modal'))._isShown == false) && ($("##loginModal").data('bs.modal') === undefined) || (($("##loginModal").data('bs.modal'))._isShown == false)) {
+  if((($("#serverModal").data('bs.modal') === undefined) || (($("#serverModal").data('bs.modal'))._isShown == false)) && (($("#loginModal").data('bs.modal') === undefined) || (($("#loginModal").data('bs.modal'))._isShown == false))) {
     removeBlackout();
   }
 });
