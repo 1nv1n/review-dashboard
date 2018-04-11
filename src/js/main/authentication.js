@@ -20,7 +20,7 @@ module.exports = {
     apiConstants = _apiConstants;
     serverProcess = _serverProcess;
     requestPromise = _RequestPromise;
-    
+
     var authenticationOptions = {
       method: "POST",
       uri: "",
@@ -35,8 +35,6 @@ module.exports = {
       function(_crucibleServerList) {
         if (_crucibleServerList.length > 0) {
           crucibleServerList = _crucibleServerList;
-          // Save the user's information from the first Crucible Instance
-          //saveUserInfo(crucibleServerList[0], userID);
 
           // Begin authentication with Crucible via call-back functions after removing existing data
           neDB.remove({ type: "CrucibleToken" }, { multi: true }, function(err, numRemoved) {
@@ -60,20 +58,23 @@ function authenticateCrucible(authenticationOptions, processedInstanceCount) {
   if (processedInstanceCount < crucibleServerList.length) {
     authenticationOptions.uri = crucibleServerList[processedInstanceCount].instance + apiConstants.FE_CRU_REST_BASE_URL + apiConstants.CRUCIBLE_AUTH;
 
-    requestPromise(authenticationOptions).then(function(parsedBody) {
-      insertCrucibleToken(crucibleServerList[processedInstanceCount], JSON.parse(parsedBody).token);
-      processedInstanceCount = processedInstanceCount + 1;
-      
-      if (processedInstanceCount < crucibleServerList.length) {
-        authenticateCrucible(authenticationOptions, processedInstanceCount);
-      } else {
-        console.log(new Date().toJSON(), appConstants.LOG_INFO, "authenticateCrucible", "Authenticated Successfully!");
-        mainWindow.webContents.send("log-in-attempted", true);
-      }
-    }).catch(function(err) {
-      console.log(new Date().toJSON(), appConstants.LOG_ERROR, "authenticateCrucible", err);
-      mainWindow.webContents.send("log-in-attempted", false);
-    });
+    requestPromise(authenticationOptions)
+      .then(function(parsedBody) {
+        console.log(new Date().toJSON(), appConstants.LOG_INFO, parsedBody);
+        insertCrucibleToken(crucibleServerList[processedInstanceCount].instance, JSON.parse(parsedBody).token);
+        processedInstanceCount = processedInstanceCount + 1;
+
+        if (processedInstanceCount < crucibleServerList.length) {
+          authenticateCrucible(authenticationOptions, processedInstanceCount);
+        } else {
+          console.log(new Date().toJSON(), appConstants.LOG_INFO, "authenticateCrucible", "Authenticated Successfully!");
+          mainWindow.webContents.send("log-in-attempted", true);
+        }
+      })
+      .catch(function(err) {
+        console.log(new Date().toJSON(), appConstants.LOG_ERROR, "authenticateCrucible", err);
+        mainWindow.webContents.send("log-in-attempted", false);
+      });
   } else {
     console.log(new Date().toJSON(), appConstants.LOG_INFO, "authenticateCrucible", "Authenticated Successfully!");
     mainWindow.webContents.send("log-in-attempted", true);

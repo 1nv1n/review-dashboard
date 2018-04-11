@@ -46,12 +46,14 @@ function closeApp() {
  * Triggered on App launch.
  */
 IPC.on("initial-state", function(event, crucibleServerList, currentUser) {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Retrieved: " + crucibleServerList.length + " Crucible Instances!");
+  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Retrieved: " + crucibleServerList.length + " Crucible Instances & User: " + currentUser.userID);
 
   var doesUserExist = false;
   if (typeof currentUser !== "undefined" && currentUser !== null) {
+    console.log(new Date().toJSON(), appConstants.LOG_INFO, "User not defined!");
     user = currentUser;
     doesUserExist = true;
+    setUserInfo(user.userID, user.displayName, user.avatarURL);
   }
 
   // Remove existing elements
@@ -62,6 +64,7 @@ IPC.on("initial-state", function(event, crucibleServerList, currentUser) {
   if(typeof crucibleServerList === "undefined" || crucibleServerList == null || crucibleServerList.length == 0) {
     // Launch the Server Modal
     launchServerModal();
+    addServerInstanceInput(null);
   } else {
     // Add elements from the database
     for (var serverIdx in crucibleServerList) {
@@ -85,10 +88,12 @@ IPC.on("initial-state", function(event, crucibleServerList, currentUser) {
  * Triggered on attempted authentication.
  */
 IPC.on("log-in-attempted", function(event, isAuthenticated) {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "log-in-attempted: " + isAuthenticated);
-  if(isAuthenticated) {
-    dismissLoginModal();
-  } else {
-    // TODO
-  }
+  loginInAttempted(isAuthenticated);
+});
+
+/**
+ * Triggered on user info retrieval.
+ */
+IPC.on("user-info", function(event, userID, displayName, avatarURL) {
+  setUserInfo(userID, displayName, avatarURL);
 });
