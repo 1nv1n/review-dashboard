@@ -11,6 +11,9 @@ function launchLoginModal() {
   // JavaScript
   // var loginModal = new Modal('#loginModal', {backdrop: true});
   // loginModal.show();
+
+  // Blackout before opening the Modal
+  blackout();
 }
 
 /**
@@ -34,6 +37,16 @@ function login() {
   // Clear username & password values
   document.getElementById("userID").value = "";
   document.getElementById("password").value = "";
+}
 
-  dismissLoginModal();
+/**
+ * Handle the attempted log-in
+ */
+function loginInAttempted(isAuthenticated) {
+  console.log(new Date().toJSON(), appConstants.LOG_INFO, "LoginIn Attempt Response: " + isAuthenticated);
+  if(isAuthenticated) {
+    dismissLoginModal();
+  } else {
+    // TODO
+  }
 }

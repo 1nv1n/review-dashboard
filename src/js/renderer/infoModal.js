@@ -11,6 +11,9 @@ function launchInfoModal() {
   // JavaScript var infoModal = new Modal('#infoModal', {backdrop: true});
   // infoModal.show();
 
+  // Blackout before opening the Modal
+  blackout();
+
   var appVersion = require('electron').remote.app.getVersion();
   
   process.getCPUUsage();
@@ -42,4 +45,15 @@ function formatBytes(kilobytes, decimalPlaces) {
   var calcBytes = Math.floor(Math.log(bytes)/Math.log(byteMultiplier));
   
   return parseFloat((bytes/Math.pow(byteMultiplier, calcBytes)).toFixed(fractionalDigit)) + " " + sizeArr[calcBytes];
+}
+
+/**
+ * Dismiss the Info Modal
+ */
+function dismissInfoModal() {
+  // jQuery
+  $("#infoModal").modal('hide');
+
+  // Display App Wrapper
+  removeBlackout();
 }

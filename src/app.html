@@ -99,7 +99,6 @@
             <span></span>
           </button>
         </div>
-        <img src="" height="45" width="45" id="profilePicture" style="display: none;">
         <!-- Centered App Brand Label -->
         <ul class="nav navbar-nav mx-auto">
           <li class="nav-item">
@@ -175,7 +174,8 @@
           </div>
         </div>
         <div class="modal-footer modal-background">
-          <button type="button" class="btn btn-primary" onclick="saveServerInput()" data-dismiss="modal">Save</button>
+          <button type="button" class="btn btn-primary" onclick="saveServerInput()">Save</button>
+          <button type="button" class="btn btn-danger" onclick="dismissServerModal()">Cancel</button>
         </div>
       </div>
     </div>
@@ -207,10 +207,23 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-body modal-background">
+          <table class="table table-user-info borderless-table" width="80">
+            <tbody>
+              <tr>
+                <td rowspan="2" class="borderless-table">
+                  <img id="profilePicture" src="" alt="userProfile" height="50px" width="50px">
+                </td>
+              </tr>
+              <tr>
+                <td class="borderless-table user-card-title" id="settingUserCardTitle"></td>
+                <td class="borderless-table user-card-text" id="settingUserCardText"></td>
+              </tr>
+            </tbody>
+          </table>
           Needs Implementation
         </div>
         <div class="modal-footer modal-background">
-          <button type="button" class="btn btn-primary" onclick="saveSettings()" data-dismiss="modal">Save</button>
+          <button type="button" class="btn btn-primary" onclick="saveSettings()">Back</button>
         </div>
       </div>
     </div>
@@ -282,7 +295,7 @@
           </table>
         </div>
         <div class="modal-footer modal-background">
-          <button type="button" class="btn btn-primary" data-dismiss="modal">Back</button>
+          <button type="button" class="btn btn-primary" onclick="dismissInfoModal()">Back</button>
         </div>
       </div>
     </div>

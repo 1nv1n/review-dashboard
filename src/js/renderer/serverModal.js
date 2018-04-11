@@ -11,6 +11,20 @@ function launchServerModal() {
   // JavaScript
   // var serverModal = new Modal('#serverModal', {backdrop: true});
   // serverModal.show();
+
+  // Blackout before opening the Modal
+  blackout();
+}
+
+/**
+ * Dismiss the Server Modal
+ */
+function dismissServerModal() {
+  // jQuery
+  $("#serverModal").modal('hide');
+
+  // Display App Wrapper
+  removeBlackout();
 }
 
 /**
@@ -53,7 +67,13 @@ function addServerInstanceInput(server) {
   input.id = "basic-url";
   
   if(isServerInputProvided) {
-    input.value = server.instance;
+    if(server.instance.startsWith("http://")) {
+      input.value = server.instance.substring(7);
+    } else if(server.instance.startsWith("https://")) {
+      input.value = server.instance.substring(8);
+    } else {
+      input.value = server.instance;
+    }
   }
   
   input.setAttribute("aria-describedby", "basic-addon3");
@@ -90,7 +110,6 @@ function removeServerInput() {
   while (crucibleServerInputDivNode.firstChild) {
     crucibleServerInputDivNode.removeChild(crucibleServerInputDivNode.firstChild);
   }
-  addServerInstanceInput(null);
 }
 
 /**
@@ -121,7 +140,11 @@ function saveServerInput() {
   // Send the server list to the main process
   IPC.send("save-crucible-server-list", currentServerList);
 
+  // Remove empty inputs
   normalizeServerInput();
+
+  // Dismiss the Modal
+  dismissServerModal();
 }
 
 /**

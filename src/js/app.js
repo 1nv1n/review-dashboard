@@ -17,7 +17,7 @@ const ElectronBroswerWindow = Electron.BrowserWindow;
 
 // Vendor Imports
 const NEDB = require("nedb");
-const Request_Promise = require("request-promise");
+const RequestPromise = require("request-promise");
 
 // App Constants
 const APIConstants = require("../js/constants/api-constants");
@@ -65,21 +65,24 @@ var appTitlebar;
 
 // Keep a global reference of the window object otherwise the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow;
+var mainWindow;
 
 // Create/Autoload the Database at the 'User Data' directory.
 // On Windows: "C:\Users\<USER>\AppData\Roaming\CrucibleDashboard"
-let neDB = new NEDB({
+var neDB = new NEDB({
   filename: App.getPath("userData") + "/crucible-dash.db",
   autoload: true
 });
 
+// Saves the default (or first) instance server string
+var crucibleServerInstance;
+
 // Create the main browser window
 var createMainWindow = function() {
   mainWindow = new ElectronBroswerWindow({
-    width: 1920,
+    width: 1900, //1920
     minWidth: 1280,
-    height: 1080,
+    height: 1000, // 1080
     minHeight: 720,
     icon: Path.join(__dirname, "../../resources/icons", "app.ico"),
     show: false,
@@ -215,6 +218,7 @@ function initialize() {
  * Save the input Crucible server list
  */
 IPC.on("save-crucible-server-list", function(event, crucibleServerList) {
+  crucibleServerInstance = crucibleServerList[0];
   serverProcess.saveCrucibleServerList(neDB, AppConstants, crucibleServerList);
 });
 
@@ -222,5 +226,6 @@ IPC.on("save-crucible-server-list", function(event, crucibleServerList) {
  * Attemt to log the user in & save the authentication token.
  */
 IPC.on("login-attempt", function(event, userID, password) {
-  authProcess.authenticateUser(neDB, APIConstants, AppConstants, userID, password, mainWindow, Request_Promise, serverProcess);
+  authProcess.authenticateUser(neDB, APIConstants, AppConstants, userID, password, mainWindow, RequestPromise, serverProcess);
+  userProcess.saveUserInfo(neDB, APIConstants, AppConstants, userID, crucibleServerInstance, mainWindow, RequestPromise);
 });
