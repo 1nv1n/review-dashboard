@@ -1,7 +1,7 @@
 {
   "name": "crucible-dash",
   "productName": "CrucibleDashboard",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Crucible Dashboard built with Electron",
   "main": "src/js/app.js",
   "scripts": {
