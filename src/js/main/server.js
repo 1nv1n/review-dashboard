@@ -20,7 +20,7 @@ module.exports = {
   },
 
   // Saves the list of servers to the database
-  saveCrucibleServerList: function(neDB, appConstants, crucibleServerList, mainWindow) {
+  saveCrucibleServerList: function(neDB, appConstants, crucibleServerList) {
     // Remove existing servers
     neDB.remove({ type: "CrucibleServerInstance" }, { multi: true }, function(err, numRemoved) {
       if (err) {
@@ -41,10 +41,8 @@ module.exports = {
         function(err, insertedRecord) {
           if (err) {
             console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveCrucibleServerList", err);
-            mainWindow.webContents.send("save-server-list", false);
           } else {
             console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveCrucibleServerList: Saved:", insertedRecord.instance);
-            mainWindow.webContents.send("save-server-list", true);
           }
         }
       );

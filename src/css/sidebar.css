@@ -60,7 +60,7 @@
 /*
  * MEDIAQUERIES
  */
-@media (max-width: 1940px) {
+@media (max-width: 1920px) {
   #sidebar {
     margin-left: -250px;
     transform: rotateY(90deg);

@@ -11,11 +11,10 @@ function launchSettingsModal() {
   
   // jQuery
   $("#settingsModal").modal({backdrop: false, keyboard: false, show: true});
+  // JavaScript var settingsModal = new Modal('#settingsModal', {backdrop: true});
+  // settingsModal.show();
 }
 
-/**
- * Dismiss the 'Settings' modal.
- */
 function dismissSettingsModal() {
   // jQuery
   $("#settingsModal").modal('hide');
@@ -24,12 +23,13 @@ function dismissSettingsModal() {
   removeBlackout();
 }
 
-/**
- * Save the settings
- */
 function saveSettings() {
-  // Save to server (app.js) needs implementation.
-
-  // Dismiss the modal
   dismissSettingsModal();
+}
+
+function setUserInfo(userID, displayName, avatarURL) {
+  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Setting User Info (" + userID + ")");
+  document.getElementById("settingUserCardTitle").innerHTML = userID;
+  document.getElementById("settingUserCardText").innerHTML = displayName;
+  document.getElementById("profilePicture").src = avatarURL;
 }

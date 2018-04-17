@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="Crucible Dashboard">
-  <meta name="author" content="NP">
+  <meta name="author" content="Neil Pathare">
 
   <title>Crucible Dashboard</title>
 
@@ -38,15 +38,6 @@
   <script src="../node_modules/popper.js/dist/umd/popper.min.js"></script>
   <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 
-  <!-- Global Variables -->
-  <script type='text/javascript' > 
-    // Main list of Crucible Server instances
-    var crucibleServerList = [];
-
-    // Main user object
-    var user;
-  </script>
-
   <!-- App JS -->
   <script src="../src/js/renderer/ipc.js"></script>
   <script src="../src/js/renderer/app-renderer.js"></script>
@@ -54,7 +45,6 @@
   <script src="../src/js/renderer/loginModal.js"></script>
   <script src="../src/js/renderer/settingsModal.js"></script>
   <script src="../src/js/renderer/infoModal.js"></script>
-  <script src="../src/js/renderer/createReviewModal.js"></script>
 </head>
 
 <body>
@@ -65,16 +55,6 @@
       <div class="sidebar-header"></div>
 
       <!-- App Side Nav Bar Components -->
-      <ul class="list-unstyled list-components">
-        <li>
-          <img class="profile-picture" id="profilePicture" src="" alt="userProfile" height="45px" width="45px">
-          <label class="user-id-label" id="userIDLabel"></label>
-        </li>
-        <li>
-          <label class="user-name-label" id="userNameLabel"></label>
-        </li>
-      </ul>
-
       <ul class="list-unstyled list-components">
         <li>
           <button class="btn btn-dark nav-btn-sml" onclick="launchServerModal()" title="Server Instances">
@@ -88,7 +68,22 @@
           </button>
         </li>
         <li>
-          <button class="btn btn-danger nav-btn nav-btn-last" onclick="logout()">Logout</button>
+          <button class="btn btn-primary nav-btn nav-btn-first">Pending Reviews</button>
+        </li>
+        <li>
+          <button class="btn btn-primary nav-btn nav-btn-mid">Open Reviews</button>
+        </li>
+        <li>
+          <button class="btn btn-primary nav-btn nav-btn-mid">Review Statistics</button>
+        </li>
+        <li>
+          <button class="btn btn-primary nav-btn nav-btn-mid">Create Review</button>
+        </li>
+        <li>
+          <button class="btn btn-primary nav-btn nav-btn-mid">Create JIRA</button>
+        </li>
+        <li>
+          <button class="btn btn-danger nav-btn nav-btn-last">Logout</button>
         </li>
       </ul>
     </nav>
@@ -129,36 +124,7 @@
 
     <!-- Main Content -->
     <main role="main" class="container content">
-      <!-- Main Button Container -->
-      <div class="button-container" id="mainButtonContainer">
-        <button id="createReviewButton" class="btn btn-primary btn-sm create-review-button" type="button" onclick="launchCreateReviewModal()">
-          Create
-        </button>
-        <button id="searchReviewButton" class="btn btn-primary btn-sm search-review-button disabled" type="button">
-          Search&nbsp;
-          <i class="fas fa-search"></i>
-        </button>
-        <button id="pendingReviewsToggle" class="btn btn-primary btn-sm pending-review-toggle" type="button">
-          Pending
-          <span id="pendingBadge" class="badge badge-light">0</span>
-        </button>
-        <button id="refreshPendingButton" class="btn btn-success btn-sm refresh-pending-button disabled" type="button">
-          <i class="fas fa-sync"></i>
-        </button>
-        <button id="openReviewsToggle" class="btn btn-primary btn-sm open-review-toggle disabled" type="button">
-          Open
-          <span id="openBadge" class="badge badge-light">0</span>
-        </button>
-        <button id="refreshOpenButton" class="btn btn-success btn-sm refresh-open-button disabled" type="button">
-          <i class="fas fa-sync"></i>
-        </button>
-        <button id="reviewStatisticsToggle" class="btn btn-primary btn-sm review-statictics-toggle disabled" type="button">
-          Review Statistics
-        </button>
-        <button id="refreshStaticticsButton" class="btn btn-success btn-sm refresh-statictics-button disabled" type="button">
-          <i class="fas fa-sync"></i>
-        </button>
-      </div>
+      Content Goes Here.
     </main>
 
     <!-- Footer -->
@@ -208,9 +174,7 @@
           </div>
         </div>
         <div class="modal-footer modal-background">
-          <button type="button" class="btn btn-primary" onclick="saveServerInput()">Save
-            <i id="saveServerIcon" class="" aria-hidden="true"></i>
-          </button>
+          <button type="button" class="btn btn-primary" onclick="saveServerInput()">Save</button>
           <button type="button" class="btn btn-danger" onclick="dismissServerModal()">Cancel</button>
         </div>
       </div>
@@ -231,9 +195,7 @@
               <input id="password" class="form-control credential-input" type="password" placeholder="Password" style="margin:0 auto; width:200px;">
             </div>
           </div>
-          <button type="button" class="btn btn-primary" onclick="login()">Login
-            <i id="loginIcon" class="fa fa-sign-in" aria-hidden="true"></i>
-          </button>
+          <button type="button" class="btn btn-primary" onclick="login()">Login</button>
         </div>
       </div>
     </div>
@@ -245,6 +207,19 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-body modal-background">
+          <table class="table table-user-info borderless-table" width="80">
+            <tbody>
+              <tr>
+                <td rowspan="2" class="borderless-table">
+                  <img id="profilePicture" src="" alt="userProfile" height="50px" width="50px">
+                </td>
+              </tr>
+              <tr>
+                <td class="borderless-table user-card-title" id="settingUserCardTitle"></td>
+                <td class="borderless-table user-card-text" id="settingUserCardText"></td>
+              </tr>
+            </tbody>
+          </table>
           Needs Implementation
         </div>
         <div class="modal-footer modal-background">
@@ -326,43 +301,25 @@
     </div>
   </div>
 
-  <!-- Create Review Modal -->
-  <div class="modal fade bd-example-modal-lg" id="createReviewModal" tabindex="-1" role="dialog" aria-labelledby="createReviewModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-body modal-background">
-          <p class="lead">Crucible server instance(s):</p>
-          <div class="crucible-server-radio" id="crucibleServerRadioDiv"></div>
-          <div class="modal-footer modal-background">
-            <button type="button" class="btn btn-primary" onclick="createReview()">Save
-              <i id="createReviewIcon" class="" aria-hidden="true"></i>
-            </button>
-            <button type="button" class="btn btn-danger" onclick="dismissCreateReviewModal()">Cancel</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <script>
-      // Self executing function for 'active' class toggle on Side Bar Collapse
-      // jQuery:
-      $(document).ready(function () {
-        $('#sidebarCollapse').on('click', function () {
-          $('#sidebar').toggleClass('active');
-          $(this).toggleClass('active');
-        });
+  <script>
+    // Self executing function for 'active' class toggle on Side Bar Collapse
+    // jQuery:
+    $(document).ready(function () {
+      $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+        $(this).toggleClass('active');
       });
-      // JavaScript:
-      // (function() {
-      //   document.getElementById("sidebarCollapse").addEventListener("click", function(event){
-      //     document.querySelector('#sidebar').classList.toggle('active');
-      //     event.target.classList.toggle('active');
-      //   });
-      // })();
+    });
+    // JavaScript:
+    // (function() {
+    //   document.getElementById("sidebarCollapse").addEventListener("click", function(event){
+    //     document.querySelector('#sidebar').classList.toggle('active');
+    //     event.target.classList.toggle('active');
+    //   });
+    // })();
 
-      const appConstants = require("../src/js/constants/app-constants");
-    </script>
+    const appConstants = require("../src/js/constants/app-constants");
+  </script>
 </body>
 
 </html>

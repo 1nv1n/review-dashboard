@@ -31,32 +31,24 @@ body {
 
 /* Apply style to immediate container children of Body's Wrapper */
 body>.app-wrapper>.container {
-  /* Padding to accomodate Nav */
-  padding: 80px 0px 0px 0px;
+  padding: 80px 0px 0px 0px; /* Padding to accomodate Nav */
 }
 
 /* Apply style to the App content */
-/* #content {
+#content {
   padding: 20px;
   min-height: 100vh;
   transition: all 0.3;
   transition-delay: 0.1s;
-} */
+}
 
-/* No borders on tables here */
 .borderless-table {
   border: none !important;
 }
 
-/* Apply style to the 'App Info' table */
 .table-app-info-header {
   text-align: center;
 }
-
-/* Apply style to the Button Container */
-/* .button-container {
-  margin:0 auto
-} */
 
 /* Apply style to the App titlebar buttons (-,o,x) */
 .app-title-btn {
@@ -72,16 +64,6 @@ body>.app-wrapper>.container {
 /* Center Align Input Text */
 .credential-input { 
   text-align: center;
-}
-
-/* Apply style to the user profile picture */
-.profile-picture {
-  margin-left: 25px;
-}
-
-/* Apply style to the user name label */
-.user-name-label {
-  margin-left: 25px;
 }
 
 /* Bootstrap Footer */

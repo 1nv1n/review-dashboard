@@ -8,6 +8,9 @@
 function launchLoginModal() {
   // jQuery
   $("#loginModal").modal({ backdrop: false, keyboard: false, show: true });
+  // JavaScript
+  // var loginModal = new Modal('#loginModal', {backdrop: true});
+  // loginModal.show();
 
   // Blackout before opening the Modal
   blackout();
@@ -31,14 +34,6 @@ function login() {
    // Send the user:pass to the background process for authentication
    IPC.send("login-attempt", document.getElementById("userID").value, document.getElementById("password").value);
 
-   // Add the spinner
-   var loginIconClassList = document.getElementById("loginIcon").classList;
-   loginIconClassList.remove("fa");
-   loginIconClassList.remove("fa-sign-in");
-   loginIconClassList.add("fas");
-   loginIconClassList.add("fa-circle-notch");
-   loginIconClassList.add("fa-spin");
-
   // Clear username & password values
   document.getElementById("userID").value = "";
   document.getElementById("password").value = "";
@@ -49,16 +44,6 @@ function login() {
  */
 function loginInAttempted(isAuthenticated) {
   console.log(new Date().toJSON(), appConstants.LOG_INFO, "LoginIn Attempt Response: " + isAuthenticated);
-
-  // Remove the spinner
-  var loginIconClassList = document.getElementById("loginIcon").classList;
-  loginIconClassList.remove("fas");
-  loginIconClassList.remove("fa-circle-notch");
-  loginIconClassList.remove("fa-spin");
-  loginIconClassList.add("fa");
-  loginIconClassList.add("fa-sign-in");
-
-  // If authenticated, dismiss the Modal
   if(isAuthenticated) {
     dismissLoginModal();
   } else {

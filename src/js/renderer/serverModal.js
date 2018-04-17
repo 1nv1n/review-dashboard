@@ -91,7 +91,6 @@ function addServerInstanceInput(server) {
   outerDiv.appendChild(input);
 
   if(crucibleServerListLength > 0) {
-    // TODO - Update & include the "-" button
     //outerDiv.appendChild(removeButton);
   }
 
@@ -118,13 +117,6 @@ function removeServerInput() {
  */
 function saveServerInput() {
   console.log(new Date().toJSON(), appConstants.LOG_INFO, "Saving Server Input.");
-
-  // Add the spinner
-  var saveServerIconClassList = document.getElementById("saveServerIcon").classList;
-  saveServerIconClassList.add("fas");
-  saveServerIconClassList.add("fa-circle-notch");
-  saveServerIconClassList.add("fa-spin");
-
   var httpProtocol;
   var currentServerList = [];
   var crucibleServerCollection = document.getElementsByClassName("crucible-server");
@@ -150,6 +142,9 @@ function saveServerInput() {
 
   // Remove empty inputs
   normalizeServerInput();
+
+  // Dismiss the Modal
+  dismissServerModal();
 }
 
 /**
@@ -194,20 +189,4 @@ function checkServerModalHTTPS(checkbox) {
       httpsSpanCollection[spanIdx].innerHTML = "http://";
     }
  }
-}
-
-/**
- * Handle Server List Save
- * 
- * @param {*} isSaved 
- */
-function handleServerListSave(isSaved) {
-  // Remove the spinner
-  var saveServerIconClassList = document.getElementById("saveServerIcon").classList;
-  saveServerIconClassList.remove("fas");
-  saveServerIconClassList.remove("fa-circle-notch");
-  saveServerIconClassList.remove("fa-spin");
-  
-  // Dismiss the Modal
-  dismissServerModal();
 }
