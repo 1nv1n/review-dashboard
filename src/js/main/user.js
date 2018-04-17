@@ -12,14 +12,22 @@ module.exports = {
           console.log(new Date().toJSON(), appConstants.LOG_ERROR, "retrieveUser()", err);
           reject(null);
         } else {
-          console.log(new Date().toJSON(), appConstants.LOG_INFO, "retrieveUser(): Retrieved:", user[0].userID);
-          resolve(user[0]);
+          if (typeof user !== "undefined" && user !== null && user.length == 1 && typeof user[0].userID !== "undefined" && user[0].userID !== null) {
+            console.log(new Date().toJSON(), appConstants.LOG_INFO, "retrieveUser(): Retrieved:", user[0].userID);
+            resolve(user[0]);
+          } else {
+            reject(null);
+          }
         }
       });
     });
   },
 
-  // GET & Save User Info
+  /**
+   * - GET User Info from Crucible.
+   * - Save it to the DB
+   * - Send it up to the renderer
+   */
   saveUserInfo: function(neDB, apiConstants, appConstants, userID, crucibleServerInstance, mainWindow, requestPromise) {
     // Remove any existing user information
     neDB.remove({ type: "User" }, { multi: true }, function(err, numRemoved) {

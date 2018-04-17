@@ -14,6 +14,12 @@ function reloadPage() {
  * Backout
  */
 function blackout() {
+  // Collapse the Sidebar only if it's currently open
+  if(document.getElementById("sidebar").classList.contains("active")) {
+    document.getElementById("sidebarCollapse").click();
+    document.getElementById("sidebar").classList.add("sidebar-clicked");
+  }
+
   var appWrapper = document.getElementById("appWrapper");
   if(!appWrapper.classList.contains("blackout")) {
     appWrapper.classList.add("blackout");
@@ -24,8 +30,28 @@ function blackout() {
  * Remove Backout
  */
 function removeBlackout() {
+  // Expand the Sidebar only if it was programmatically collapsed
+  if(!document.getElementById("sidebar").classList.contains("active") && document.getElementById("sidebar").classList.contains("sidebar-clicked")) {
+    document.getElementById("sidebarCollapse").click();
+    document.getElementById("sidebar").classList.remove("sidebar-clicked");
+  }
+
   var appWrapper = document.getElementById("appWrapper");
   if(appWrapper.classList.length > 0) {
     appWrapper.classList.remove("blackout");
   }
+}
+
+/**
+ * Set the user information to the modal as a header.
+ * 
+ * @param {String} userID 
+ * @param {String} displayName 
+ * @param {String} avatarURL 
+ */
+function setUserInfo(userID, displayName, avatarURL) {
+  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Setting User Info (" + userID + ")");
+  document.getElementById("userIDLabel").innerHTML = userID;
+  document.getElementById("userNameLabel").innerHTML = displayName;
+  document.getElementById("profilePicture").src = avatarURL;
 }
