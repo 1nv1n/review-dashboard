@@ -12,7 +12,7 @@ var crucibleServerList;
 
 // Export all functions.
 module.exports = {
-  // AUthenticate the user
+  // Authenticate the user
   authenticateUser: function(_neDB, _apiConstants, _appConstants, userID, password, _mainWindow, _RequestPromise, _serverProcess) {
     neDB = _neDB;
     mainWindow = _mainWindow;
@@ -36,7 +36,7 @@ module.exports = {
         if (_crucibleServerList.length > 0) {
           crucibleServerList = _crucibleServerList;
 
-          // Begin authentication with Crucible via call-back functions after removing existing data
+          // Begin authentication with Crucible via call-back functions after removing existing data - start fresh
           neDB.remove({ type: "CrucibleToken" }, { multi: true }, function(err, numRemoved) {
             if (err) {
               console.log(new Date().toJSON(), appConstants.LOG_ERROR, "authenticateUser", err);
@@ -51,9 +51,32 @@ module.exports = {
         console.log(new Date().toJSON(), appConstants.LOG_ERROR, "authenticateUser()", err);
       }
     );
+  },
+
+  // Clear the DB.
+  logout: function(neDB, appConstants) {
+    neDB.remove(
+      {},
+      {
+        multi: true
+      },
+      function(err, numRemoved) {
+        if (err) {
+          console.log(new Date().toJSON(), appConstants.LOG_ERROR, "logout()", err);
+        } else {
+          console.log(new Date().toJSON(), appConstants.LOG_INFO, "logout()", "Removed", numRemoved, "Records!");
+        }
+      }
+    );
   }
 };
 
+/**
+ * The actual auth process that happens for each instance.
+ *
+ * @param {*} authenticationOptions
+ * @param {*} processedInstanceCount
+ */
 function authenticateCrucible(authenticationOptions, processedInstanceCount) {
   if (processedInstanceCount < crucibleServerList.length) {
     authenticationOptions.uri = crucibleServerList[processedInstanceCount].instance + apiConstants.FE_CRU_REST_BASE_URL + apiConstants.CRUCIBLE_AUTH;
@@ -81,6 +104,12 @@ function authenticateCrucible(authenticationOptions, processedInstanceCount) {
   }
 }
 
+/**
+ * Insert the token into the DB
+ *
+ * @param {*} instanceString
+ * @param {*} tokenValue
+ */
 function insertCrucibleToken(instanceString, tokenValue) {
   neDB.insert(
     {

@@ -219,7 +219,7 @@ function initialize() {
  */
 IPC.on("save-crucible-server-list", function(event, crucibleServerList) {
   crucibleServerInstance = crucibleServerList[0];
-  serverProcess.saveCrucibleServerList(neDB, AppConstants, crucibleServerList);
+  serverProcess.saveCrucibleServerList(neDB, AppConstants, crucibleServerList, mainWindow);
 });
 
 /**
@@ -228,4 +228,11 @@ IPC.on("save-crucible-server-list", function(event, crucibleServerList) {
 IPC.on("login-attempt", function(event, userID, password) {
   authProcess.authenticateUser(neDB, APIConstants, AppConstants, userID, password, mainWindow, RequestPromise, serverProcess);
   userProcess.saveUserInfo(neDB, APIConstants, AppConstants, userID, crucibleServerInstance, mainWindow, RequestPromise);
+});
+
+/**
+ * Clear all user details
+ */
+IPC.on("logout", function(event, flag) {
+  authProcess.logout(neDB, AppConstants);
 });
