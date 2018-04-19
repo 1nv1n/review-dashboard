@@ -37,14 +37,21 @@
   <script src="../node_modules/jquery/dist/jquery.slim.min.js"></script>
   <script src="../node_modules/popper.js/dist/umd/popper.min.js"></script>
   <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="../src/js/vendor/particles.js"></script>
 
   <!-- Global Variables -->
-  <script type='text/javascript' > 
-    // Main list of Crucible Server instances
+  <script type="text/javascript">
+    // Constants
+    const appConstants = require("../src/js/constants/app-constants");
+
+    // List of Crucible Server instances
     var crucibleServerList = [];
 
-    // Main user object
+    // User object
     var user;
+
+    // List of reviewers
+    var reviewerList = [];
   </script>
 
   <!-- App JS -->
@@ -68,10 +75,10 @@
       <ul class="list-unstyled list-components">
         <li>
           <img class="profile-picture" id="profilePicture" src="" alt="userProfile" height="45px" width="45px">
-          <label class="user-id-label" id="userIDLabel"></label>
+          
         </li>
         <li>
-          <label class="user-name-label" id="userNameLabel"></label>
+            <label class="user-id-label" id="userIDLabel"></label>
         </li>
       </ul>
 
@@ -127,39 +134,41 @@
       </nav>
     </header>
 
-    <!-- Main Content -->
-    <main role="main" class="container content">
-      <!-- Main Button Container -->
-      <div class="button-container" id="mainButtonContainer">
-        <button id="createReviewButton" class="btn btn-primary btn-sm create-review-button" type="button" onclick="launchCreateReviewModal()">
-          Create
-        </button>
-        <button id="searchReviewButton" class="btn btn-primary btn-sm search-review-button disabled" type="button">
-          Search&nbsp;
-          <i class="fas fa-search"></i>
-        </button>
-        <button id="pendingReviewsToggle" class="btn btn-primary btn-sm pending-review-toggle" type="button">
-          Pending
-          <span id="pendingBadge" class="badge badge-light">0</span>
-        </button>
-        <button id="refreshPendingButton" class="btn btn-success btn-sm refresh-pending-button disabled" type="button">
-          <i class="fas fa-sync"></i>
-        </button>
-        <button id="openReviewsToggle" class="btn btn-primary btn-sm open-review-toggle disabled" type="button">
-          Open
-          <span id="openBadge" class="badge badge-light">0</span>
-        </button>
-        <button id="refreshOpenButton" class="btn btn-success btn-sm refresh-open-button disabled" type="button">
-          <i class="fas fa-sync"></i>
-        </button>
-        <button id="reviewStatisticsToggle" class="btn btn-primary btn-sm review-statictics-toggle disabled" type="button">
-          Review Statistics
-        </button>
-        <button id="refreshStaticticsButton" class="btn btn-success btn-sm refresh-statictics-button disabled" type="button">
-          <i class="fas fa-sync"></i>
-        </button>
-      </div>
-    </main>
+    <div id="particles-js">
+      <!-- Main Content -->
+      <main role="main" class="container content">
+        <!-- Main Button Container -->
+        <div class="button-container" id="mainButtonContainer">
+          <button id="createReviewButton" class="btn btn-primary btn-sm create-review-button" type="button" onclick="launchCreateReviewModal()">
+            Create
+          </button>
+          <button id="searchReviewButton" class="btn btn-primary btn-sm search-review-button disabled" type="button">
+            Search&nbsp;
+            <i class="fas fa-search"></i>
+          </button>
+          <button id="pendingReviewsToggle" class="btn btn-primary btn-sm pending-review-toggle" type="button">
+            Pending
+            <span id="pendingBadge" class="badge badge-light">0</span>
+          </button>
+          <button id="refreshPendingButton" class="btn btn-success btn-sm refresh-pending-button disabled" type="button">
+            <i class="fas fa-sync"></i>
+          </button>
+          <button id="openReviewsToggle" class="btn btn-primary btn-sm open-review-toggle disabled" type="button">
+            Open
+            <span id="openBadge" class="badge badge-light">0</span>
+          </button>
+          <button id="refreshOpenButton" class="btn btn-success btn-sm refresh-open-button disabled" type="button">
+            <i class="fas fa-sync"></i>
+          </button>
+          <button id="reviewStatisticsToggle" class="btn btn-primary btn-sm review-statictics-toggle disabled" type="button">
+            Review Statistics
+          </button>
+          <button id="refreshStaticticsButton" class="btn btn-success btn-sm refresh-statictics-button disabled" type="button">
+            <i class="fas fa-sync"></i>
+          </button>
+        </div>
+      </main>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -182,6 +191,7 @@
         </a>
       </div>
     </footer>
+
   </div>
 
   <!-- Server Instances Modal -->
@@ -245,7 +255,10 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-body modal-background">
-          Needs Implementation
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="enableParticles" onclick="enableParticles()">
+            <label class="form-check-label" for="enableParticles" id="enableParticlesLabel">Enable Particles</label>
+          </div>
         </div>
         <div class="modal-footer modal-background">
           <button type="button" class="btn btn-primary" onclick="saveSettings()">Back</button>
@@ -334,12 +347,33 @@
         <div class="modal-body modal-background">
           <p class="lead">Crucible server instance(s):</p>
           <div class="crucible-server-radio" id="crucibleServerRadioDiv"></div>
-          <div class="modal-footer modal-background">
-            <button type="button" class="btn btn-primary" onclick="createReview()">Save
-              <i id="createReviewIcon" class="" aria-hidden="true"></i>
-            </button>
-            <button type="button" class="btn btn-danger" onclick="dismissCreateReviewModal()">Cancel</button>
+          <div class="review-info-div" id="reviewInfoDiv">
+            <div class="input-group mb-2">
+              <input id="projectKey" class="form-control form-control-sm" type="text" placeholder="Project Key" style="width:500px;">
+            </div>
+            <div class="input-group mb-2">
+              <input id="reviewName" class="form-control form-control-sm" type="text" placeholder="Review Name" style="width:500px;">
+            </div>
+            <div class="input-group mb-2">
+              <input id="reviewDesc" class="form-control form-control-sm" type="text" placeholder="Review Description/Objectives" style="width:500px;">
+            </div>
+            <div class="input-group mb-2">
+              <input id="jiraKey" class="form-control form-control-sm" type="text" placeholder="JIRA Key" style="width:500px;">
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="allowReviewerJoinCheck" checked>
+              <label class="form-check-label" for="allowReviewerJoinCheck">Allow Reviewers To Join?</label>
+            </div>
           </div>
+          <p class="lead">Add Reviewer
+            <button type="button" class="btn btn-primary btn-sm btn-modal" onclick="addReviewer(null)">&nbsp;+&nbsp;</button>
+            <div class="reviewer-list" id="reviewerListDiv"></div>
+            <div class="modal-footer modal-background">
+              <button type="button" class="btn btn-primary" onclick="createReview()">Create
+                <i id="createReviewIcon" class="" aria-hidden="true"></i>
+              </button>
+              <button type="button" class="btn btn-danger" onclick="dismissCreateReviewModal()">Cancel</button>
+            </div>
         </div>
       </div>
     </div>
@@ -360,8 +394,6 @@
       //     event.target.classList.toggle('active');
       //   });
       // })();
-
-      const appConstants = require("../src/js/constants/app-constants");
     </script>
 </body>
 

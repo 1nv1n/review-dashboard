@@ -17,6 +17,10 @@
 }
 
 .radio-input-group {
-  background-color: black;
-  color: white;
+  padding-top: 5px;
+}
+
+.review-info-div {
+  padding-top: 15px;
+  padding-bottom: 10px;
 }

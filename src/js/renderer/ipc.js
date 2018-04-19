@@ -39,7 +39,7 @@ function closeApp() {
 /**
  * Triggered on App launch.
  */
-IPC.on("initial-state", function(event, _crucibleServerList, currentUser) {
+IPC.on("initial-state", function(event, _crucibleServerList, currentUser, currentReviewerList, currentProjectKey) {
   console.log(new Date().toJSON(), appConstants.LOG_INFO, "Retrieved: " + _crucibleServerList.length + " Crucible Instances.");
 
   if (typeof currentUser !== "undefined" && currentUser !== null) {
@@ -68,6 +68,12 @@ IPC.on("initial-state", function(event, _crucibleServerList, currentUser) {
       addServerInstanceInput(_crucibleServerList[serverIdx]);
     }
   }
+
+  // Set the current reviewer list
+  reviewerList = currentReviewerList;
+
+  // Set the current project
+  populateReviewInfoDiv(currentProjectKey);
 
   // If the User does not exist, wait for the Server Modal to close before prompting for login
   $("#serverModal").on('hidden.bs.modal', function (e) {
@@ -119,4 +125,11 @@ IPC.on("user-info", function(event, userID, displayName, avatarURL) {
  */
 IPC.on("save-server-list", function(event, isSaved) {
   handleServerListSave(isSaved);
+});
+
+/**
+ * Triggered on review creation attempted.
+ */
+IPC.on("review-created", function(event, isCreated, reviewID) {
+  handleReviewCreated(isCreated, reviewID);
 });

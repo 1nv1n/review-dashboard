@@ -89,7 +89,7 @@ var createMainWindow = function() {
     backgroundColor: "#333333",
     toolbar: false,
     frame: false,
-    titleBarStyle: 'hidden-inset'
+    titleBarStyle: "hidden-inset"
   });
 
   //const menu = Menu.buildFromTemplate(null);
@@ -160,7 +160,7 @@ var createMainWindow = function() {
     mainWindow = null;
   });
 
-  mainWindow.webContents.on('will-navigate', (event, url) => {
+  mainWindow.webContents.on("will-navigate", (event, url) => {
     event.preventDefault();
     ElectronShell.openExternal(url);
   });
@@ -199,17 +199,33 @@ function initialize() {
     function(crucibleServerList) {
       userProcess.retrieveUser(neDB, AppConstants).then(
         function(user) {
-          mainWindow.webContents.send("initial-state", crucibleServerList, user);
+          userProcess.retrieveReviewerList(neDB, AppConstants).then(
+            function(reviewerList) {
+              userProcess.retrieveProjectKey(neDB, AppConstants).then(
+                function(projectKey) {
+                  mainWindow.webContents.send("initial-state", crucibleServerList, user, reviewerList, projectKey);
+                },
+                function(err) {
+                  console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "initialize()", err);
+                  mainWindow.webContents.send("initial-state", [], null, [], null);
+                }
+              );
+            },
+            function(err) {
+              console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "initialize()", err);
+              mainWindow.webContents.send("initial-state", [], null, [], null);
+            }
+          );
         },
         function(err) {
           console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "initialize()", err);
-          mainWindow.webContents.send("initial-state", [], null);
+          mainWindow.webContents.send("initial-state", [], null, [], null);
         }
       );
     },
     function(err) {
       console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "initialize()", err);
-      mainWindow.webContents.send("initial-state", [], null);
+      mainWindow.webContents.send("initial-state", [], null, [], null);
     }
   );
 }
@@ -228,6 +244,15 @@ IPC.on("save-crucible-server-list", function(event, crucibleServerList) {
 IPC.on("login-attempt", function(event, userID, password) {
   authProcess.authenticateUser(neDB, APIConstants, AppConstants, userID, password, mainWindow, RequestPromise, serverProcess);
   userProcess.saveUserInfo(neDB, APIConstants, AppConstants, userID, crucibleServerInstance, mainWindow, RequestPromise);
+});
+
+/**
+ * Attemt to create a review.
+ */
+IPC.on("create-review", function(event, crucibleServerInstance, projectKey, reviewName, reviewDesc, jiraKey, reviewerList) {
+  userProcess.saveReviewerDetails(neDB, AppConstants, reviewerList);
+  userProcess.saveProjectDetails(neDB, AppConstants, projectKey);
+  mainWindow.webContents.send("review-created", true, "ID");
 });
 
 /**

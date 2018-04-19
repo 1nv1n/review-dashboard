@@ -23,6 +23,44 @@ module.exports = {
     });
   },
 
+  // Retrieve ReviewerList
+  retrieveReviewerList: function(neDB, appConstants) {
+    return new Promise(function(resolve, reject) {
+      neDB.find({ type: "ReviewerList" }, function(err, reviewer) {
+        if (err) {
+          console.log(new Date().toJSON(), appConstants.LOG_ERROR, "retrieveReviewerList()", err);
+          reject(null);
+        } else {
+          if (typeof reviewer !== "undefined" && reviewer !== null) {
+            console.log(new Date().toJSON(), appConstants.LOG_INFO, "retrieveReviewerList(): Retrieved:", reviewer[0].reviewerList.length, "Reviewers.");
+            resolve(reviewer[0].reviewerList);
+          } else {
+            reject(null);
+          }
+        }
+      });
+    });
+  },
+
+  // Retrieve Project Key
+  retrieveProjectKey: function(neDB, appConstants) {
+    return new Promise(function(resolve, reject) {
+      neDB.find({ type: "ProjectKey" }, function(err, project) {
+        if (err) {
+          console.log(new Date().toJSON(), appConstants.LOG_ERROR, "retrieveProjectKey()", err);
+          reject(null);
+        } else {
+          if (typeof project !== "undefined" && project !== null) {
+            console.log(new Date().toJSON(), appConstants.LOG_INFO, "retrieveProjectKey(): Retrieved:", project[0].projectKey);
+            resolve(project[0].projectKey);
+          } else {
+            reject(null);
+          }
+        }
+      });
+    });
+  },
+
   /**
    * - GET User Info from Crucible.
    * - Save it to the DB
@@ -36,12 +74,14 @@ module.exports = {
       } else {
         console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveUserInfo", "Removed Existing User.");
 
+        // GET Parameters
         var userInfoOptions = {
           method: "GET",
           uri: crucibleServerInstance + apiConstants.CRUCIBLE_REST_BASE_URL + apiConstants.CRUCIBLE_REST_USERS + apiConstants.USER_ID + userID,
           json: true
         };
 
+        // Handle GET Call
         requestPromise(userInfoOptions)
           .then(function(parsedBody) {
             var userName = parsedBody.userData[0].userName;
@@ -70,5 +110,43 @@ module.exports = {
           });
       }
     });
+  },
+
+  /**
+   * Save Reviewers.
+   */
+  saveReviewerDetails: function(neDB, appConstants, reviewerList) {
+    neDB.insert(
+      {
+        type: "ReviewerList",
+        reviewerList: reviewerList
+      },
+      function(err, insertedRecord) {
+        if (err) {
+          console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveReviewerDetails", err);
+        } else {
+          console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveReviewerDetails: Saved Reviewer List!");
+        }
+      }
+    );
+  },
+
+  /**
+   * Save Project Key.
+   */
+  saveProjectDetails: function(neDB, appConstants, projKey) {
+    neDB.insert(
+      {
+        type: "ProjectKey",
+        projectKey: projKey
+      },
+      function(err, insertedRecord) {
+        if (err) {
+          console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveProjectDetails", err);
+        } else {
+          console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveProjectDetails: Saved Project Key!");
+        }
+      }
+    );
   }
 };
