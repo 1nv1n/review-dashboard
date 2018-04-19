@@ -52,6 +52,5 @@ function removeBlackout() {
 function setUserInfo(userID, displayName, avatarURL) {
   console.log(new Date().toJSON(), appConstants.LOG_INFO, "Setting User Info (" + userID + ")");
   document.getElementById("userIDLabel").innerHTML = userID;
-  document.getElementById("userNameLabel").innerHTML = displayName;
   document.getElementById("profilePicture").src = avatarURL;
 }

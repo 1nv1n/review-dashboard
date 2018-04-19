@@ -1,10 +1,10 @@
 /* Apply style to HTML */
 html {
-  overflow-x: hidden; /* Hide horizontal scrollbar */
-  overflow-y: hidden; /* Hide vertical scrollbar */
   font-family: 'Mina', sans-serif; /* Apply Google's Font */
   position: relative;
   min-height: 100%;
+  overflow-x: hidden; /* Hide horizontal scrollbar */
+  overflow-y: hidden; /* Hide vertical scrollbar */
 }
 
 /* Apply style to App */
@@ -12,6 +12,15 @@ html {
   display: flex;
   align-items: stretch;
   perspective: 2000px;
+}
+
+#particles-js {
+  margin-top: 75px;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: -1;
+  color: black;
 }
 
 /* Hide & black out foreground & background */
@@ -54,9 +63,9 @@ body>.app-wrapper>.container {
 }
 
 /* Apply style to the Button Container */
-/* .button-container {
-  margin:0 auto
-} */
+.button-container {
+  margin-left: 25%;
+}
 
 /* Apply style to the App titlebar buttons (-,o,x) */
 .app-title-btn {
@@ -76,12 +85,13 @@ body>.app-wrapper>.container {
 
 /* Apply style to the user profile picture */
 .profile-picture {
-  margin-left: 25px;
+  border-radius: 50%;
+  margin-left: 100px;
 }
 
-/* Apply style to the user name label */
-.user-name-label {
-  margin-left: 25px;
+/* Apply style to the user ID label */
+.user-id-label {
+  margin-left: 85px;
 }
 
 /* Bootstrap Footer */
