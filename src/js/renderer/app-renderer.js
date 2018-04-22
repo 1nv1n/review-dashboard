@@ -54,3 +54,15 @@ function setUserInfo(userID, displayName, avatarURL) {
   document.getElementById("userIDLabel").innerHTML = userID;
   document.getElementById("profilePicture").src = avatarURL;
 }
+
+/**
+ * Toggles Particle JS
+ */
+function toggleParticles(toggle) {
+  if (toggle) {
+    particlesJS.load("particles-js", "../src/js/vendor/particles.json", function () {});
+  } else {
+    pJSDom[0].pJS.fn.vendors.destroypJS();
+    pJSDom = [];
+  }
+}
