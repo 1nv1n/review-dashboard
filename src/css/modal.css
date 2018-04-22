@@ -1,9 +1,16 @@
 .modal-background {
-  background-color: black;
-  color: white;
+  background-color: #1E1E1E;
+  color: #FFFFFF;
   -webkit-border-radius: 0px !important;
   -moz-border-radius: 0px !important;
-  border-radius: 0px !important; 
+  border-radius: 0px !important;
+  border-style: solid;
+  border-width: thin;
+  border-color: #000000;
+}
+
+.modal-footer {
+  border-width: 0px;
 }
 
 .btn-modal {
@@ -13,7 +20,7 @@
 
 .table-user-info {
   background-color: black;
-  color: white;
+  color: #FFFFFF;
 }
 
 .radio-input-group {
@@ -23,4 +30,12 @@
 .review-info-div {
   padding-top: 15px;
   padding-bottom: 10px;
+}
+
+.create-review-table {
+  margin: 0px auto;
+}
+
+.reviewer {
+  margin-left: 5px;
 }

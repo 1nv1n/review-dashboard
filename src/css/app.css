@@ -1,17 +1,25 @@
 /* Apply style to HTML */
 html {
   font-family: 'Mina', sans-serif; /* Apply Google's Font */
-  position: relative;
-  min-height: 100%;
   overflow-x: hidden; /* Hide horizontal scrollbar */
   overflow-y: hidden; /* Hide vertical scrollbar */
+}
+
+/* Smooth fade-in */
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Apply style to App */
 .app-wrapper {
   display: flex;
-  align-items: stretch;
   perspective: 2000px;
+  animation: fadein 0.75s;
 }
 
 #particles-js {
@@ -34,7 +42,7 @@ html {
 body {
   font-family: 'Poppins', sans-serif; /* Apply Google's Font */
   margin-bottom: 60px; /* Margin bottom to accomodate footer height */
-  background-color: black;
+  background-color: #1E1E1E;
   height: 100%;
 }
 
@@ -43,14 +51,6 @@ body>.app-wrapper>.container {
   /* Padding to accomodate Nav */
   padding: 80px 0px 0px 0px;
 }
-
-/* Apply style to the App content */
-/* #content {
-  padding: 20px;
-  min-height: 100vh;
-  transition: all 0.3;
-  transition-delay: 0.1s;
-} */
 
 /* No borders on tables here */
 .borderless-table {
@@ -64,18 +64,22 @@ body>.app-wrapper>.container {
 
 /* Apply style to the Button Container */
 .button-container {
-  margin-left: 25%;
+  margin-left: 20%;
 }
 
 /* Apply style to the App titlebar buttons (-,o,x) */
 .app-title-btn {
-  color: white;
-  background-color: black;
+  color: #FFFFFF;
+  background-color: #000000 ;
   border: none;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   outline: none;
+}
+
+.main-btn {
+  width: 100px;
 }
 
 /* Center Align Input Text */
@@ -98,13 +102,16 @@ body>.app-wrapper>.container {
 .footer {
   font-family: 'Mina', sans-serif; /* Apply Google's Font */
   font-size: 15px;
-  position: absolute;
+  
   bottom: 0;
+  position: absolute;
+  
   width: 100%;
   height: 60px; /* Set the fixed height of the footer */
   line-height: 60px; /* Vertically center the footer text */
-  background-color: black;
-  color: white;
+  
+  color: #FFFFFF;
+  background-color: #000000;
 }
 
 /* Apply style to immediate container children of Footer */

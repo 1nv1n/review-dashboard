@@ -12,20 +12,9 @@
   -webkit-app-region: no-drag;
 }
 
-.nav-btn-first {
-  margin-top: 5px;
-}
-
-.nav-btn-mid {
-  margin-top: 5px;
-}
-
-.nav-btn-last {
-  margin-top: 10px;
-}
-
 .nav-btn {
   width: 225px;
+  margin-top: 10px;
   margin-bottom: 5px;
   margin-left: 10px;
 }
@@ -33,9 +22,8 @@
 .nav-btn-sml {
   width: 50px;
   margin-top: -5px;
-  margin-bottom: 5px;
   margin-left: 20px;
-  background-color: black;
+  background-color: #000000;
 }
 
 .navbar-btn {
@@ -44,9 +32,13 @@
   border: none;
 }
 
+.side-nav-btn-list {
+  margin-top: -15px;
+}
+
 .navbar-brand-label {
   font-family: 'Mina', sans-serif; /* Apply Google's Font */
-  color: white;
+  color: #FFFFFF;
   display: inline-block;
   font-size: 1.2em;
   margin-left: 5px;
