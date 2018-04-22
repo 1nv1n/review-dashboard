@@ -13,6 +13,7 @@ const IPC = Electron.ipcMain;
 const ElectronMenu = Electron.Menu;
 const ElectronTray = Electron.Tray;
 const ElectronShell = Electron.shell;
+const GlobalShortcut = Electron.globalShortcut;
 const ElectronBroswerWindow = Electron.BrowserWindow;
 
 // Vendor Imports
@@ -77,6 +78,9 @@ var neDB = new NEDB({
 // Saves the default (or first) instance server string
 var crucibleServerInstance;
 
+// Particles
+var particlesEnabled = false;
+
 // Create the main browser window
 var createMainWindow = function() {
   mainWindow = new ElectronBroswerWindow({
@@ -86,7 +90,7 @@ var createMainWindow = function() {
     minHeight: 720,
     icon: Path.join(__dirname, "../../resources/icons", "app.ico"),
     show: false,
-    backgroundColor: "#333333",
+    backgroundColor: "#1E1E1E",
     toolbar: false,
     frame: false,
     titleBarStyle: "hidden-inset"
@@ -170,6 +174,10 @@ var createMainWindow = function() {
 // initialization and is ready to create browser windows.
 App.on("ready", appReady => {
   createMainWindow();
+  GlobalShortcut.register('CommandOrControl+P', () => {
+    particlesEnabled = !particlesEnabled
+    mainWindow.webContents.send("toggle-particles", particlesEnabled);
+  })
   console.timeEnd("Init Time");
 });
 

@@ -33,15 +33,3 @@ function saveSettings() {
   // Dismiss the modal
   dismissSettingsModal();
 }
-
-/**
- * Toggles Particle JS
- */
-function enableParticles() {
-  if (document.getElementById("enableParticles").checked) {
-    particlesJS.load("particles-js", "../src/js/vendor/particles.json", function () {});
-  } else {
-    pJSDom[0].pJS.fn.vendors.destroypJS();
-    pJSDom = [];
-  }
-}

@@ -106,6 +106,10 @@ function logout() {
   });
 }
 
+IPC.on("toggle-particles", function(event, toggle) {
+  toggleParticles(toggle);
+});
+
 /**
  * Triggered on attempted authentication.
  */
