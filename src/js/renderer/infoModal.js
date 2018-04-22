@@ -6,15 +6,25 @@
  * Launch the 'Info.' modal.
  */
 function launchInfoModal() {
-  // jQuery
-  $("#infoModal").modal({ backdrop: false, keyboard: false, show: true });
+  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Launching Information Modal.");
 
   // Blackout before opening the Modal
   blackout();
 
+  // jQuery
+  $("#infoModal").modal({ backdrop: false, keyboard: false, show: true });
+
+  // Set info.
+  setInfoToModal();
+}
+
+/**
+ * Sets the current information to the Modal.
+ */
+function setInfoToModal() {
   // Get the running App version from Electron
-  var appVersion = require('electron').remote.app.getVersion();
-  
+  var appVersion = require("electron").remote.app.getVersion();
+
   // Call this initially because the first call always returns 0
   process.getCPUUsage();
 
@@ -33,8 +43,10 @@ function launchInfoModal() {
  * Dismiss the Info Modal
  */
 function dismissInfoModal() {
+  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Dismissing Information Modal.");
+
   // jQuery
-  $("#infoModal").modal('hide');
+  $("#infoModal").modal("hide");
 
   // Display App Wrapper
   removeBlackout();
@@ -42,20 +54,20 @@ function dismissInfoModal() {
 
 /**
  * Formats the input bytes
- * 
- * @param {*} bytes 
- * @param {*} decimalPlaces 
+ *
+ * @param {*} bytes
+ * @param {*} decimalPlaces
  */
 function formatBytes(kilobytes, decimalPlaces) {
-  if(0 == kilobytes) {
+  if (0 == kilobytes) {
     return "0 Bytes";
   }
-  
+
   var byteMultiplier = 1024;
   var bytes = kilobytes * byteMultiplier;
-  var fractionalDigit = decimalPlaces||2;
-  var sizeArr = ["Bytes", "KB", "MB", "GB"," TB", "PB", "EB", "ZB", "YB"];
-  var calcBytes = Math.floor(Math.log(bytes)/Math.log(byteMultiplier));
-  
-  return parseFloat((bytes/Math.pow(byteMultiplier, calcBytes)).toFixed(fractionalDigit)) + " " + sizeArr[calcBytes];
+  var fractionalDigit = decimalPlaces || 2;
+  var sizeArr = ["Bytes", "KB", "MB", "GB", " TB", "PB", "EB", "ZB", "YB"];
+  var calcBytes = Math.floor(Math.log(bytes) / Math.log(byteMultiplier));
+
+  return parseFloat((bytes / Math.pow(byteMultiplier, calcBytes)).toFixed(fractionalDigit)) + " " + sizeArr[calcBytes];
 }
