@@ -2,10 +2,10 @@
   min-width: 250px;
   max-width: 250px;
   background: #000000;
-  color: white;
+  color: #FFFFFF;
   transition: all 0.5s cubic-bezier(0.945, 0.020, 0.270, 0.665);
   transition-delay: 0.1s;
-  transform-origin: bottom left;
+  transform-origin: top left;
   height: 100vh;
 }
 
@@ -22,7 +22,7 @@
 #sidebarCollapse {
   width: 40px;
   height: 40px;
-  background: black;
+  background: #000000;
 }
 
 #sidebarCollapse span {
@@ -30,7 +30,7 @@
   height: 2px;
   margin: 0 auto;
   display: block;
-  background: white;
+  background: #FFFFFF;
   transition: all 0.6s cubic-bezier(0.810, -0.330, 0.345, 1.375);
   transition-delay: 0.1s;
 }
