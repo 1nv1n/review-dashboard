@@ -75,27 +75,27 @@
       <ul class="list-unstyled list-components">
         <li>
           <img class="profile-picture" id="profilePicture" src="" alt="userProfile" height="45px" width="45px">
-          
+
         </li>
         <li>
-            <label class="user-id-label" id="userIDLabel"></label>
+          <label class="user-id-label" id="userIDLabel"></label>
         </li>
       </ul>
 
-      <ul class="list-unstyled list-components">
+      <ul class="list-unstyled list-components side-nav-btn-list">
         <li>
-          <button class="btn btn-dark nav-btn-sml" onclick="launchServerModal()" title="Server Instances">
+          <button class="btn btn-dark nav-btn-sml navbar-btn" onclick="launchServerModal()" title="Server Instances">
             <i class="fas fa-server"></i>
           </button>
-          <button class="btn btn-dark nav-btn-sml" onclick="launchSettingsModal()" title="Settings">
+          <button class="btn btn-dark nav-btn-sml navbar-btn" onclick="launchSettingsModal()" title="Settings">
             <i class="fas fa-wrench"></i>
           </button>
-          <button class="btn btn-dark nav-btn-sml" onclick="launchInfoModal()" title="Info">
+          <button class="btn btn-dark nav-btn-sml navbar-btn" onclick="launchInfoModal()" title="Info">
             <i class="fas fa-info"></i>
           </button>
         </li>
         <li>
-          <button class="btn btn-danger nav-btn nav-btn-last" onclick="logout()">Logout</button>
+          <button class="btn btn-danger nav-btn" onclick="logout()">Logout</button>
         </li>
       </ul>
     </nav>
@@ -122,13 +122,13 @@
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li>
-            <button type="button" class="pull-right app-title-btn top-nav-content" onclick="minimizeApp()">&nbsp;&#8722;&nbsp;</button>
+            <button type="button" class="pull-right btn btn-dark app-title-btn top-nav-content" onclick="minimizeApp()">&nbsp;&#8722;&nbsp;</button>
           </li>
           <li>
-            <button type="button" class="pull-right app-title-btn top-nav-content" onclick="maximizeApp()">&nbsp;&#2109;&nbsp;</button>
+            <button type="button" class="pull-right btn btn-dark app-title-btn top-nav-content" onclick="maximizeApp()">&nbsp;&#2109;&nbsp;</button>
           </li>
           <li>
-            <button type="button" class="pull-right app-title-btn top-nav-content" onclick="closeApp()">&nbsp;X&nbsp;</button>
+            <button type="button" class="pull-right btn btn-dark app-title-btn top-nav-content" onclick="closeApp()">&nbsp;X&nbsp;</button>
           </li>
         </ul>
       </nav>
@@ -139,29 +139,29 @@
       <main role="main" class="container content">
         <!-- Main Button Container -->
         <div class="button-container" id="mainButtonContainer">
-          <button id="createReviewButton" class="btn btn-primary btn-sm create-review-button" type="button" onclick="launchCreateReviewModal()">
+          <button id="createReviewButton" class="btn btn-primary btn-sm main-btn create-review-button" type="button" onclick="launchCreateReviewModal()">
             Create
           </button>
-          <button id="searchReviewButton" class="btn btn-primary btn-sm search-review-button disabled" type="button">
+          <button id="searchReviewButton" class="btn btn-primary btn-sm main-btn search-review-button disabled" type="button">
             Search&nbsp;
             <i class="fas fa-search"></i>
           </button>
-          <button id="pendingReviewsToggle" class="btn btn-primary btn-sm pending-review-toggle" type="button">
+          <button id="pendingReviewsToggle" class="btn btn-primary btn-sm main-btn pending-review-toggle" type="button">
             Pending
             <span id="pendingBadge" class="badge badge-light">0</span>
           </button>
           <button id="refreshPendingButton" class="btn btn-success btn-sm refresh-pending-button disabled" type="button">
             <i class="fas fa-sync"></i>
           </button>
-          <button id="openReviewsToggle" class="btn btn-primary btn-sm open-review-toggle disabled" type="button">
+          <button id="openReviewsToggle" class="btn btn-primary btn-sm main-btn open-review-toggle disabled" type="button">
             Open
             <span id="openBadge" class="badge badge-light">0</span>
           </button>
           <button id="refreshOpenButton" class="btn btn-success btn-sm refresh-open-button disabled" type="button">
             <i class="fas fa-sync"></i>
           </button>
-          <button id="reviewStatisticsToggle" class="btn btn-primary btn-sm review-statictics-toggle disabled" type="button">
-            Review Statistics
+          <button id="reviewStatisticsToggle" class="btn btn-primary btn-sm main-btn review-statictics-toggle disabled" type="button">
+            Statistics
           </button>
           <button id="refreshStaticticsButton" class="btn btn-success btn-sm refresh-statictics-button disabled" type="button">
             <i class="fas fa-sync"></i>
@@ -186,7 +186,7 @@
         <script type="text/javascript">
           document.write(new Date().getFullYear())
         </script>
-        <a href="https://github.com/InViN/crucible-dashboard">
+        <a href="https://github.com/InViN/crucible-dashboard/blob/master/README.md#crucible-dashboard">
           <img class="github-footer-img" src="../resources/logo/github-logo.svg" height="18" width="18">
         </a>
       </div>
@@ -216,12 +216,12 @@
               <input type="text" class="form-control crucible-server" id="basic-url" aria-describedby="basic-addon3" autofocus>
             </div>
           </div>
-        </div>
-        <div class="modal-footer modal-background">
-          <button type="button" class="btn btn-primary" onclick="saveServerInput()">Save
-            <i id="saveServerIcon" class="" aria-hidden="true"></i>
-          </button>
-          <button type="button" class="btn btn-danger" onclick="dismissServerModal()">Cancel</button>
+          <div class="modal-footer modal-background">
+            <button type="button" class="btn btn-primary" onclick="saveServerInput()">Save
+              <i id="saveServerIcon" class="" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="btn btn-danger" onclick="dismissServerModal()">Cancel</button>
+          </div>
         </div>
       </div>
     </div>
@@ -255,13 +255,10 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-body modal-background">
-          <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="enableParticles" onclick="enableParticles()">
-            <label class="form-check-label" for="enableParticles" id="enableParticlesLabel">Enable Particles</label>
+          To Do
+          <div class="modal-footer modal-background">
+            <button type="button" class="btn btn-primary" onclick="saveSettings()">Back</button>
           </div>
-        </div>
-        <div class="modal-footer modal-background">
-          <button type="button" class="btn btn-primary" onclick="saveSettings()">Back</button>
         </div>
       </div>
     </div>
@@ -331,9 +328,9 @@
               </tr>
             </tbody>
           </table>
-        </div>
-        <div class="modal-footer modal-background">
-          <button type="button" class="btn btn-primary" onclick="dismissInfoModal()">Back</button>
+          <div class="modal-footer modal-background">
+            <button type="button" class="btn btn-primary" onclick="dismissInfoModal()">Back</button>
+          </div>
         </div>
       </div>
     </div>
@@ -366,14 +363,17 @@
             </div>
           </div>
           <p class="lead">Add Reviewer
-            <button type="button" class="btn btn-primary btn-sm btn-modal" onclick="addReviewer(null)">&nbsp;+&nbsp;</button>
-            <div class="reviewer-list" id="reviewerListDiv"></div>
-            <div class="modal-footer modal-background">
-              <button type="button" class="btn btn-primary" onclick="createReview()">Create
-                <i id="createReviewIcon" class="" aria-hidden="true"></i>
-              </button>
-              <button type="button" class="btn btn-danger" onclick="dismissCreateReviewModal()">Cancel</button>
-            </div>
+            <button type="button" class="btn btn-primary btn-sm btn-modal" onclick="addReviewer(null)">
+              &nbsp;+&nbsp;
+            </button>
+          </p>
+          <div class="reviewer-list" id="reviewerListDiv"></div>
+          <div class="modal-footer modal-background">
+            <button type="button" class="btn btn-primary" onclick="createReview()">Create
+              <i id="createReviewIcon" class="" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="btn btn-danger" onclick="dismissCreateReviewModal()">Cancel</button>
+          </div>
         </div>
       </div>
     </div>

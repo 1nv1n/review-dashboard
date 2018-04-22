@@ -2,6 +2,9 @@
  * JS for operations on the 'Create Review' Modal
  */
 
+var insertedCellCnt = -1;
+var lastInsertedCell = 0;
+
 /**
  * Launch the 'Create Review' modal.
  */
@@ -37,16 +40,26 @@ function populateCrucibleServerRadioDiv() {
   var crucibleServerRadioDivNode = document.getElementById("crucibleServerRadioDiv");
 
   // Remove existing
-  while (crucibleServerRadioDivNode.firstChild) {
-    crucibleServerRadioDivNode.removeChild(crucibleServerRadioDivNode.firstChild);
-  }
+  removeChildren(crucibleServerRadioDivNode);
 
   if (typeof crucibleServerList === "undefined" || crucibleServerList == null || crucibleServerList.length == 0) {
     // TODO - Handle this
     console.log(new Date().toJSON(), appConstants.LOG_WARN, "crucibleServerList undefined!");
   } else {
+    var serverTable = document.createElement("table");
+    serverTable.classList.add("create-review-table");
+    var serverTableBody = document.createElement("tbody");
+    var serverTableRow;
     var serverIdx;
     for (serverIdx = 0; serverIdx < crucibleServerList.length; serverIdx++) {
+      // If even,
+      if (isEven(serverIdx)) {
+        // Create row
+        serverTableRow = document.createElement("tr");
+      }
+      var tableData = document.createElement("td");
+      tableData.style = "width:350px"
+
       var outerDiv = document.createElement("div");
       outerDiv.classList.add("input-group");
       outerDiv.classList.add("radio-input-group");
@@ -73,6 +86,7 @@ function populateCrucibleServerRadioDiv() {
       disabledText.value = crucibleServerList[serverIdx].instance;
       disabledText.classList.add("form-control");
       disabledText.classList.add("form-control-sm");
+      disabledText.classList.add("server-input-disabled");
       disabledText.setAttribute("aria-label", "Radio Button Text");
       disabledText.setAttribute("disabled", "disabled");
 
@@ -80,9 +94,12 @@ function populateCrucibleServerRadioDiv() {
       middleDiv.appendChild(innerDiv);
       outerDiv.appendChild(middleDiv);
       outerDiv.appendChild(disabledText);
-
-      crucibleServerRadioDivNode.appendChild(outerDiv);
+      tableData.appendChild(outerDiv);
+      serverTableRow.appendChild(tableData);
+      serverTable.appendChild(serverTableRow);
     }
+
+    crucibleServerRadioDivNode.appendChild(serverTable);
   }
 }
 
@@ -100,10 +117,9 @@ function populateReviewInfoDiv(projectKey) {
  */
 function populateReviewerList() {
   // Remove existing
-  var reviewerListDivNode = document.getElementById("reviewerListDiv");
-  while (reviewerListDivNode.firstChild) {
-    reviewerListDivNode.removeChild(reviewerListDivNode.firstChild);
-  }
+  removeChildren(document.getElementById("reviewerListDiv"));
+  insertedCellCnt = -1;
+  lastInsertedCell = 0;
 
   // Add from the main list
   reviewerList.forEach(function(reviewer) {
@@ -115,21 +131,46 @@ function populateReviewerList() {
  * Adds a reviewer to the list
  */
 function addReviewer(reviewer) {
-  var reviewerContainer = document.getElementById("reviewerListDiv");
-  var currentReviewerListLength = document.getElementsByClassName("reviewer").length;
+  var reviewerTable = document.getElementById("reviewerTable");
+  if(typeof reviewerTable === "undefined" || reviewerTable === null) {
+    reviewerTable = document.createElement("table");
+    reviewerTable.id = "reviewerTable";
+    
+    var reviewerTableBody = document.createElement("tbody");
+    reviewerTableBody.classList.add("create-review-table");
+    reviewerTable.appendChild(reviewerTableBody);
+
+    var reviewerListDiv = document.getElementById("reviewerListDiv");
+    reviewerListDiv.appendChild(reviewerTable);
+  }
+
+  insertedCellCnt++;
+
+  var tableData = document.createElement("td");
+  var reviewerTableRow;
+  
+  if (isMultipleOfFour(insertedCellCnt)) {
+    // Create row
+    reviewerTableRow = document.createElement("tr");
+    reviewerTableRow.id = "revIdx"+insertedCellCnt;
+    lastInsertedCell = insertedCellCnt;
+  } else {
+    // Get last row
+    reviewerTableRow = document.getElementById("revIdx"+lastInsertedCell);
+  }
 
   var outerDiv = document.createElement("div");
   outerDiv.classList.add("input-group");
   outerDiv.classList.add("mb-2");
 
   var input = document.createElement("input");
-  input.id = currentReviewerListLength + 1
+  input.id = 'reviewerIdx'+insertedCellCnt;
   input.type = "text";
   input.placeholder = "ID";
   input.classList.add("form-control");
   input.classList.add("form-control-sm");
   input.classList.add("reviewer");
-  input.classList.add("reviewer-" + currentReviewerListLength + 1);
+  input.classList.add("reviewer-" + insertedCellCnt);
   input.setAttribute("aria-describedby", "basic-addon3");
 
   if (typeof reviewer !== "undefined" || reviewer !== null) {
@@ -137,7 +178,9 @@ function addReviewer(reviewer) {
   }
 
   outerDiv.appendChild(input);
-  reviewerContainer.appendChild(outerDiv);
+  tableData.appendChild(outerDiv);
+  reviewerTableRow.appendChild(tableData);
+  reviewerTable.appendChild(reviewerTableRow);
 }
 
 /**
@@ -158,16 +201,16 @@ function createReview() {
   var serverIdx = document.querySelector('input[name="crucibleServer"]:checked').value;
 
   var projectKey = document.getElementById("projectKey").value;
-  
+
   var reviewName = document.getElementById("reviewName").value;
   document.getElementById("reviewName").value = "";
-  
+
   var reviewDesc = document.getElementById("reviewDesc").value;
   document.getElementById("reviewDesc").value = "";
-  
+
   var jiraKey = document.getElementById("jiraKey").value;
   document.getElementById("jiraKey").value = "";
-  
+
   var allowReviewersCheck = document.getElementById("allowReviewerJoinCheck").checked;
 
   // Send Review Data to the Main Process
@@ -183,20 +226,24 @@ function consolidateReviewerList() {
 
   // Loop through the Reviewer Div & set the reviewer list
   var reviewerListCollection = document.getElementsByClassName("reviewer");
-  if(reviewerListCollection.length > 0) {
+  if (reviewerListCollection.length > 0) {
     for (var reviewerIdx = 0; reviewerIdx < reviewerListCollection.length; reviewerIdx++) {
-      if(typeof reviewerListCollection[reviewerIdx] !== "undefined" && reviewerListCollection[reviewerIdx] !== null && reviewerListCollection[reviewerIdx].value.length > 0) {
-        console.log('Pushing'+reviewerListCollection[reviewerIdx].value);
+      if (
+        typeof reviewerListCollection[reviewerIdx] !== "undefined" &&
+        reviewerListCollection[reviewerIdx] !== null &&
+        reviewerListCollection[reviewerIdx].value.length > 0
+      ) {
+        console.log("Pushing" + reviewerListCollection[reviewerIdx].value);
         reviewerList.push(reviewerListCollection[reviewerIdx].value);
       } else {
-        console.log('To Remove'+reviewerListCollection[reviewerIdx].id);
+        console.log("To Remove" + reviewerListCollection[reviewerIdx].id);
         removeIDList.push(reviewerListCollection[reviewerIdx].id);
       }
     }
   }
 
   // Remove empty/invalid elements
-  if(removeIDList.length > 0) {
+  if (removeIDList.length > 0) {
     removeIDList.forEach(function(id) {
       document.getElementById(id).parentNode.parentNode.removeChild(document.getElementById(id).parentNode);
     });
@@ -205,7 +252,7 @@ function consolidateReviewerList() {
 
 /**
  * Handle 'Create Review'
- * 
+ *
  * @param {bool} isCreated
  * @param {String} reviewID
  */
@@ -215,11 +262,48 @@ function handleReviewCreated(isCreated, reviewID) {
   createReviewIconClassList.remove("fas");
   createReviewIconClassList.remove("fa-circle-notch");
   createReviewIconClassList.remove("fa-spin");
-  
-  if(!isCreated) {
+
+  if (!isCreated) {
     // Display toast
   }
-  
+
   // Dismiss the Modal
   dismissCreateReviewModal();
+}
+
+/**
+ * Removes the children of the given node.
+ *
+ * @param {*} node
+ */
+function removeChildren(node) {
+  while (node.firstChild) {
+    node.removeChild(node.firstChild);
+  }
+}
+
+/**
+ * Checks whether the given number is even (0 is even).
+ *
+ * @param {*} num
+ */
+function isEven(num) {
+  if (num === 0) {
+    return true;
+  }
+
+  return num % 2 == 0;
+}
+
+/**
+ * Checks whether the given number is a multiple of 4 (0 is a multiple of 4).
+ * 
+ * @param {*} num 
+ */
+function isMultipleOfFour(num) {
+  if (num === 0) {
+    return true;
+  }
+
+  return num % 4 == 0;
 }
