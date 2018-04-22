@@ -134,7 +134,10 @@ function setUserInfo(userID, displayName, avatarURL) {
  */
 function setCurrentReviewerList(currentReviewerList) {
   console.log(new Date().toJSON(), appConstants.LOG_INFO, "Setting" + currentReviewerList + "Reviewers.");
-  reviewerList = currentReviewerList;
+  reviewerList = [];
+  currentReviewerList.forEach(function(element) {
+    reviewerList.push(element.reviewer);
+  });
 }
 
 /**
