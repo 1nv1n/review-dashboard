@@ -83,8 +83,10 @@ body>.app-wrapper>.container {
 }
 
 /* Center Align Input Text */
-.credential-input { 
+.credential-input {
   text-align: center;
+  margin:0 auto;
+  width:200px;
 }
 
 /* Apply style to the user profile picture */

@@ -231,19 +231,19 @@
   <div class="modal fade bd-example-modal-sm" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-      <div class="modal-content modal-background">
-        <div class="modal-body modal-background" style="margin:0 auto; text-align: center;">
-          <div class="login-input" id="loginInputDiv">
+      <div class="modal-content">
+        <div class="modal-body modal-background">
+          <div class="login-input login-modal" id="loginInputDiv">
             <div class="input-group mb-3">
-              <input id="userID" class="form-control credential-input" type="text" autofocus="true" placeholder="User ID" style="margin:0 auto; width:200px;">
+              <input id="userID" class="form-control credential-input" type="text" autofocus="true" placeholder="User ID">
             </div>
             <div class="input-group mb-3">
-              <input id="password" class="form-control credential-input" type="password" placeholder="Password" style="margin:0 auto; width:200px;">
+              <input id="password" class="form-control credential-input" type="password" placeholder="Password">
             </div>
+            <button type="button" class="btn btn-primary btn-login" onclick="login()">Login
+              <i id="loginIcon" class="fa fa-sign-in" aria-hidden="true"></i>
+            </button>
           </div>
-          <button type="button" class="btn btn-primary" onclick="login()">Login
-            <i id="loginIcon" class="fa fa-sign-in" aria-hidden="true"></i>
-          </button>
         </div>
       </div>
     </div>

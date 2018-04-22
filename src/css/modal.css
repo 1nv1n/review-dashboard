@@ -39,3 +39,8 @@
 .reviewer {
   margin-left: 5px;
 }
+
+.login-modal {
+  margin:0 auto;
+  text-align: center;
+}
