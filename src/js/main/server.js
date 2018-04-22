@@ -27,27 +27,27 @@ module.exports = {
         console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveCrucibleServerList", err);
       } else {
         console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveCrucibleServerList: Removed:", numRemoved, "entry(s)!");
+
+        // Insert passed-in server list
+        for (var serverIdx in crucibleServerList) {
+          console.log(serverIdx);
+          neDB.insert(
+            {
+              type: "CrucibleServerInstance",
+              instance: crucibleServerList[serverIdx]
+            },
+            function(err, insertedRecord) {
+              if (err) {
+                console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveCrucibleServerList", err);
+                mainWindow.webContents.send("save-server-list", false);
+              } else {
+                console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveCrucibleServerList: Saved:", insertedRecord.instance);
+                mainWindow.webContents.send("save-server-list", true);
+              }
+            }
+          );
+        }
       }
     });
-
-    // Insert passed-in server list
-    for (var serverIdx in crucibleServerList) {
-      console.log(serverIdx);
-      neDB.insert(
-        {
-          type: "CrucibleServerInstance",
-          instance: crucibleServerList[serverIdx]
-        },
-        function(err, insertedRecord) {
-          if (err) {
-            console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveCrucibleServerList", err);
-            mainWindow.webContents.send("save-server-list", false);
-          } else {
-            console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveCrucibleServerList: Saved:", insertedRecord.instance);
-            mainWindow.webContents.send("save-server-list", true);
-          }
-        }
-      );
-    }
   }
 };

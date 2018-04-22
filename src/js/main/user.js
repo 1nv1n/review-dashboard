@@ -125,24 +125,24 @@ module.exports = {
         console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveReviewerDetails()", err);
       } else {
         console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveReviewerDetails()", "Removed " + numRemoved + " Existing Reviewer(s).");
-      }
-    });
 
-    // Insert current Reviewers
-    currentReviewerList.forEach(function(element) {
-      neDB.insert(
-        {
-          type: "Reviewer",
-          reviewer: element
-        },
-        function(err, insertedRecord) {
-          if (err) {
-            console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveReviewerDetails()", err);
-          } else {
-            console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveReviewerDetails(): Saved Reviewer: " + insertedRecord.reviewer);
-          }
-        }
-      );
+        // Insert current Reviewers
+        currentReviewerList.forEach(function(element) {
+          neDB.insert(
+            {
+              type: "Reviewer",
+              reviewer: element
+            },
+            function(err, insertedRecord) {
+              if (err) {
+                console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveReviewerDetails()", err);
+              } else {
+                console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveReviewerDetails(): Saved Reviewer: " + insertedRecord.reviewer);
+              }
+            }
+          );
+        });
+      }
     });
   },
 
@@ -156,22 +156,22 @@ module.exports = {
         console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveProjectDetails()", err);
       } else {
         console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveProjectDetails()", "Removed Existing Project Key.");
+
+        // Save current Project key
+        neDB.insert(
+          {
+            type: "ProjectKey",
+            projectKey: projKey
+          },
+          function(err, insertedRecord) {
+            if (err) {
+              console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveProjectDetails()", err);
+            } else {
+              console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveProjectDetails(): Saved (" + projKey + ") Project Key!");
+            }
+          }
+        );
       }
     });
-
-    // Save current Project key
-    neDB.insert(
-      {
-        type: "ProjectKey",
-        projectKey: projKey
-      },
-      function(err, insertedRecord) {
-        if (err) {
-          console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveProjectDetails()", err);
-        } else {
-          console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveProjectDetails(): Saved (" + projKey + ") Project Key!");
-        }
-      }
-    );
   }
 };
