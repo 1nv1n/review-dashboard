@@ -96,15 +96,16 @@ var createMainWindow = function() {
     titleBarStyle: "hidden-inset"
   });
 
-  //const menu = Menu.buildFromTemplate(null);
   ElectronMenu.setApplicationMenu(null);
 
   appTray = new ElectronTray(Path.join(__dirname, "../../resources/icons", "app.ico"));
   appTray.setContextMenu(ElectronContextMenu);
   appTray.setToolTip("Crucible Dashboard");
+  
   appTray.on("click", () => {
     mainWindow.show();
   });
+
   appTray.on("double-click", () => {
     mainWindow.show();
   });
@@ -123,9 +124,6 @@ var createMainWindow = function() {
     initialize();
   });
 
-  // Launch DevTools
-  mainWindow.webContents.openDevTools("undocked");
-
   // Emitted when external links are clicked
   mainWindow.webContents.on("new-window", function(functionEvent, url) {
     var urlToOpen;
@@ -134,6 +132,7 @@ var createMainWindow = function() {
       protocol: "file:",
       slashes: true
     }).replace(/\\/g, "/");
+    
     url = url.substring(appURL.length + 3);
     url = url.slice(0, -3);
     functionEvent.preventDefault();
@@ -170,14 +169,35 @@ var createMainWindow = function() {
   });
 };
 
+// Register Global Shortcut Commands
+var registerGlobalShortcuts = function() {
+  // Register the Debug (Ctrl+D) shortcut
+  GlobalShortcut.register("CommandOrControl+D", () => {
+    // Launch DevTools if it not open, close if open
+    if(mainWindow.webContents.isDevToolsOpened()) {
+      mainWindow.webContents.closeDevTools();
+    } else {
+      mainWindow.webContents.openDevTools({mode: 'detach'});
+    }
+  });
+
+  // Register the Particles JS (Ctrl+P) shortcut
+  GlobalShortcut.register("CommandOrControl+P", () => {
+    particlesEnabled = !particlesEnabled;
+    mainWindow.webContents.send("toggle-particles", particlesEnabled);
+  });
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 App.on("ready", appReady => {
+  // Create the Main Window
   createMainWindow();
-  GlobalShortcut.register('CommandOrControl+P', () => {
-    particlesEnabled = !particlesEnabled
-    mainWindow.webContents.send("toggle-particles", particlesEnabled);
-  })
+
+  // Register Global Shortcuts
+  registerGlobalShortcuts();
+
+  // End Init Time Log
   console.timeEnd("Init Time");
 });
 
@@ -205,34 +225,37 @@ function initialize() {
   // Start by attempting to retrieve the list of Crucible Servers
   serverProcess.retrieveCrucibleServerList(neDB, AppConstants).then(
     function(crucibleServerList) {
+      // Retieve the user information
       userProcess.retrieveUser(neDB, AppConstants).then(
         function(user) {
+          // Retrieve the list of saved reviewers
           userProcess.retrieveReviewerList(neDB, AppConstants).then(
             function(reviewerList) {
+              // Retieve the saved Project type key
               userProcess.retrieveProjectKey(neDB, AppConstants).then(
                 function(projectKey) {
                   mainWindow.webContents.send("initial-state", crucibleServerList, user, reviewerList, projectKey);
                 },
                 function(err) {
-                  console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "initialize()", err);
+                  console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "initialize():retrieveProjectKey:", err);
                   mainWindow.webContents.send("initial-state", [], null, [], null);
                 }
               );
             },
             function(err) {
-              console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "initialize()", err);
+              console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "initialize():retrieveReviewerList:", err);
               mainWindow.webContents.send("initial-state", [], null, [], null);
             }
           );
         },
         function(err) {
-          console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "initialize()", err);
+          console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "initialize():retrieveUser:", err);
           mainWindow.webContents.send("initial-state", [], null, [], null);
         }
       );
     },
     function(err) {
-      console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "initialize()", err);
+      console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "initialize():retrieveCrucibleServerList:", err);
       mainWindow.webContents.send("initial-state", [], null, [], null);
     }
   );
