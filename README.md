@@ -13,9 +13,6 @@
  <a href="https://github.com/InViN/crucible-dashboard/pulls">
   <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="pr-welcome" />
  </a>
-  <a href="https://flattr.com/submit/auto?user_id=1nv1n&url=https://github.com/InViN/crucible-dashboard&title=crucible-dashboard&language=javascript&tags=github&category=software">
-  <img src="http://api.flattr.com/button/flattr-badge-large.png" alt="flattr" />
- </a>
 </p>
 <p align="center">
  <a href="https://circleci.com/gh/InViN/crucible-dashboard">
