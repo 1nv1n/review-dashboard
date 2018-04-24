@@ -63,6 +63,7 @@
   <script src="../src/js/renderer/settingsModal.js"></script>
   <script src="../src/js/renderer/infoModal.js"></script>
   <script src="../src/js/renderer/createReviewModal.js"></script>
+  <script src="../src/js/renderer/searchReviewModal.js"></script>
 </head>
 
 <body>
@@ -76,7 +77,6 @@
       <ul class="list-unstyled list-components">
         <li>
           <img class="profile-picture" id="profilePicture" src="" alt="userProfile" height="45px" width="45px">
-
         </li>
         <li>
           <label class="user-id-label" id="userIDLabel"></label>
@@ -143,11 +143,11 @@
           <button id="createReviewButton" class="btn btn-primary btn-sm main-btn create-review-button" type="button" onclick="launchCreateReviewModal()">
             Create
           </button>
-          <button id="searchReviewButton" class="btn btn-primary btn-sm main-btn search-review-button disabled" type="button">
+          <button id="searchReviewButton" class="btn btn-primary btn-sm main-btn search-review-button" type="button" onclick="launchSearchReviewModal()">
             Search&nbsp;
             <i class="fas fa-search"></i>
           </button>
-          <button id="pendingReviewsToggle" class="btn btn-primary btn-sm main-btn pending-review-toggle" type="button">
+          <button id="pendingReviewsToggle" class="btn btn-primary btn-sm main-btn pending-review-toggle disabled" type="button">
             Pending
             <span id="pendingBadge" class="badge badge-light">0</span>
           </button>
@@ -378,24 +378,48 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <script>
-      // Self executing function for 'active' class toggle on Side Bar Collapse
-      // jQuery:
-      $(document).ready(function () {
-        $('#sidebarCollapse').on('click', function () {
-          $('#sidebar').toggleClass('active');
-          $(this).toggleClass('active');
-        });
+  <!-- Search Modal -->
+  <div class="modal fade bd-example-modal-lg" id="searchReviewModal" tabindex="-1" role="dialog" aria-labelledby="searchReviewModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-body modal-background">
+          <p class="lead">Search for Reviews by JIRA</p>
+          <div class="crucible-server-radio" id="searchCrucibleServerRadioDiv"></div>
+          <div class="input-group mb-2 jira-search-key-input">
+            <input id="jiraSearchKey" class="form-control form-control-sm" type="text" placeholder="JIRA Key" style="width:100px;">
+            <button type="button" class="btn btn-primary btn-sm btn-modal" onclick="searchForReview()">
+              <i id="searchForReviewIcon" class="fas fa-search"></i>
+            </button>
+          </div>
+          <div id="searchResultsDiv"></div>
+          <div class="modal-footer modal-background">
+            <button type="button" class="btn btn-primary" onclick="dismissSearchReviewModal()">Back</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Self executing function for 'active' class toggle on Side Bar Collapse
+    // jQuery:
+    $(document).ready(function () {
+      $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+        $(this).toggleClass('active');
       });
-      // JavaScript:
-      // (function() {
-      //   document.getElementById("sidebarCollapse").addEventListener("click", function(event){
-      //     document.querySelector('#sidebar').classList.toggle('active');
-      //     event.target.classList.toggle('active');
-      //   });
-      // })();
-    </script>
+    });
+    // JavaScript:
+    // (function() {
+    //   document.getElementById("sidebarCollapse").addEventListener("click", function(event){
+    //     document.querySelector('#sidebar').classList.toggle('active');
+    //     event.target.classList.toggle('active');
+    //   });
+    // })();
+  </script>
 </body>
 
 </html>

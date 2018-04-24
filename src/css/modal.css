@@ -44,3 +44,7 @@
   margin:0 auto;
   text-align: center;
 }
+
+.jira-search-key-input {
+  margin-top: 10px;
+}

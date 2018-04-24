@@ -77,3 +77,10 @@ IPC.on("save-server-list", function(event, isSaved) {
 IPC.on("review-created", function(event, isCreated, reviewID) {
   handleReviewCreated(isCreated, reviewID);
 });
+
+/**
+ * Triggered on review search attempted.
+ */
+IPC.on("search-results", function(event, couldSearch, reviewData) {
+  handleReviewSearch(couldSearch, reviewData);
+});

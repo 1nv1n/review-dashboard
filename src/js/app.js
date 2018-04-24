@@ -294,6 +294,7 @@ IPC.on("create-review", function(event, crucibleServerInstance, projectKey, revi
     APIConstants,
     RequestPromise,
     ElectronShell,
+    mainWindow,
     crucibleServerInstance,
     currentUser,
     projectKey,
@@ -303,7 +304,13 @@ IPC.on("create-review", function(event, crucibleServerInstance, projectKey, revi
     allowReviewersToJoin,
     reviewerList
   );
-  mainWindow.webContents.send("review-created", true, "ID");
+});
+
+/**
+ * Search for reviews
+ */
+IPC.on("search-review", function(event, instanceString, jiraIssue) {
+  reviewProcess.searchByJIRA(APIConstants, AppConstants, RequestPromise, mainWindow, instanceString, jiraIssue);
 });
 
 /**
