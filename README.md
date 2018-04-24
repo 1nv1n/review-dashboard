@@ -49,10 +49,11 @@
 
 | Feature                     | Progress                     |
 | --------------------------- | ---------------------------- |
-| Graph Review Statistics     | <ul><li>[ ] In Progress</li> |
+| Graph Review Statistics     | <ul><li>[ ] Planned</li>     |
 | Display Open Reviews        | <ul><li>[ ] In Progress</li> |
 | Display Pending Reviews     | <ul><li>[ ] In Progress</li> |
-| Create Review               | <ul><li>[ ] Planned</li>     |
+| Create Review               | <ul><li>[x] Implemented</li> |
+| Add Change Sets to Review   | <ul><li>[ ] Planned</li>     |
 | Review Reminders            | <ul><li>[ ] Planned</li>     |
 | Diff. Change Sets           | <ul><li>[ ] Planned</li>     |
 | Multi Server Authentication | <ul><li>[x] Implemented</li> |
