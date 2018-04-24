@@ -104,6 +104,7 @@ module.exports = {
                 } else {
                   console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveUserInfo()", userName);
                   mainWindow.webContents.send("user-info", userName, formattedName, userAvatarURL);
+                  return insertedRecord[0];
                 }
               }
             );

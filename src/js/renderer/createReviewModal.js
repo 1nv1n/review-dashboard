@@ -311,7 +311,7 @@ function createReview() {
   var allowReviewersCheck = document.getElementById("allowReviewerJoinCheck").checked;
 
   // Send Review Data to the Main Process
-  IPC.send("create-review", crucibleServerList[serverIdx].instance, projectKey, reviewName, reviewDesc, jiraKey, reviewerList);
+  IPC.send("create-review", crucibleServerList[serverIdx].instance, projectKey, reviewName, reviewDesc, jiraKey, allowReviewersCheck, reviewerList);
 }
 
 /**

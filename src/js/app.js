@@ -29,6 +29,7 @@ const AppStringConstants = require("../js/constants/app-strings");
 const serverProcess = require("../js/main/server");
 const authProcess = require("../js/main/authentication");
 const userProcess = require("../js/main/user");
+const reviewProcess = require("../js/main/review");
 
 // Log Constants
 const LogFile = FS.createWriteStream("debug.log", {
@@ -75,8 +76,11 @@ var neDB = new NEDB({
   autoload: true
 });
 
-// Saves the default (or first) instance server string
+// Save the default (or first) instance server string
 var crucibleServerInstance;
+
+// Save the current user
+var currentUser;
 
 // Particles
 var particlesEnabled = false;
@@ -101,7 +105,7 @@ var createMainWindow = function() {
   appTray = new ElectronTray(Path.join(__dirname, "../../resources/icons", "app.ico"));
   appTray.setContextMenu(ElectronContextMenu);
   appTray.setToolTip("Crucible Dashboard");
-  
+
   appTray.on("click", () => {
     mainWindow.show();
   });
@@ -132,7 +136,7 @@ var createMainWindow = function() {
       protocol: "file:",
       slashes: true
     }).replace(/\\/g, "/");
-    
+
     url = url.substring(appURL.length + 3);
     url = url.slice(0, -3);
     functionEvent.preventDefault();
@@ -173,11 +177,11 @@ var createMainWindow = function() {
 var registerGlobalShortcuts = function() {
   // Register the Debug (Ctrl+D) shortcut
   GlobalShortcut.register("CommandOrControl+D", () => {
-    // Launch DevTools if it not open, close if open
-    if(mainWindow.webContents.isDevToolsOpened()) {
+    // Launch DevTools if it is not currently open, close it if it is open.
+    if (mainWindow.webContents.isDevToolsOpened()) {
       mainWindow.webContents.closeDevTools();
     } else {
-      mainWindow.webContents.openDevTools({mode: 'detach'});
+      mainWindow.webContents.openDevTools({ mode: "detach" });
     }
   });
 
@@ -186,7 +190,7 @@ var registerGlobalShortcuts = function() {
     particlesEnabled = !particlesEnabled;
     mainWindow.webContents.send("toggle-particles", particlesEnabled);
   });
-}
+};
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -225,13 +229,14 @@ function initialize() {
   // Start by attempting to retrieve the list of Crucible Servers
   serverProcess.retrieveCrucibleServerList(neDB, AppConstants).then(
     function(crucibleServerList) {
-      // Retieve the user information
+      // Then, retrieve the user information
       userProcess.retrieveUser(neDB, AppConstants).then(
         function(user) {
-          // Retrieve the list of saved reviewers
+          currentUser = user;
+          // Then, retrieve the list of saved reviewers
           userProcess.retrieveReviewerList(neDB, AppConstants).then(
             function(reviewerList) {
-              // Retieve the saved Project type key
+              // Then, retrieve the saved Project Type key
               userProcess.retrieveProjectKey(neDB, AppConstants).then(
                 function(projectKey) {
                   mainWindow.webContents.send("initial-state", crucibleServerList, user, reviewerList, projectKey);
@@ -274,15 +279,30 @@ IPC.on("save-crucible-server-list", function(event, crucibleServerList) {
  */
 IPC.on("login-attempt", function(event, userID, password) {
   authProcess.authenticateUser(neDB, APIConstants, AppConstants, userID, password, mainWindow, RequestPromise, serverProcess);
-  userProcess.saveUserInfo(neDB, APIConstants, AppConstants, userID, crucibleServerInstance, mainWindow, RequestPromise);
+  currentUser = userProcess.saveUserInfo(neDB, APIConstants, AppConstants, userID, crucibleServerInstance, mainWindow, RequestPromise);
 });
 
 /**
  * Attemt to create a review.
  */
-IPC.on("create-review", function(event, crucibleServerInstance, projectKey, reviewName, reviewDesc, jiraKey, reviewerList) {
+IPC.on("create-review", function(event, crucibleServerInstance, projectKey, reviewName, reviewDesc, jiraKey, allowReviewersToJoin, reviewerList) {
   userProcess.saveReviewerDetails(neDB, AppConstants, reviewerList);
   userProcess.saveProjectDetails(neDB, AppConstants, projectKey);
+  reviewProcess.createReview(
+    neDB,
+    AppConstants,
+    APIConstants,
+    RequestPromise,
+    ElectronShell,
+    crucibleServerInstance,
+    currentUser,
+    projectKey,
+    reviewName,
+    reviewDesc,
+    jiraKey,
+    allowReviewersToJoin,
+    reviewerList
+  );
   mainWindow.webContents.send("review-created", true, "ID");
 });
 
