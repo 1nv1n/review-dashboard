@@ -20,7 +20,7 @@ function launchCreateReviewModal() {
   $("#createReviewModal").modal({ backdrop: false, keyboard: false, focus: true, show: true });
 
   // Populate the Crucible serer instances
-  populateCrucibleServerRadioDiv();
+  populateCrucibleServerRadioDiv("crucibleServerRadioDiv");
 
   // Populate the Reviewer List
   populateReviewerList();
@@ -40,51 +40,6 @@ function dismissCreateReviewModal() {
 }
 
 /**
- * Populate the Crucible serer instances.
- */
-function populateCrucibleServerRadioDiv() {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Populating Server Table.");
-
-  // Remove existing
-  var crucibleServerRadioDivNode = document.getElementById("crucibleServerRadioDiv");
-  removeChildren(crucibleServerRadioDivNode);
-
-  if (typeof crucibleServerList === "undefined" || crucibleServerList == null || crucibleServerList.length == 0) {
-    // TODO - Handle this
-    console.log(new Date().toJSON(), appConstants.LOG_WARN, "crucibleServerList undefined!");
-  } else {
-    var serverTable = createReviewServerTable();
-
-    var serverTableRow;
-    var serverIdx;
-    for (serverIdx = 0; serverIdx < crucibleServerList.length; serverIdx++) {
-      // If even,
-      if (isEven(serverIdx)) {
-        // Create row
-        serverTableRow = document.createElement("tr");
-      }
-
-      var tableData = createServerTableData();
-      var outerDiv = createServerTableOuterDiv();
-      var middleDiv = createServerTableMiddleDiv();
-      var innerDiv = createServerTableInnerDiv();
-      var inputRadio = createServerInputRadio(serverIdx);
-      var disabledText = createServerDisabledText(crucibleServerList[serverIdx].instance);
-
-      innerDiv.appendChild(inputRadio);
-      middleDiv.appendChild(innerDiv);
-      outerDiv.appendChild(middleDiv);
-      outerDiv.appendChild(disabledText);
-      tableData.appendChild(outerDiv);
-      serverTableRow.appendChild(tableData);
-      serverTable.appendChild(serverTableRow);
-    }
-
-    crucibleServerRadioDivNode.appendChild(serverTable);
-  }
-}
-
-/**
  * Creates the Server Table used for Review Creation.
  */
 function createReviewServerTable() {
@@ -94,6 +49,9 @@ function createReviewServerTable() {
   return serverTable;
 }
 
+/**
+ * Creates the Server Table Data.
+ */
 function createServerTableData() {
   var tableData = document.createElement("td");
   tableData.style = "width:350px";
@@ -352,13 +310,13 @@ function handleReviewCreated(isCreated, reviewID) {
   // Remove the spinner
   removeSpinner(document.getElementById("createReviewIcon").classList);
 
-  if (!isCreated) {
-    // ToDo: Display Toast.
+  if (isCreated) {
+    // Clear out review-specific fields
+    clearReviewSpecificInput();
+
+    // Dismiss the Modal
+    dismissCreateReviewModal();
+  } else {
+    // TODO: Display Toast.
   }
-
-  // Clear out review-specific fields
-  clearReviewSpecificInput();
-
-  // Dismiss the Modal
-  dismissCreateReviewModal();
 }
