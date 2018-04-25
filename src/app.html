@@ -58,6 +58,7 @@
   <script src="../src/js/renderer/ipc.js"></script>
   <script src="../src/js/renderer/app-renderer.js"></script>
   <script src="../src/js/renderer/common.js"></script>
+  <script src="../src/js/renderer/review.js"></script>
   <script src="../src/js/renderer/serverModal.js"></script>
   <script src="../src/js/renderer/loginModal.js"></script>
   <script src="../src/js/renderer/settingsModal.js"></script>
@@ -151,7 +152,7 @@
             Pending
             <span id="pendingBadge" class="badge badge-light">0</span>
           </button>
-          <button id="refreshPendingButton" class="btn btn-success btn-sm refresh-pending-button disabled" type="button">
+          <button id="refreshPendingButton" class="btn btn-success btn-sm refresh-pending-button" type="button" onclick="retrievePendingReviews()">
             <i class="fas fa-sync"></i>
           </button>
           <button id="openReviewsToggle" class="btn btn-primary btn-sm main-btn open-review-toggle disabled" type="button">

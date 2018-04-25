@@ -1,4 +1,4 @@
-console.time("Init Time");
+console.time("Startup Time");
 
 // Constants
 const FS = require("fs");
@@ -202,7 +202,7 @@ App.on("ready", appReady => {
   registerGlobalShortcuts();
 
   // End Init Time Log
-  console.timeEnd("Init Time");
+  console.timeEnd("Startup Time");
 });
 
 // Quit when all windows are closed.
@@ -264,6 +264,8 @@ function initialize() {
       mainWindow.webContents.send("initial-state", [], null, [], null);
     }
   );
+
+  reviewProcess.retrievePending(neDB, AppConstants, mainWindow);
 }
 
 /**
@@ -307,14 +309,21 @@ IPC.on("create-review", function(event, crucibleServerInstance, projectKey, revi
 });
 
 /**
- * Search for reviews
+ * Search for reviews.
  */
 IPC.on("search-review", function(event, instanceString, jiraIssue) {
   reviewProcess.searchByJIRA(APIConstants, AppConstants, RequestPromise, mainWindow, instanceString, jiraIssue);
 });
 
 /**
- * Clear all user details
+ * Retrieve Pending Reviews
+ */
+IPC.on("retrieve-pending", function(event, flag) {
+  reviewProcess.getPending(neDB, APIConstants, AppConstants, RequestPromise, mainWindow);
+});
+
+/**
+ * Clear all user details.
  */
 IPC.on("logout", function(event, flag) {
   authProcess.logout(neDB, AppConstants);

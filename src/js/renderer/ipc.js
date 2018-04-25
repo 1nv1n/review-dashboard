@@ -84,3 +84,10 @@ IPC.on("review-created", function(event, isCreated, reviewID) {
 IPC.on("search-results", function(event, couldSearch, reviewData) {
   handleReviewSearch(couldSearch, reviewData);
 });
+
+/**
+ * Triggered on pending Review retrieval.
+ */
+IPC.on("retrieved-pending", function(event, pendingReviewList) {
+  handlePendingRetrieval(pendingReviewList);
+});
