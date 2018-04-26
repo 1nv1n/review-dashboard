@@ -52,7 +52,7 @@ function searchForReview() {
 }
 
 /**
- * Adds the "search" Font Awesome Icon to the provided element.
+ * Adds the "Search" Font Awesome Icon to the provided element.
  */
 function addSearchIcon(elementClassList) {
   elementClassList.add("fas");
@@ -60,7 +60,7 @@ function addSearchIcon(elementClassList) {
 }
 
 /**
- * Removes the "search" Font Awesome Icon from the provided element.
+ * Removes the "Search" Font Awesome Icon from the provided element.
  */
 function removeSearchIcon(elementClassList) {
   elementClassList.remove("fas");

@@ -133,7 +133,7 @@ function setUserInfo(userID, displayName, avatarURL) {
  * @param {*} currentReviewerList 
  */
 function setCurrentReviewerList(currentReviewerList) {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Setting" + currentReviewerList + "Reviewers.");
+  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Setting", currentReviewerList.length, "Reviewers.");
   reviewerList = [];
   currentReviewerList.forEach(function(element) {
     reviewerList.push(element.reviewer);

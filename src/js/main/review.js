@@ -200,6 +200,7 @@ module.exports = {
       if (err) {
         console.log(new Date().toJSON(), appConstants.LOG_ERROR, "retrievePending()", err);
       } else {
+        console.log(new Date().toJSON(), appConstants.LOG_INFO, "retrievePending()", "Retrieved", pendingReviewList.length, "Reviews!");
         mainWindow.webContents.send("retrieved-pending", pendingReviewList);
       }
     });
