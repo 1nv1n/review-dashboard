@@ -11,3 +11,7 @@
 .pending-reviews-container {
   margin-top: 10px;
 }
+
+.table-header {
+  text-align: center;
+}

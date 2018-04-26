@@ -62,17 +62,19 @@
     itemTemplate: function(value, item) {
       var $result = $([]);
       $result = $result.add(
-        $("<button style='border:2px solid;border-radius:25px;background-color: #000000;color: white;'>")
+        $("<button style = 'border: 2px solid; border-radius: 25px; background-color: #000000; color: #FFFFFF;'>")
           .attr("type", "button")
           .attr("title", "Complete Review")
           .text("C")
           .on("click", function() {
             var $grid = $("#pendingReviewsTable");
             $grid.jsGrid("deleteItem", item);
+
             var countElement = document.getElementById("pendingBadge");
             var count = parseFloat(countElement.innerHTML);
             count--;
             countElement.innerHTML = count;
+            
             completeSelectedReview(item.ID);
           })
       );
@@ -89,12 +91,15 @@
       var updateButtonState = $.proxy(function() {
         $button.toggleClass(this.modeOnButtonClass, isOn);
       }, this);
+
       var $button = this._createGridButton(this.modeButtonClass + " " + this.searchModeButtonClass, "", function(grid) {
         isOn = !isOn;
         grid.option("filtering", isOn);
         updateButtonState();
       });
+
       updateButtonState();
+      
       return $button;
     },
 

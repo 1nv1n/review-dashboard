@@ -72,24 +72,38 @@ function handlePendingRetrieval(pendingReviewList) {
     data: pendingReviewList,
     autoload: false,
     confirmDeleting: false,
+    loadMessage: "Retrieving Pending Reviews...",
+    noDataContent: "No Pending Reviews!",
     rowDoubleClick: handleDoubleClick,
     fields: [
       {
+        title: "ID",
+        align: "left",
+        headercss: "table-header",
         name: "ID",
         type: "text",
         width: 75
       },
       {
+        title: "Review Title",
+        align: "left",
+        headercss: "table-header",
         name: "Name",
         type: "text",
         width: 275
       },
       {
+        title: "Author",
+        align: "left",
+        headercss: "table-header",
         name: "Author",
         type: "text",
         width: 100
       },
       {
+        title: "Creation",
+        align: "left",
+        headercss: "table-header",
         name: "Created",
         type: "text",
         width: 50

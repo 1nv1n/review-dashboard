@@ -438,7 +438,8 @@
         $(this).toggleClass('active');
       });
 
-      document.getElementById("refreshPendingButton").click();
+      // Retrieve Pending Reviews from the Database
+      IPC.send("retrieve-pending", false);
     });
     // JavaScript:
     // (function() {

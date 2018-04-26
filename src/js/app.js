@@ -318,7 +318,11 @@ IPC.on("search-review", function(event, instanceString, jiraIssue) {
  * Retrieve Pending Reviews
  */
 IPC.on("retrieve-pending", function(event, flag) {
-  reviewProcess.getPending(neDB, APIConstants, AppConstants, RequestPromise, mainWindow);
+  if(flag) {
+    reviewProcess.getPending(neDB, APIConstants, AppConstants, RequestPromise, mainWindow);
+  } else {
+    reviewProcess.retrievePending(neDB, AppConstants, mainWindow);
+  }
 });
 
 /**
