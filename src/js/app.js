@@ -226,6 +226,7 @@ App.on("activate", appActivate => {
  * Launched when the Main Window is "ready-to-show".
  */
 function initialize() {
+  // TODO: Refactor to not have so many nested calls.
   // Start by attempting to retrieve the list of Crucible Servers
   serverProcess.retrieveCrucibleServerList(neDB, AppConstants).then(
     function(crucibleServerList) {
@@ -264,8 +265,6 @@ function initialize() {
       mainWindow.webContents.send("initial-state", [], null, [], null);
     }
   );
-
-  reviewProcess.retrievePending(neDB, AppConstants, mainWindow);
 }
 
 /**

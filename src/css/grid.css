@@ -1,0 +1,13 @@
+/*
+* CSS for the Grid-Tables.
+*/
+
+.jsgrid-grid-header,
+.jsgrid-grid-body{
+  overflow-x: hidden; /* Hide horizontal scrollbar */
+  overflow-y: hidden; /* Hide vertical scrollbar */
+}
+
+.pending-reviews-container {
+  margin-top: 10px;
+}

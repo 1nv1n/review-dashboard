@@ -91,3 +91,12 @@ IPC.on("search-results", function(event, couldSearch, reviewData) {
 IPC.on("retrieved-pending", function(event, pendingReviewList) {
   handlePendingRetrieval(pendingReviewList);
 });
+
+/**
+ * Send the "clicked" item to the main process.
+ * 
+ * @param {*} clickedItem 
+ */
+function handleDoubleClick(clickedItem) {
+  ipc.send("handle-double-click", clickedItem.item.ID);
+}

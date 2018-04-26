@@ -18,16 +18,19 @@
   <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="../node_modules/@fortawesome/fontawesome-free-webfonts/css/fa-solid.css" rel="stylesheet">
   <link href="../node_modules/@fortawesome/fontawesome-free-webfonts/css/fontawesome.css" rel="stylesheet">
+  <link href="../node_modules/jsgrid/dist/jsgrid.min.css" rel="stylesheet">
+  <link href="../node_modules/jsgrid/dist/jsgrid-theme.min.css" rel="stylesheet">
 
   <!-- App CSS -->
   <link href="../src/css/app.css" rel="stylesheet">
   <link href="../src/css/navbar.css" rel="stylesheet">
   <link href="../src/css/sidebar.css" rel="stylesheet">
   <link href="../src/css/modal.css" rel="stylesheet">
+  <link href="../src/css/grid.css" rel="stylesheet">
 
   <!-- 
-    jQuery (Required by Bootstrap)
-    Should be declared before other JS imports
+    jQuery (Required by Bootstrap & JSGrid)
+    Should be declared before other JS imports.
    -->
   <script>
     var $ = jQuery = require("jquery")
@@ -37,12 +40,17 @@
   <script src="../node_modules/jquery/dist/jquery.slim.min.js"></script>
   <script src="../node_modules/popper.js/dist/umd/popper.min.js"></script>
   <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="../node_modules/jsgrid/dist/jsgrid.min.js"></script>
+
   <script src="../src/js/vendor/particles.js"></script>
 
   <!-- Global Variables -->
   <script type="text/javascript">
     // Constants
     const appConstants = require("../src/js/constants/app-constants");
+
+    // Pending Review Grid
+    const pendingReviewGrid = require("../src/js/renderer/pendingReviewsGrid");
 
     // List of Crucible Server instances
     var crucibleServerList = [];
@@ -68,6 +76,9 @@
 </head>
 
 <body>
+  <!-- DIV for Particles JS -->
+  <div id="particles-js"></div>
+  
   <!-- App Wrapper (includes everything except the Modals -->
   <div id="appWrapper" class="app-wrapper blackout">
     <!-- App Side Nav Bar -->
@@ -136,7 +147,7 @@
       </nav>
     </header>
 
-    <div id="particles-js">
+    
       <!-- Main Content -->
       <main role="main" class="container content">
         <!-- Main Button Container -->
@@ -153,7 +164,7 @@
             <span id="pendingBadge" class="badge badge-light">0</span>
           </button>
           <button id="refreshPendingButton" class="btn btn-success btn-sm refresh-pending-button" type="button" onclick="retrievePendingReviews()">
-            <i class="fas fa-sync"></i>
+            <i id="refreshPendingIcon" class="fas fa-sync"></i>
           </button>
           <button id="openReviewsToggle" class="btn btn-primary btn-sm main-btn open-review-toggle disabled" type="button">
             Open
@@ -169,8 +180,22 @@
             <i class="fas fa-sync"></i>
           </button>
         </div>
+
+        <!-- Wrapper DIV for pending reviews  -->
+        <div class="pending-reviews-container">
+          <div id="pendingReviewsTable" class="pending-reviews-table-container"></div>
+        </div>
+
+        <!-- Wrapper DIV for open reviews  -->
+        <div class="open-reviews-container" style="display: none">
+          <div id="openReviewsTable" class="open-reviews-table-container" style="display: none"></div>
+        </div>
+
+        <!-- Wrapper DIV for statistics  -->
+        <div class="review-statistics-container" style="display: none">
+        </div>
       </main>
-    </div>
+    <!-- </div> -->
 
     <!-- Footer -->
     <footer class="footer">
@@ -412,6 +437,8 @@
         $('#sidebar').toggleClass('active');
         $(this).toggleClass('active');
       });
+
+      document.getElementById("refreshPendingButton").click();
     });
     // JavaScript:
     // (function() {
