@@ -49,7 +49,8 @@
     // Constants
     const appConstants = require("../src/js/constants/app-constants");
 
-    // Pending Review Grid
+    // Review Grids
+    const openReviewGrid = require("../src/js/renderer/openReviewsGrid");
     const pendingReviewGrid = require("../src/js/renderer/pendingReviewsGrid");
 
     // List of Crucible Server instances
@@ -78,7 +79,7 @@
 <body>
   <!-- DIV for Particles JS -->
   <div id="particles-js"></div>
-  
+
   <!-- App Wrapper (includes everything except the Modals -->
   <div id="appWrapper" class="app-wrapper blackout">
     <!-- App Side Nav Bar -->
@@ -147,55 +148,61 @@
       </nav>
     </header>
 
-    
-      <!-- Main Content -->
-      <main role="main" class="container content">
-        <!-- Main Button Container -->
-        <div class="button-container" id="mainButtonContainer">
-          <button id="createReviewButton" class="btn btn-primary btn-sm main-btn create-review-button" type="button" onclick="launchCreateReviewModal()">
-            Create
-          </button>
-          <button id="searchReviewButton" class="btn btn-primary btn-sm main-btn search-review-button" type="button" onclick="launchSearchReviewModal()">
-            Search&nbsp;
-            <i class="fas fa-search"></i>
-          </button>
-          <button id="pendingReviewsToggle" class="btn btn-primary btn-sm main-btn pending-review-toggle disabled" type="button">
-            Pending
-            <span id="pendingBadge" class="badge badge-light">0</span>
-          </button>
-          <button id="refreshPendingButton" class="btn btn-success btn-sm refresh-pending-button" type="button" onclick="retrievePendingReviews()">
-            <i id="refreshPendingIcon" class="fas fa-sync"></i>
-          </button>
-          <button id="openReviewsToggle" class="btn btn-primary btn-sm main-btn open-review-toggle disabled" type="button">
-            Open
-            <span id="openBadge" class="badge badge-light">0</span>
-          </button>
-          <button id="refreshOpenButton" class="btn btn-success btn-sm refresh-open-button disabled" type="button">
-            <i class="fas fa-sync"></i>
-          </button>
-          <button id="reviewStatisticsToggle" class="btn btn-primary btn-sm main-btn review-statictics-toggle disabled" type="button">
-            Statistics
-          </button>
-          <button id="refreshStaticticsButton" class="btn btn-success btn-sm refresh-statictics-button disabled" type="button">
-            <i class="fas fa-sync"></i>
-          </button>
-        </div>
 
+    <!-- Main Content -->
+    <main role="main" class="container content">
+      <!-- Main Button Container -->
+      <div id="mainButtonContainer" class="button-container" style="display: none;">
+        <button id="createReviewButton" class="btn btn-primary btn-sm main-btn create-review-button" type="button" onclick="launchCreateReviewModal()">
+          Create
+        </button>
+        <button id="searchReviewButton" class="btn btn-primary btn-sm main-btn search-review-button" type="button" onclick="launchSearchReviewModal()">
+          Search&nbsp;
+          <i class="fas fa-search"></i>
+        </button>
+        <button id="pendingReviewsToggle" class="btn btn-primary btn-sm main-btn pending-review-toggle" type="button" onclick="togglePendingReviewsContainter()">
+          Pending
+          <span id="pendingBadge" class="badge badge-light">0</span>
+        </button>
+        <button id="refreshPendingButton" class="btn btn-success btn-sm refresh-pending-button" type="button" onclick="getPendingReviews()">
+          <i id="refreshPendingIcon" class="fas fa-sync"></i>
+        </button>
+        <button id="openReviewsToggle" class="btn btn-primary btn-sm main-btn open-review-toggle" type="button" onclick="toggleOpenReviewsContainter()">
+          Open
+          <span id="openBadge" class="badge badge-light">0</span>
+        </button>
+        <button id="refreshOpenButton" class="btn btn-success btn-sm refresh-open-button" type="button" onclick="getOpenReviews()">
+          <i id="refreshOpenIcon" class="fas fa-sync"></i>
+        </button>
+        <button id="reviewStatisticsToggle" class="btn btn-primary btn-sm main-btn review-statictics-toggle" type="button" onclick="togggleStatisticsContainer()">
+          Statistics
+        </button>
+        <button id="refreshStaticticsButton" class="btn btn-success btn-sm refresh-statictics-button disabled" type="button" onclick="getReviewStatistics()">
+          <i id="refreshStatisticsIcon" class="fas fa-sync"></i>
+        </button>
+      </div>
+
+      <!-- Wrapper DIV for the Containers -->
+      <div id="reviewContainer" class="review-container" style="display: none;">
         <!-- Wrapper DIV for pending reviews  -->
-        <div class="pending-reviews-container">
+        <div id="pendingReviewContainer" class="pending-reviews-container" style="display: none;">
+          <p id="pendingReviewContainerLabel" class="lead review-container-label">Pending Reviews</p>
           <div id="pendingReviewsTable" class="pending-reviews-table-container"></div>
         </div>
 
         <!-- Wrapper DIV for open reviews  -->
-        <div class="open-reviews-container" style="display: none">
-          <div id="openReviewsTable" class="open-reviews-table-container" style="display: none"></div>
+        <div id="openReviewContainer" class="open-reviews-container" style="display: none;">
+          <p id="openReviewContainerLabel" class="lead review-container-label">Open Reviews</p>
+          <div id="openReviewsTable" class="open-reviews-table-container"></div>
         </div>
 
         <!-- Wrapper DIV for statistics  -->
-        <div class="review-statistics-container" style="display: none">
+        <div id="reviewStatisticsContainer" class="review-statistics-container" style="display: none;">
+          <p id="reviewStatisticsContainerLabel" class="lead review-container-label">Review Statistics</p>
+
         </div>
-      </main>
-    <!-- </div> -->
+      </div>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
@@ -437,9 +444,6 @@
         $('#sidebar').toggleClass('active');
         $(this).toggleClass('active');
       });
-
-      // Retrieve Pending Reviews from the Database
-      IPC.send("retrieve-pending", false);
     });
     // JavaScript:
     // (function() {

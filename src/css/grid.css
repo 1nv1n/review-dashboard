@@ -8,10 +8,38 @@
   overflow-y: hidden; /* Hide vertical scrollbar */
 }
 
+.review-container {
+  margin-top: 45px;
+  margin-left: -245px;
+  width: 1650px;
+  color: #FFFFFF;
+}
+
+.review-container-label {
+  color: #FFFFFF;
+}
+
 .pending-reviews-container {
   margin-top: 10px;
+  padding: 10px 10px 10px 10px;
+  border-style: solid;
+  border-width: thin;
+  border-color: #000000;
+}
+
+.open-reviews-container {
+  margin-top: 10px;
+  padding: 10px 10px 10px 10px;
+  border-style: solid;
+  border-width: thin;
+  border-color: #000000;
 }
 
 .table-header {
+  color: #000000;
   text-align: center;
+}
+
+.table-row {
+  color: #000000;
 }

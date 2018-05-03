@@ -72,6 +72,12 @@ function loginInAttempted(isAuthenticated) {
     // Clear username & password values
     clearIDPassInput();
 
+    // Restore Button & Review Div Containers
+    showContentContainer();
+
+    // Retrieve Pending & Open Reviews from the Database
+    getPendingOpenReviews();
+
     // Dismiss the Modal.
     dismissLoginModal();
   } else {

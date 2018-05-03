@@ -12,20 +12,41 @@ const { BrowserWindow } = require("electron").remote;
 IPC.on("initial-state", function(event, _crucibleServerList, currentUser, currentReviewerList, currentProjectKey) {
   console.log(new Date().toJSON(), appConstants.LOG_INFO, "Initial State");
 
-  // Set user
-  setCurrentUser(currentUser);
+  // Determine & set the user if defined
+  var isUserDefined = false;
+  if (typeof currentUser !== "undefined" && currentUser !== null) {
+    isUserDefined = true;
+    setCurrentUser(currentUser);
+  } else {
+    setCurrentUser(null);
+  }
 
   // Remove existing elements
   removeServerInput();
 
-  // Set the Crucible server list
-  setCurrentServerList(_crucibleServerList);
+  // Determine & set the server list if defined
+  var isServerListDefined = false;
+  if (typeof _crucibleServerList !== "undefined" && _crucibleServerList !== null && _crucibleServerList.length > 0) {
+    isServerListDefined = true;
+    setCurrentServerList(_crucibleServerList);
+  } else {
+    setCurrentServerList([]);
+  }
 
   // Set the current reviewer list
   setCurrentReviewerList(currentReviewerList);
 
   // Set the current project
   populateReviewInfoDiv(currentProjectKey);
+
+  // If the User & the Server list is defined, set the Content & retrieve Pending & Open Reviews.
+  if (isUserDefined && isServerListDefined) {
+    // Restore Button & Review Div Containers
+    showContentContainer();
+
+    // Retrieve Pending & Open Reviews from the Database
+    retrievePendingOpenReviews();
+  }
 
   // If the User does not exist, wait for the Server Modal to close before prompting for login
   $("#serverModal").on("hidden.bs.modal", function(event) {
@@ -67,8 +88,8 @@ IPC.on("user-info", function(event, _userID, _displayName, _avatarURL) {
 /**
  * Triggered on server-list save.
  */
-IPC.on("save-server-list", function(event, isSaved) {
-  handleServerListSave(isSaved);
+IPC.on("save-server-list", function(event, currentCrucibleServerList) {
+  handleServerListSave(currentCrucibleServerList);
 });
 
 /**
@@ -86,17 +107,24 @@ IPC.on("search-results", function(event, couldSearch, reviewData) {
 });
 
 /**
- * Triggered on pending Review retrieval.
+ * Triggered on Pending Review retrieval.
  */
 IPC.on("retrieved-pending", function(event, pendingReviewList) {
   handlePendingRetrieval(pendingReviewList);
 });
 
 /**
+ * Triggered on Open Review retrieval.
+ */
+IPC.on("retrieved-open", function(event, openReviewList) {
+  handleOpenRetrieval(openReviewList);
+});
+
+/**
  * Send the "clicked" item to the main process.
- * 
- * @param {*} clickedItem 
+ *
+ * @param {*} clickedItem
  */
 function handleDoubleClick(clickedItem) {
-  ipc.send("handle-double-click", clickedItem.item.ID);
+  IPC.send("open-review", clickedItem.item.instance, clickedItem.item.reviewID);
 }

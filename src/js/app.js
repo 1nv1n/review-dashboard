@@ -318,10 +318,40 @@ IPC.on("search-review", function(event, instanceString, jiraIssue) {
  * Retrieve Pending Reviews
  */
 IPC.on("retrieve-pending", function(event, flag) {
-  if(flag) {
+  if (flag) {
     reviewProcess.getPending(neDB, APIConstants, AppConstants, RequestPromise, mainWindow);
   } else {
     reviewProcess.retrievePending(neDB, AppConstants, mainWindow);
+  }
+});
+
+/**
+ * Open Review
+ */
+IPC.on("open-review", function(event, instanceString, reviewID) {
+  console.log(new Date().toJSON(), AppConstants.LOG_INFO, "Opening Review:", instanceString + APIConstants.CRUCIBLE_BASE_URL + reviewID);
+  ElectronShell.openExternal(instanceString + APIConstants.CRUCIBLE_BASE_URL + reviewID);
+});
+
+/**
+ * Retrieve Open Reviews
+ */
+IPC.on("retrieve-open", function(event, flag) {
+  if (flag) {
+    reviewProcess.getOpen(neDB, APIConstants, AppConstants, RequestPromise, mainWindow);
+  } else {
+    reviewProcess.retrieveOpen(neDB, AppConstants, mainWindow);
+  }
+});
+
+/**
+ * Retrieve Review Statistics
+ */
+IPC.on("retrieve-statistics", function(event, flag) {
+  if (flag) {
+    reviewProcess.getStatistics(neDB, APIConstants, AppConstants, RequestPromise, mainWindow);
+  } else {
+    reviewProcess.retrieveStatistics(neDB, AppConstants, mainWindow);
   }
 });
 

@@ -53,8 +53,8 @@ body {
 
 /* Hide & black out foreground & background */
 .blackout {
-  color: black;
-  background-color: black;
+  color: #000000;
+  background-color: #000000;
   visibility: hidden;
 }
 

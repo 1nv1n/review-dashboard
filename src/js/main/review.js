@@ -186,8 +186,34 @@ module.exports = {
           if (err) {
             console.log(new Date().toJSON(), appConstants.LOG_ERROR, "getPending()", err);
           } else {
+            console.log(new Date().toJSON(), appConstants.LOG_INFO, "getPending()", "Found", crucibleRecords.length, "Crucible instances to query for Pending Reviews.");
             var processedInstanceCount = 0;
             getPendingReviews(neDB, processedInstanceCount, crucibleRecords, apiConstants, appConstants, requestPromise, mainWindow, []);
+          }
+        });
+      }
+    });
+  },
+
+  /**
+   * Remove existing "Open" Reviews.
+   * GET "Open" Reviews.
+   * Save "Open" Reviews.
+   * Send "Open" Reviews up to the Renderer.
+   */
+  getOpen: function(neDB, apiConstants, appConstants, requestPromise, mainWindow) {
+    neDB.remove({ type: "Open" }, { multi: true }, function(err, numRemoved) {
+      if (err) {
+        console.log(new Date().toJSON(), appConstants.LOG_ERROR, "getOpen()", err);
+      } else {
+        console.log(new Date().toJSON(), appConstants.LOG_INFO, "getOpen()", "Removed", numRemoved, "Existing Open Review(s).");
+        neDB.find({ type: "CrucibleToken" }, function(err, crucibleRecords) {
+          if (err) {
+            console.log(new Date().toJSON(), appConstants.LOG_ERROR, "getOpen()", err);
+          } else {
+            console.log(new Date().toJSON(), appConstants.LOG_INFO, "getOpen()", "Found", crucibleRecords.length, "Crucible instances to query for Open Reviews.");
+            var processedInstanceCount = 0;
+            getOpenReviews(neDB, processedInstanceCount, crucibleRecords, apiConstants, appConstants, requestPromise, mainWindow, []);
           }
         });
       }
@@ -202,6 +228,18 @@ module.exports = {
       } else {
         console.log(new Date().toJSON(), appConstants.LOG_INFO, "retrievePending()", "Retrieved", pendingReviewList.length, "Reviews!");
         mainWindow.webContents.send("retrieved-pending", pendingReviewList);
+      }
+    });
+  },
+
+  // Retrieves "Open" Reviews from the Database & sends them up to the renderer.
+  retrieveOpen: function(neDB, appConstants, mainWindow) {
+    neDB.find({ type: "Open" }, function(err, openReviewList) {
+      if (err) {
+        console.log(new Date().toJSON(), appConstants.LOG_ERROR, "retrieveOpen()", err);
+      } else {
+        console.log(new Date().toJSON(), appConstants.LOG_INFO, "retrieveOpen()", "Retrieved", openReviewList.length, "Reviews!");
+        mainWindow.webContents.send("retrieved-open", openReviewList);
       }
     });
   }
@@ -220,6 +258,7 @@ module.exports = {
  * @param {*} pendingReviewList
  */
 function getPendingReviews(neDB, processedInstanceCount, crucibleRecords, apiConstants, appConstants, requestPromise, mainWindow, pendingReviewList) {
+  console.log(new Date().toJSON(), appConstants.LOG_INFO, "getPendingReviews()", "Querying", crucibleRecords[processedInstanceCount].instance, "for Pending Reviews.");
   var retrieveOptions = {
     uri:
       crucibleRecords[processedInstanceCount].instance +
@@ -244,7 +283,8 @@ function getPendingReviews(neDB, processedInstanceCount, crucibleRecords, apiCon
             .replace("Y", utcDate.getFullYear())
             .replace("m", utcDate.getMonth() + 1)
             .replace("d", utcDate.getDate());
-
+          
+          console.log(new Date().toJSON(), appConstants.LOG_INFO, "getPendingReviews()", "Saving Pending Review:", parsedBody.reviewData[review].permaId.id);
           insertPendingReview(
             neDB,
             appConstants,
@@ -256,24 +296,95 @@ function getPendingReviews(neDB, processedInstanceCount, crucibleRecords, apiCon
           );
 
           var pendingReview = {
-            ID: parsedBody.reviewData[review].permaId.id,
-            Name: parsedBody.reviewData[review].name,
-            Author: parsedBody.reviewData[review].author.displayName,
-            Created: strDate
+            reviewID: parsedBody.reviewData[review].permaId.id,
+            reviewName: parsedBody.reviewData[review].name,
+            reviewAuthor: parsedBody.reviewData[review].author.displayName,
+            createDt: strDate
           };
           pendingReviewList.push(pendingReview);
         }
-        processedInstanceCount = processedInstanceCount + 1;
-        if (processedInstanceCount < crucibleRecords.length) {
-          getPendingReviews(neDB, processedInstanceCount, crucibleRecords, apiConstants, appConstants, requestPromise, mainWindow, pendingReviewList);
-        } else {
-          console.log(new Date().toJSON(), appConstants.LOG_INFO, "getPendingReviews()", "Retrieved", pendingReviewList.length, "Reviews!");
-          mainWindow.webContents.send("retrieved-pending", pendingReviewList);
-        }
+      }
+      processedInstanceCount = processedInstanceCount + 1;
+      if (processedInstanceCount < crucibleRecords.length) {
+        getPendingReviews(neDB, processedInstanceCount, crucibleRecords, apiConstants, appConstants, requestPromise, mainWindow, pendingReviewList);
+      } else {
+        console.log(new Date().toJSON(), appConstants.LOG_INFO, "getPendingReviews()", "Retrieved", pendingReviewList.length, "Reviews!");
+        mainWindow.webContents.send("retrieved-pending", pendingReviewList);
       }
     })
     .catch(function(err) {
       console.log(new Date().toJSON(), appConstants.LOG_ERROR, "getPendingReviews()", err);
+    });
+}
+
+/**
+ * Retrieves Open Reviews using Crucible's API.
+ *
+ * @param {*} neDB
+ * @param {*} processedInstanceCount
+ * @param {*} crucibleRecords
+ * @param {*} apiConstants
+ * @param {*} appConstants
+ * @param {*} requestPromise
+ * @param {*} mainWindow
+ * @param {*} openReviewList
+ */
+function getOpenReviews(neDB, processedInstanceCount, crucibleRecords, apiConstants, appConstants, requestPromise, mainWindow, openReviewList) {
+  console.log(new Date().toJSON(), appConstants.LOG_INFO, "getOpenReviews()", "Querying", crucibleRecords[processedInstanceCount].instance, "for Open Reviews.");
+  var retrieveOptions = {
+    uri:
+      crucibleRecords[processedInstanceCount].instance +
+      apiConstants.CRUCIBLE_REST_BASE_URL +
+      apiConstants.CRUCIBLE_REST_REVIEWS +
+      apiConstants.OPEN_REVIEWS_SIMPLE_FILTER +
+      apiConstants.FEAUTH +
+      crucibleRecords[processedInstanceCount].token,
+    headers: {
+      "User-Agent": "Request-Promise"
+    },
+    json: true // Automatically parses the JSON string in the response
+  };
+  requestPromise(retrieveOptions)
+    .then(function(parsedBody) {
+      if (parsedBody.reviewData.length > 0) {
+        var utcDate;
+        var strDate;
+        for (var review in parsedBody.reviewData) {
+          utcDate = new Date(parsedBody.reviewData[review].createDate);
+          strDate = "Y-m-d"
+            .replace("Y", utcDate.getFullYear())
+            .replace("m", utcDate.getMonth() + 1)
+            .replace("d", utcDate.getDate());
+          
+          console.log(new Date().toJSON(), appConstants.LOG_INFO, "getOpenReviews()", "Saving Open Review:", parsedBody.reviewData[review].permaId.id);
+          insertOpenReview(
+            neDB,
+            appConstants,
+            crucibleRecords[processedInstanceCount].instance,
+            parsedBody.reviewData[review].permaId.id,
+            parsedBody.reviewData[review].name,
+            strDate
+          );
+
+          var openReview = {
+            reviewID: parsedBody.reviewData[review].permaId.id,
+            reviewName: parsedBody.reviewData[review].name,
+            reviewAuthor: parsedBody.reviewData[review].author.displayName,
+            createDt: strDate
+          };
+          openReviewList.push(openReview);
+        }
+      }
+      processedInstanceCount = processedInstanceCount + 1;
+      if (processedInstanceCount < crucibleRecords.length) {
+        getOpenReviews(neDB, processedInstanceCount, crucibleRecords, apiConstants, appConstants, requestPromise, mainWindow, openReviewList);
+      } else {
+        console.log(new Date().toJSON(), appConstants.LOG_INFO, "getOpenReviews()", "Retrieved", openReviewList.length, "Reviews!");
+        mainWindow.webContents.send("retrieved-open", openReviewList);
+      }
+    })
+    .catch(function(err) {
+      console.log(new Date().toJSON(), appConstants.LOG_ERROR, "getOpenReviews()", err);
     });
 }
 
@@ -303,6 +414,35 @@ function insertPendingReview(neDB, appConstants, instanceString, reviewID, revie
         console.log(new Date().toJSON(), appConstants.LOG_ERROR, "insertPendingReview()", err);
       } else {
         console.log(new Date().toJSON(), appConstants.LOG_INFO, "insertPendingReview() Inserted Pending Review:", reviewID);
+      }
+    }
+  );
+}
+
+/**
+ * Inserts an Open Review into the Database.
+ *
+ * @param {*} neDB
+ * @param {*} appConstants
+ * @param {*} instanceString
+ * @param {*} reviewID
+ * @param {*} reviewName
+ * @param {*} createDt
+ */
+function insertOpenReview(neDB, appConstants, instanceString, reviewID, reviewName, createDt) {
+  neDB.insert(
+    {
+      type: "Open",
+      instance: instanceString,
+      reviewID: reviewID,
+      reviewName: reviewName,
+      createDt: createDt
+    },
+    function(err, insertedRecord) {
+      if (err) {
+        console.log(new Date().toJSON(), appConstants.LOG_ERROR, "insertOpenReview()", err);
+      } else {
+        console.log(new Date().toJSON(), appConstants.LOG_INFO, "insertOpenReview() Inserted Open Review:", reviewID);
       }
     }
   );

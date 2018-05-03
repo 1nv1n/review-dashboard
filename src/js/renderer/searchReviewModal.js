@@ -103,9 +103,9 @@ function populateSearchResult(reviewData) {
     var reviewNameTableData = createReviewNameTableData(review.name);
     var authorTableData = createAuthorTableData(review.author.avatarUrl, review.author.displayName);
 
+    searchResultTableRow.appendChild(authorTableData);
     searchResultTableRow.appendChild(reviewIDTableData);
     searchResultTableRow.appendChild(reviewNameTableData);
-    searchResultTableRow.appendChild(authorTableData);
 
     searchResultTable.appendChild(searchResultTableRow);
   });
@@ -137,9 +137,18 @@ function createSearchResultTableRow() {
  * @param {*} reviewID
  */
 function createReviewIDTableData(reviewID) {
+  var reviewButton = document.createElement("button");
+  reviewButton.innerHTML = reviewID;
+  reviewButton.onclick = handleSearchResultOpen;
+  reviewButton.classList.add("btn");
+  reviewButton.classList.add("btn-sm");
+  reviewButton.classList.add("btn-primary");
+  reviewButton.setAttribute("value", crucibleServerList[document.querySelector('input[name="crucibleServer"]:checked').value].instance);
+
   var reviewIDTableData = document.createElement("td");
-  reviewIDTableData.style = "width:150px";
-  reviewIDTableData.innerHTML = reviewID;
+  reviewIDTableData.appendChild(reviewButton);
+  reviewIDTableData.style = "width:200px";
+
   return reviewIDTableData;
 }
 
@@ -175,4 +184,11 @@ function createAuthorTableData(avatarURL, displayName) {
   reviewAuthorTableData.appendChild(authorAvatar);
 
   return reviewAuthorTableData;
+}
+
+/**
+ * Sends the Review ID to the main process to open externally.
+ */
+function handleSearchResultOpen() {
+  IPC.send("open-review", this.value, this.innerHTML);
 }

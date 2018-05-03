@@ -24,6 +24,8 @@ function launchServerModal() {
 function dismissServerModal() {
   console.log(new Date().toJSON(), appConstants.LOG_INFO, "Dismissing the Server Modal.");
 
+  // TODO: Disable dismiss & display toast when there is no input.
+
   // Remove empty inputs
   normalizeServerInput();
 
@@ -34,6 +36,10 @@ function dismissServerModal() {
   removeBlackout();
 }
 
+/**
+ * Sets the provided server list as the main (global) server list.
+ * @param {*} _crucibleServerList 
+ */
 function setCurrentServerList(_crucibleServerList) {
   // If any saved Crucible server instances were sent up, populate them onto the modal.
   // Else, prompt for them
@@ -238,12 +244,15 @@ function checkServerModalHTTPS(checkbox) {
 }
 
 /**
- * Handle Server List Save
+ * Handle Server List Save.
  *
- * @param {*} isSaved
+ * @param {*} currentCrucibleServerList
  */
-function handleServerListSave(isSaved) {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "handleServerListSave():" + isSaved);
+function handleServerListSave(currentCrucibleServerList) {
+  console.log(new Date().toJSON(), appConstants.LOG_INFO, "handleServerListSave()", currentCrucibleServerList.length, "Server(s)");
+
+  // Set to current list
+  crucibleServerList = currentCrucibleServerList;
 
   // Remove the spinner from the "Save" button.
   removeSpinner(document.getElementById("saveServerIcon").classList);

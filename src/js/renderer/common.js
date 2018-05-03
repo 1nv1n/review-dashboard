@@ -21,6 +21,48 @@ function removeSpinner(elementClassList) {
 }
 
 /**
+ * Removes the 'Sync' icon & adds the spinner to the provided button.
+ * 
+ * @param {*} button 
+ */
+function startRetrievalSpinner(button) {
+  // Remove the Sync Icon
+  removeSyncIcon(document.getElementById(button).classList);
+
+  // Add the spinner
+  addSpinner(document.getElementById(button).classList);
+}
+
+/**
+ * Adds the 'Sync' icon & removes the spinner to the provided button.
+ * 
+ * @param {*} button 
+ */
+function endRetrievalSpinner(button) {
+  // Remove the spinner
+  removeSpinner(document.getElementById(button).classList);
+
+  // Add back the Sync Icon
+  addSyncIcon(document.getElementById(button).classList);
+}
+
+/**
+ * Adds the "Sync" Font Awesome Icon to the provided element.
+ */
+function addSyncIcon(elementClassList) {
+  elementClassList.add("fas");
+  elementClassList.add("fa-sync");
+}
+
+/**
+ * Removes the "Sync" Font Awesome Icon from the provided element.
+ */
+function removeSyncIcon(elementClassList) {
+  elementClassList.remove("fas");
+  elementClassList.remove("fa-sync");
+}
+
+/**
  * Removes the children of the given node.
  *
  * @param {*} node
@@ -59,6 +101,15 @@ function isMultipleOfFour(num) {
   }
 
   return num % 4 == 0;
+}
+
+/**
+ * Returns whether an element is hidden in the DOM.
+ *
+ * @param {*} element
+ */
+function isHidden(element) {
+  return element.offsetParent === null;
 }
 
 /**

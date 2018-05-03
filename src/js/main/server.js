@@ -30,7 +30,6 @@ module.exports = {
 
         // Insert passed-in server list
         for (var serverIdx in crucibleServerList) {
-          console.log(serverIdx);
           neDB.insert(
             {
               type: "CrucibleServerInstance",
@@ -39,14 +38,23 @@ module.exports = {
             function(err, insertedRecord) {
               if (err) {
                 console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveCrucibleServerList", err);
-                mainWindow.webContents.send("save-server-list", false);
+                mainWindow.webContents.send("save-server-list", []);
               } else {
                 console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveCrucibleServerList: Saved:", insertedRecord.instance);
-                mainWindow.webContents.send("save-server-list", true);
               }
             }
           );
         }
+
+        neDB.find({ type: "CrucibleServerInstance" }, function(err, crucibleServerList) {
+          if (err) {
+            console.log(new Date().toJSON(), appConstants.LOG_ERROR, "retrieveCrucibleServerList()", err);
+            mainWindow.webContents.send("save-server-list", []);
+          } else {
+            console.log(new Date().toJSON(), appConstants.LOG_INFO, "retrieveCrucibleServerList(): Retrieved:", crucibleServerList.length, "Crucible Instances!");
+            mainWindow.webContents.send("save-server-list", crucibleServerList);
+          }
+        });
       }
     });
   }
