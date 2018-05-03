@@ -44,19 +44,6 @@
 
 ---
 
-| Feature                     | Progress                     |
-| --------------------------- | ---------------------------- |
-| Graph Review Statistics     | <ul><li>[ ] Planned</li>     |
-| Display Open Reviews        | <ul><li>[ ] In Progress</li> |
-| Display Pending Reviews     | <ul><li>[ ] In Progress</li> |
-| Create Review               | <ul><li>[x] Implemented</li> |
-| Add Change Sets to Review   | <ul><li>[ ] Planned</li>     |
-| Review Reminders            | <ul><li>[ ] Planned</li>     |
-| Diff. Change Sets           | <ul><li>[ ] Planned</li>     |
-| Multi Server Authentication | <ul><li>[x] Implemented</li> |
-
----
-
 ### Run From Source:
 ```
 git clone https://github.com/InViN/crucible-dashboard.git
@@ -78,6 +65,36 @@ This will create the following executable containing directories:
  - CrucibleDashboard-win32-x64
  - CrucibleDashboard-linux-x64
  - CrucibleDashboard-darwin-x64
+
+---
+
+#### Project Features
+
+| Feature                              | Progress                     |
+| ------------------------------------ | ---------------------------- |
+| Graph Review Statistics              | <ul><li>[ ] In Progress</li> |
+| Display Open Reviews                 | <ul><li>[x] Implemented</li> |
+| Display Pending Reviews              | <ul><li>[x] Implemented</li> |
+| Create Review                        | <ul><li>[x] Implemented</li> |
+| Close Open Review                    | <ul><li>[ ] Planned</li>     |
+| Open Review Remind Reviewers         | <ul><li>[ ] Planned</li>     |
+| Complete Pending Review              | <ul><li>[ ] Planned</li>     |
+| Add Change Sets to Review            | <ul><li>[ ] Planned</li>     |
+| Review Reminders (Tray Notification) | <ul><li>[ ] Planned</li>     |
+| Diff. Change Sets                    | <ul><li>[ ] Planned</li>     |
+| Add Toast Notifications              | <ul><li>[ ] Planned</li>     |
+| Add Themes                           | <ul><li>[ ] Planned</li>     |
+| Multi Server Authentication          | <ul><li>[x] Implemented</li> |
+
+---
+
+#### Project's To-Do List
+
+| To-Do                                        | Progress                     |
+| -------------------------------------------- | ---------------------------- |
+| End-to-End Tests                             | <ul><li>[ ] Planned</li>     |
+| Electron Forge Integration                   | <ul><li>[ ] Planned</li>     |
+| Uplift to Angular 5/6 for 2 Way Data Binding | <ul><li>[ ] Planned</li>     |
 
 ---
 
