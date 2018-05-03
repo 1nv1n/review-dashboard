@@ -35,11 +35,36 @@
   border-color: #000000;
 }
 
-.table-header {
-  color: #000000;
-  text-align: center;
+.btn-grid {
+  margin-right: 1px;
+  margin-left: 1px;
+  width: 30px;
 }
 
-.table-row {
-  color: #000000;
+.jsgrid-header-row>.jsgrid-header-cell,
+.jsgrid-filter-row>.jsgrid-cell,
+.jsgrid-edit-row>.jsgrid-cell,
+.jsgrid-insert-row>.jsgrid-cell {
+  color: #FFFFFF;
+  background: #1E1E1E;
+  background-color: #1E1E1E;
+  text-align: center;
+  font-size: 1.1em;
+  font-weight: normal;
+  border: none !important;
+}
+
+.jsgrid-row>.jsgrid-cell,
+.jsgrid-alt-row>.jsgrid-cell {
+  color: #FFFFFF;
+  background: #1E1E1E;
+  background-color: #1E1E1E;
+  border: none !important;
+}
+
+.jsgrid-grid-header,
+.jsgrid-grid-body,
+.jsgrid-table,
+.jsgrid-cell {
+  border: none !important;
 }

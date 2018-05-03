@@ -221,8 +221,6 @@ function handlePendingRetrieval(pendingReviewList) {
       {
         title: "ID",
         align: "left",
-        headercss: "table-header",
-        css: "table-row",
         name: "reviewID",
         type: "text",
         width: 100
@@ -230,8 +228,6 @@ function handlePendingRetrieval(pendingReviewList) {
       {
         title: "Review Title",
         align: "left",
-        headercss: "table-header",
-        css: "table-row",
         name: "reviewName",
         type: "text",
         width: 375
@@ -239,8 +235,6 @@ function handlePendingRetrieval(pendingReviewList) {
       {
         title: "Author",
         align: "left",
-        headercss: "table-header",
-        css: "table-row",
         name: "reviewAuthor",
         type: "text",
         width: 125
@@ -248,8 +242,6 @@ function handlePendingRetrieval(pendingReviewList) {
       {
         title: "Creation",
         align: "left",
-        headercss: "table-header",
-        css: "table-row",
         name: "createDt",
         type: "text",
         width: 40
@@ -307,8 +299,6 @@ function handleOpenRetrieval(openReviewList) {
       {
         title: "ID",
         align: "left",
-        headercss: "table-header",
-        css: "table-row",
         name: "reviewID",
         type: "text",
         width: 100
@@ -316,8 +306,6 @@ function handleOpenRetrieval(openReviewList) {
       {
         title: "Review Title",
         align: "left",
-        headercss: "table-header",
-        css: "table-row",
         name: "reviewName",
         type: "text",
         width: 450
@@ -325,8 +313,6 @@ function handleOpenRetrieval(openReviewList) {
       {
         title: "Creation",
         align: "left",
-        headercss: "table-header",
-        css: "table-row",
         name: "createDt",
         type: "text",
         width: 40
@@ -337,7 +323,7 @@ function handleOpenRetrieval(openReviewList) {
     ],
     controller: {
       loadData: function(filter) {
-        return $.grep(openData, function(item) {
+        return $.grep(openReviewList, function(item) {
           return (
             (!filter.ID || item.ID.indexOf(filter.ID) > -1) &&
             (!filter.Name || item.Name.indexOf(filter.Name) > -1) &&

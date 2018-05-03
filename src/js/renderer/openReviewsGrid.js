@@ -10,7 +10,7 @@
   ControlField.prototype = new Field({
     css: "jsgrid-control-field",
     align: "center",
-    width: 30,
+    width: 50,
     filtering: false,
     inserting: false,
     editing: false,
@@ -62,7 +62,7 @@
     itemTemplate: function(value, item) {
       var $result = $([]);
       $result = $result.add(
-        $("<button style='border:2px solid; border-radius:25px; background-color:#000000; color:#FFFFFF;'>")
+        $("<button class='btn btn-primary btn-sm btn-grid'>C</button>")
           .attr("type", "button")
           .attr("title", "Close Review")
           .text("C")
@@ -80,7 +80,7 @@
           })
       );
       $result = $result.add(
-        $("<button style='border:2px solid; border-radius:25px; background-color:#000000; color:#FFFFFF;'>")
+        $("<button class='btn btn-primary btn-sm btn-grid'>R</button>")
           .attr("type", "button")
           .attr("title", "Remind Reviewers")
           .text("R")

@@ -62,7 +62,7 @@
     itemTemplate: function(value, item) {
       var $result = $([]);
       $result = $result.add(
-        $("<button style = 'border: 2px solid; border-radius: 25px; background-color: #000000; color: #FFFFFF;'>")
+        $("<button class='btn btn-primary btn-sm btn-grid'>C</button>")
           .attr("type", "button")
           .attr("title", "Complete Review")
           .text("C")
