@@ -68,9 +68,7 @@ This will create the following executable containing directories:
 
 ---
 
-#### Project Features
-
-| Feature                              | Progress                     |
+| Feature/Component                    | Progress                     |
 | ------------------------------------ | ---------------------------- |
 | Graph Review Statistics              | <ul><li>[ ] In Progress</li> |
 | Display Open Reviews                 | <ul><li>[x] Implemented</li> |
@@ -85,16 +83,9 @@ This will create the following executable containing directories:
 | Add Toast Notifications              | <ul><li>[ ] Planned</li>     |
 | Add Themes                           | <ul><li>[ ] Planned</li>     |
 | Multi Server Authentication          | <ul><li>[x] Implemented</li> |
-
----
-
-#### Project's To-Do List
-
-| To-Do                                        | Progress                     |
-| -------------------------------------------- | ---------------------------- |
-| End-to-End Tests                             | <ul><li>[ ] Planned</li>     |
-| Electron Forge Integration                   | <ul><li>[ ] Planned</li>     |
-| Uplift to Angular 5/6 for 2 Way Data Binding | <ul><li>[ ] Planned</li>     |
+| End-to-End Tests                     | <ul><li>[ ] Planned</li>     |
+| Electron Forge Integration           | <ul><li>[ ] Planned</li>     |
+| Uplift to Angular 5/6                | <ul><li>[ ] Planned</li>     |
 
 ---
 
