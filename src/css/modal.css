@@ -45,6 +45,13 @@
   text-align: center;
 }
 
+.login-modal-content,
+.login-modal-background {
+  border-style: none;
+  border-width: 0px;
+  border-color: #1E1E1E;
+}
+
 .jira-search-key-input {
   margin-top: 10px;
 }
