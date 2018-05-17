@@ -70,49 +70,54 @@ module.exports = {
    * - Send it up to the renderer.
    */
   saveUserInfo: function(neDB, apiConstants, appConstants, userID, crucibleServerInstance, mainWindow, requestPromise) {
-    // Remove any existing user information
-    neDB.remove({ type: "User" }, { multi: true }, function(err, numRemoved) {
-      if (err) {
-        console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveUserInfo()", err);
-      } else {
-        console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveUserInfo()", "Removed Existing User.");
+    return new Promise(function(resolve, reject) {
+      // Remove any existing user information
+      neDB.remove({ type: "User" }, { multi: true }, function(err, numRemoved) {
+        if (err) {
+          console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveUserInfo()", err);
+          reject(null);
+        } else {
+          console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveUserInfo()", "Removed Existing User.");
 
-        // GET Parameters
-        var userGET = {
-          method: "GET",
-          uri: crucibleServerInstance + apiConstants.CRUCIBLE_REST_BASE_URL + apiConstants.CRUCIBLE_REST_USERS + apiConstants.USER_ID + userID,
-          json: true
-        };
+          // GET Parameters
+          var userGET = {
+            method: "GET",
+            uri: crucibleServerInstance + apiConstants.CRUCIBLE_REST_BASE_URL + apiConstants.CRUCIBLE_REST_USERS + apiConstants.USER_ID + userID,
+            json: true
+          };
 
-        // Handle GET Call
-        requestPromise(userGET)
-          .then(function(parsedBody) {
-            var userName = parsedBody.userData[0].userName;
-            var formattedName = parsedBody.userData[0].displayName;
-            var userAvatarURL = parsedBody.userData[0].avatarUrl;
+          // Handle GET Call
+          requestPromise(userGET)
+            .then(function(parsedBody) {
+              var userName = parsedBody.userData[0].userName;
+              var formattedName = parsedBody.userData[0].displayName;
+              var userAvatarURL = parsedBody.userData[0].avatarUrl;
 
-            neDB.insert(
-              {
-                type: "User",
-                userID: userName,
-                displayName: formattedName,
-                avatarURL: userAvatarURL
-              },
-              function(err, insertedRecord) {
-                if (err) {
-                  console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveUserInfo()", err);
-                } else {
-                  console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveUserInfo()", userName);
-                  mainWindow.webContents.send("user-info", userName, formattedName, userAvatarURL);
-                  return insertedRecord[0];
+              neDB.insert(
+                {
+                  type: "User",
+                  userID: userName,
+                  displayName: formattedName,
+                  avatarURL: userAvatarURL
+                },
+                function(err, insertedRecord) {
+                  if (err) {
+                    console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveUserInfo()", err);
+                    reject(null);
+                  } else {
+                    console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveUserInfo()", userName);
+                    mainWindow.webContents.send("user-info", userName, formattedName, userAvatarURL);
+                    resolve(insertedRecord);
+                  }
                 }
-              }
-            );
-          })
-          .catch(function(err) {
-            console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveUserInfo()", err);
-          });
-      }
+              );
+            })
+            .catch(function(err) {
+              console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveUserInfo()", err);
+              reject(null);
+            });
+        }
+      });
     });
   },
 
