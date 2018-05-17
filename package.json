@@ -5,8 +5,11 @@
   "description": "Crucible Dashboard built with Electron",
   "main": "src/js/app.js",
   "scripts": {
-    "start": "electron .",
-    "build": "rimraf CrucibleDashboard-* && electron-packager . --platform=win32,darwin,linux --arch=x64 --icon=app"
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "eslint src --color"
   },
   "repository": {
     "type": "git",
@@ -24,19 +27,63 @@
     "url": "https://github.com/InViN"
   },
   "license": "Apache-2.0",
+  "config": {
+    "forge": {
+      "make_targets": {
+        "win32": [
+          "squirrel",
+          "zip"
+        ],
+        "darwin": [
+          "dmg",
+          "zip"
+        ],
+        "linux": [
+          "deb",
+          "rpm",
+          "zip"
+        ]
+      },
+      "electronPackagerConfig": {
+        "packageManager": "yarn",
+        "executableName": "CrucibleDash"
+      },
+      "electronWinstallerConfig": {
+        "name": "CrucibleDashboard"
+      },
+      "electronInstallerDebian": {},
+      "electronInstallerRedhat": {},
+      "github_repository": {
+        "owner": "InViN",
+        "name": "https://github.com/InViN/crucible-dashboard"
+      },
+      "windowsStoreConfig": {
+        "packageName": "",
+        "name": "CrucibleDashboard"
+      }
+    }
+  },
   "bugs": {
     "url": "https://github.com/InViN/crucible-dashboard/issues"
   },
   "homepage": "https://github.com/InViN/crucible-dashboard#readme",
   "devDependencies": {
-    "electron": "^2.0.0",
-    "rimraf": "^2.6.2",
-    "electron-packager": "^12.0.1"
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
+    "electron-forge": "^5.2.2",
+    "electron-prebuilt-compile": "2.0.0",
+    "eslint": "^3",
+    "eslint-config-airbnb": "^15",
+    "eslint-plugin-import": "^2",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.1.0"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free-webfonts": "^1.0.7",
+    "@fortawesome/fontawesome-free-webfonts": "^1.0.9",
     "bootstrap": "^4.1.1",
     "chart.js": "^2.7.2",
+    "electron-compile": "^6.4.2",
+    "electron-squirrel-startup": "^1.0.0",
     "jquery": "^3.3.1",
     "jsgrid": "^1.5.3",
     "nedb": "^1.8.0",
