@@ -76,7 +76,7 @@ body {
 
 /* Apply style to the Button Container */
 .button-container {
-  margin-left: 20%;
+  margin-left: 15%;
 }
 
 /* Apply style to the App titlebar buttons (-,o,x) */
@@ -110,6 +110,93 @@ body {
 /* Apply style to the user ID label */
 .user-id-label {
   margin-left: 85px;
+}
+
+/* Toast CSS */
+#toast {
+  visibility: hidden;
+  max-width: 60px;
+  height: 40px;
+  margin: auto;
+  background-color: #000000;
+  color: #FFFFFF;
+  text-align: center;
+  border-radius: 2px;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  right:0;
+  bottom: 70px;
+  white-space: nowrap;
+}
+#toast #toastImg{
+  width: 50px;
+  height: 50px;
+  float: left;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  box-sizing: border-box;
+  background-color: #000000;
+  color: #FFFFFF;
+}
+#toast #toastDesc{
+  color: #FFFFFF;
+  padding: 16px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+#toast.show {
+  visibility: visible;
+  -webkit-animation: toastfadein 0.5s, expand 0.5s 0.5s,stay 3s 1s, shrink 0.5s 2s, fadeout 0.5s 2.5s;
+  animation: toastfadein 0.5s, expand 0.5s 0.5s,stay 3s 1s, shrink 0.5s 4s, fadeout 0.5s 4.5s;
+}
+
+@-webkit-keyframes toastfadein {
+  from {bottom: 0; opacity: 0;} 
+  to   {bottom: 30px; opacity: 1;}
+}
+
+@keyframes toastfadein {
+  from {bottom: 0; opacity: 0;}
+  to   {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes expand {
+  from {min-width: 50px}
+  to   {min-width: 350px}
+}
+
+@keyframes expand {
+  from {min-width: 50px}
+  to   {min-width: 350px}
+}
+@-webkit-keyframes stay {
+  from {min-width: 350px}
+  to   {min-width: 350px}
+}
+
+@keyframes stay {
+  from {min-width: 350px}
+  to   {min-width: 350px}
+}
+@-webkit-keyframes shrink {
+  from {min-width: 350px;}
+  to   {min-width: 50px;}
+}
+
+@keyframes shrink {
+  from {min-width: 350px;}
+  to   {min-width: 50px;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to   {bottom: 60px; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to   {bottom: 60px; opacity: 0;}
 }
 
 /* Bootstrap Footer */
