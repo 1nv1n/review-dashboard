@@ -78,6 +78,22 @@ function removeChildren(node) {
 }
 
 /**
+ * Hides the Button & Review Div Containers
+ */
+function hideContentContainer() {
+  document.getElementById("mainButtonContainer").style.display = "none";
+  document.getElementById("reviewContainer").style.display = "none";
+}
+
+/**
+ * Show the Button & Review Div Containers
+ */
+function showContentContainer() {
+  document.getElementById("mainButtonContainer").style.display = "block";
+  document.getElementById("reviewContainer").style.display = "block";
+}
+
+/**
  * Checks whether the given number is even (0 is considered even).
  *
  * @param {*} num
@@ -157,4 +173,12 @@ function populateCrucibleServerRadioDiv(crucibleServerRadioDiv) {
 
     crucibleServerRadioDivNode.appendChild(serverTable);
   }
+}
+
+function createToast() {
+  var toastDiv = document.getElementById("toast")
+  toastDiv.className = "show";
+  setTimeout(function () {
+    toastDiv.className = toastDiv.className.replace("show", "");
+  }, 2500);
 }
