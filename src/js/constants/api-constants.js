@@ -25,6 +25,9 @@ define("VERSION_INFO",           "/versionInfo");
 // FishEye
 define("FE_CRU_REST_BASE_URL", "/viewer/rest-service-fecru");
 
+define("FILTER_DETAILS", "filter/details");
+define("CREATOR", "&creator=");
+
 // Open Reviews
 define("OPEN_REVIEWS_SIMPLE_FILTER",   "filter/open");
 define("OPEN_REVIEWS_DETAILED_FILTER", "filter/open/details");

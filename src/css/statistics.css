@@ -1,0 +1,20 @@
+/*
+* CSS for the Review Statistics Div.
+*/
+
+.review-statistics-container {
+  margin-top: -15px;
+  padding: 10px 10px 10px 10px;
+}
+
+.chart-button-div {
+  margin-top: 10px;
+}
+
+.btn-stat-switch {
+  width: 75px;
+}
+
+.btn-chart-switch {
+  width: 150px;
+}

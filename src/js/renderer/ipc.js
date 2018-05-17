@@ -46,6 +46,9 @@ IPC.on("initial-state", function(event, _crucibleServerList, currentUser, curren
 
     // Retrieve Pending & Open Reviews from the Database
     retrievePendingOpenReviews();
+
+    // Retrieve Statistics from the Database
+    IPC.send("retrieve-statistics", false);
   }
 
   // If the User does not exist, wait for the Server Modal to close before prompting for login
@@ -118,6 +121,13 @@ IPC.on("retrieved-pending", function(event, pendingReviewList) {
  */
 IPC.on("retrieved-open", function(event, openReviewList) {
   handleOpenRetrieval(openReviewList);
+});
+
+/**
+ * Triggered on Reviewer Statistics retrieval.
+ */
+IPC.on("retrieved-reviewer-statistics", function(event, reviewerList) {
+  handleStatRetrieval(reviewerList);
 });
 
 /**

@@ -43,6 +43,10 @@ console.log = function() {
 console.error = console.log;
 console.log(new Date().toJSON(), AppConstants.LOG_INFO, "Logging Initialized.");
 
+// Uncomment for hot-reload:
+// import { enableLiveReload } from 'electron-compile';
+// enableLiveReload();
+
 const ElectronContextMenu = ElectronMenu.buildFromTemplate([
   {
     label: AppStringConstants.APP_NAME,
@@ -88,10 +92,10 @@ var particlesEnabled = false;
 // Create the main browser window
 var createMainWindow = function() {
   mainWindow = new ElectronBroswerWindow({
-    width: 1900, //1920
-    minWidth: 1280,
-    height: 1000, // 1080
-    minHeight: 720,
+    width: 1860, //1920
+    minWidth: 1860,
+    height: 840, // 1080
+    minHeight: 840,
     icon: Path.join(__dirname, "../../resources/icons", "app.ico"),
     show: false,
     backgroundColor: "#1E1E1E",
@@ -280,7 +284,14 @@ IPC.on("save-crucible-server-list", function(event, crucibleServerList) {
  */
 IPC.on("login-attempt", function(event, userID, password) {
   authProcess.authenticateUser(neDB, APIConstants, AppConstants, userID, password, mainWindow, RequestPromise, serverProcess);
-  currentUser = userProcess.saveUserInfo(neDB, APIConstants, AppConstants, userID, crucibleServerInstance, mainWindow, RequestPromise);
+  userProcess.saveUserInfo(neDB, APIConstants, AppConstants, userID, crucibleServerInstance, mainWindow, RequestPromise).then(
+    function(user) {
+      currentUser = user;
+    },
+    function(err) {
+      console.log(new Date().toJSON(), AppConstants.LOG_ERROR, "login-attempt:saveUserInfo():", err);
+    }
+  );
 });
 
 /**
@@ -349,9 +360,9 @@ IPC.on("retrieve-open", function(event, flag) {
  */
 IPC.on("retrieve-statistics", function(event, flag) {
   if (flag) {
-    reviewProcess.getStatistics(neDB, APIConstants, AppConstants, RequestPromise, mainWindow);
+    reviewProcess.getStats(neDB, APIConstants, AppConstants, RequestPromise, mainWindow, currentUser);
   } else {
-    reviewProcess.retrieveStatistics(neDB, AppConstants, mainWindow);
+    reviewProcess.retrieveStats(neDB, AppConstants, mainWindow);
   }
 });
 

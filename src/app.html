@@ -27,22 +27,24 @@
   <link href="../src/css/sidebar.css" rel="stylesheet">
   <link href="../src/css/modal.css" rel="stylesheet">
   <link href="../src/css/grid.css" rel="stylesheet">
+  <link href="../src/css/statistics.css" rel="stylesheet">
 
   <!-- 
-    jQuery (Required by Bootstrap & JSGrid)
+    For jQuery (Required by Bootstrap & JSGrid)
     Should be declared before other JS imports.
    -->
-  <script>
-    var $ = jQuery = require("jquery")
-  </script>
+  <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 
   <!-- Vendor Imports (JS) -->
   <script src="../node_modules/jquery/dist/jquery.slim.min.js"></script>
   <script src="../node_modules/popper.js/dist/umd/popper.min.js"></script>
   <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="../node_modules/jsgrid/dist/jsgrid.min.js"></script>
+  <script src="../node_modules/chart.js/dist/Chart.min.js"></script>
 
   <script src="../src/js/vendor/particles.js"></script>
+
+  <script>if (window.module) module = window.module;</script>
 
   <!-- Global Variables -->
   <script type="text/javascript">
@@ -65,8 +67,8 @@
 
   <!-- App JS -->
   <script src="../src/js/renderer/ipc.js"></script>
-  <script src="../src/js/renderer/app-renderer.js"></script>
   <script src="../src/js/renderer/common.js"></script>
+  <script src="../src/js/renderer/app-renderer.js"></script>
   <script src="../src/js/renderer/review.js"></script>
   <script src="../src/js/renderer/serverModal.js"></script>
   <script src="../src/js/renderer/loginModal.js"></script>
@@ -74,6 +76,7 @@
   <script src="../src/js/renderer/infoModal.js"></script>
   <script src="../src/js/renderer/createReviewModal.js"></script>
   <script src="../src/js/renderer/searchReviewModal.js"></script>
+  <script src="../src/js/renderer/statistics.js"></script>
 </head>
 
 <body>
@@ -156,29 +159,43 @@
         <button id="createReviewButton" class="btn btn-primary btn-sm main-btn create-review-button" type="button" onclick="launchCreateReviewModal()">
           Create
         </button>
+
         <button id="searchReviewButton" class="btn btn-primary btn-sm main-btn search-review-button" type="button" onclick="launchSearchReviewModal()">
           Search&nbsp;
           <i class="fas fa-search"></i>
         </button>
-        <button id="pendingReviewsToggle" class="btn btn-primary btn-sm main-btn pending-review-toggle" type="button" onclick="togglePendingReviewsContainter()">
-          Pending
-          <span id="pendingBadge" class="badge badge-light">0</span>
-        </button>
-        <button id="refreshPendingButton" class="btn btn-success btn-sm refresh-pending-button" type="button" onclick="getPendingReviews()">
-          <i id="refreshPendingIcon" class="fas fa-sync"></i>
-        </button>
-        <button id="openReviewsToggle" class="btn btn-primary btn-sm main-btn open-review-toggle" type="button" onclick="toggleOpenReviewsContainter()">
-          Open
-          <span id="openBadge" class="badge badge-light">0</span>
-        </button>
-        <button id="refreshOpenButton" class="btn btn-success btn-sm refresh-open-button" type="button" onclick="getOpenReviews()">
-          <i id="refreshOpenIcon" class="fas fa-sync"></i>
-        </button>
-        <button id="reviewStatisticsToggle" class="btn btn-primary btn-sm main-btn review-statictics-toggle" type="button" onclick="togggleStatisticsContainer()">
-          Statistics
-        </button>
-        <button id="refreshStaticticsButton" class="btn btn-success btn-sm refresh-statictics-button disabled" type="button" onclick="getReviewStatistics()">
-          <i id="refreshStatisticsIcon" class="fas fa-sync"></i>
+
+        <div class="btn-group btn-group-sm" role="group" aria-label="Pending Review Toggle Refresh">
+          <button id="pendingReviewsToggle" class="btn btn-primary btn-sm main-btn pending-review-toggle" type="button" onclick="togglePendingReviewsContainter()">
+            Pending
+            <span id="pendingBadge" class="badge badge-light">0</span>
+          </button>
+          <button id="refreshPendingButton" class="btn btn-success btn-sm refresh-pending-button" type="button" onclick="getPendingReviews()">
+            <i id="refreshPendingIcon" class="fas fa-sync"></i>
+          </button>
+        </div>
+
+        <div class="btn-group btn-group-sm" role="group" aria-label="Open Review Toggle Refresh">
+          <button id="openReviewsToggle" class="btn btn-primary btn-sm main-btn open-review-toggle" type="button" onclick="toggleOpenReviewsContainter()">
+            Open
+            <span id="openBadge" class="badge badge-light">0</span>
+          </button>
+          <button id="refreshOpenButton" class="btn btn-success btn-sm refresh-open-button" type="button" onclick="getOpenReviews()">
+            <i id="refreshOpenIcon" class="fas fa-sync"></i>
+          </button>
+        </div>
+
+        <div class="btn-group btn-group-sm" role="group" aria-label="Review Statistics Toggle Refresh">
+          <button id="reviewStatisticsToggle" class="btn btn-primary btn-sm main-btn review-statictics-toggle" type="button" onclick="toggleStatisticsContainer()">
+            Statistics
+          </button>
+          <button id="refreshStaticticsButton" class="btn btn-success btn-sm refresh-statictics-button" type="button" onclick="getReviewStatistics()">
+            <i id="refreshStatisticsIcon" class="fas fa-sync"></i>
+          </button>
+        </div>
+
+        <button id="teamToggle" class="btn btn-primary btn-sm main-btn team-toggle" type="button">
+          Team
         </button>
       </div>
 
@@ -199,9 +216,33 @@
         <!-- Wrapper DIV for statistics  -->
         <div id="reviewStatisticsContainer" class="review-statistics-container" style="display: none;">
           <p id="reviewStatisticsContainerLabel" class="lead review-container-label">Review Statistics</p>
+          <div id="chartTableButtonDiv">
+            <div class="btn-group btn-group-sm" role="group" aria-label="ChartTableSwitcherGroup">
+              <button id="statChartButton" onclick="statChartToggle()" type="button" class="btn btn-primary btn-sm btn-stat-switch" disabled>Chart</button>
+              <button id="statTableButton" onclick="statTableToggle()" type="button" class="btn btn-primary btn-sm btn-stat-switch">Table</button>
+            </div>
+          </div>
+          <div id="chartButtonDiv" class="chart-button-div">
+            <div class="btn-group btn-group-sm" role="group" aria-label="ChartSwitcherGroup">
+              <button id="totalTimeChart" type="button" class="btn btn-primary btn-sm btn-chart-switch" disabled>Total Time</button>
+              <button id="avgTimeChart" type="button" class="btn btn-primary btn-sm btn-chart-switch" disabled>Average Time</button>
+              <button id="commentChart" type="button" class="btn btn-primary btn-sm btn-chart-switch" disabled>Comment Count</button>
+              <button id="defectChart" type="button" class="btn btn-primary btn-sm btn-chart-switch" disabled>Defect Timeline</button>
+            </div>
+          </div>
+
+          <div id="statChartContainer" class="stat-chart-container">
+            <canvas id="statChart" width="800" height="400"></canvas>
+          </div>
+          <div id="statTableContainer" class="stat-table-container"></div>
         </div>
       </div>
     </main>
+
+    <div id="toast">
+      <div id="toastImg">Icon</div>
+      <div id="toastDesc">A notification message..</div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -264,8 +305,8 @@
   <div class="modal fade bd-example-modal-sm" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-body modal-background">
+      <div class="modal-content login-modal-content">
+        <div class="modal-body modal-background login-modal-background">
           <div class="login-input login-modal" id="loginInputDiv">
             <div class="input-group mb-3">
               <input id="userID" class="form-control credential-input" type="text" autofocus="true" placeholder="User ID">
