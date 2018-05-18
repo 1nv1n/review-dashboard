@@ -81,9 +81,7 @@ function togglePendingReviewsContainter() {
   hideOpenReviewDiv();
   hideReviewStatisticsDiv();
 
-  if (isPendingReviewDivVisible()) {
-    hidePendingReviewDiv();
-  } else {
+  if (!isPendingReviewDivVisible()) {
     showPendingReviewDiv();
   }
 }
@@ -95,9 +93,7 @@ function toggleOpenReviewsContainter() {
   hidePendingReviewDiv();
   hideReviewStatisticsDiv();
 
-  if (isOpenReviewDivVisible()) {
-    hideOpenReviewDiv();
-  } else {
+  if (!isOpenReviewDivVisible()) {
     showOpenReviewDiv();
   }
 }
@@ -105,13 +101,11 @@ function toggleOpenReviewsContainter() {
 /**
  * Toggles the visibility of the Review Statistics container.
  */
-function toggleReviewStatisticsContainter() {
+function toggleStatisticsContainer() {
   hideOpenReviewDiv();
   hidePendingReviewDiv();
 
-  if (isReviewStatisticsDivVisible()) {
-    hideReviewStatisticsDiv();
-  } else {
+  if (!isReviewStatisticsDivVisible()) {
     showReviewStatisticsDiv();
   }
 }
@@ -170,6 +164,7 @@ function isReviewStatisticsDivVisible() {
  */
 function showReviewStatisticsDiv() {
   document.getElementById("reviewStatisticsContainer").style.display = "block";
+  setChart();
 }
 
 /**
@@ -180,10 +175,16 @@ function hideReviewStatisticsDiv() {
 }
 
 /**
- * Set an empty array to the Pending & Open review tables.
+ * Set an empty array to the Pending review table.
  */
-function clearPendingOpenReviewTables() {
+function clearPendingReviewTable() {
   handlePendingRetrieval([]);
+}
+
+/**
+ * Set an empty array to the Open review table.
+ */
+function clearOpenReviewTable() {
   handleOpenRetrieval([]);
 }
 
@@ -214,8 +215,8 @@ function handlePendingRetrieval(pendingReviewList) {
     autoload: false,
     confirmDeleting: false,
     loadIndication: true,
-    loadMessage: "<p style='color: #000000'>Retrieving Pending Reviews...</p>",
-    noDataContent: "<p style='color: #000000'>No Pending Reviews!</p>",
+    loadMessage: "<p style='color: #FFFFFF'>Retrieving Pending Reviews...</p>",
+    noDataContent: "<p style='color: #FFFFFF'>No Pending Reviews!</p>",
     rowDoubleClick: handleDoubleClick,
     fields: [
       {
@@ -293,8 +294,8 @@ function handleOpenRetrieval(openReviewList) {
     autoload: false,
     confirmDeleting: false,
     rowDoubleClick: handleDoubleClick,
-    loadMessage: "<p style='color: #000000'>Retrieving Open Reviews...</p>",
-    noDataContent: "<p style='color: #000000'>No Open Reviews!</p>",
+    loadMessage: "<p style='color: #FFFFFF'>Retrieving Open Reviews...</p>",
+    noDataContent: "<p style='color: #FFFFFF'>No Open Reviews!</p>",
     fields: [
       {
         title: "ID",
