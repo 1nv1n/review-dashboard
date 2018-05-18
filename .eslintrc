@@ -1,0 +1,29 @@
+{
+  "extends": "eslint-config-airbnb",
+  "globals": {
+    "$": false,
+    "document": false,
+    "IPC": false
+  },
+  "rules": {
+    "eol-last": 0,
+    "import/extensions": 0,
+    "import/no-extraneous-dependencies": 0,
+    "import/no-unresolved": [2, {
+      "ignore": ["electron"]
+    }],
+    "linebreak-style": 0,
+    "max-len": [1, 120, 2, {
+      "ignoreComments": true,
+      "ignoreUrls": true,
+      "ignoreStrings": true,
+      "ignoreTemplateLiterals": true,
+      "ignoreRegExpLiterals": true
+    }],
+    "no-console": 0,
+    "no-plusplus": [1, {
+      "allowForLoopAfterthoughts": true
+    }],
+    "quotes": ["error", "double"]
+  }
+}
