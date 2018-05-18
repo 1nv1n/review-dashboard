@@ -1,3 +1,7 @@
+/*
+* CSS for the side-nav.
+*/
+
 #sidebar {
   min-width: 250px;
   max-width: 250px;
@@ -58,7 +62,7 @@
 }
 
 /*
- * MEDIAQUERIES
+ * Media Queries to auto-toggle the side-nav.
  */
 @media (max-width: 1940px) {
   #sidebar {

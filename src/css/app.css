@@ -151,21 +151,19 @@ body {
   animation: toastfadein 0.5s, expand 0.5s 0.5s,stay 3s 1s, shrink 0.5s 4s, fadeout 0.5s 4.5s;
 }
 
+/* Toast keyframes */
 @-webkit-keyframes toastfadein {
   from {bottom: 0; opacity: 0;} 
   to   {bottom: 30px; opacity: 1;}
 }
-
 @keyframes toastfadein {
   from {bottom: 0; opacity: 0;}
   to   {bottom: 30px; opacity: 1;}
 }
-
 @-webkit-keyframes expand {
   from {min-width: 50px}
   to   {min-width: 350px}
 }
-
 @keyframes expand {
   from {min-width: 50px}
   to   {min-width: 350px}
@@ -174,7 +172,6 @@ body {
   from {min-width: 350px}
   to   {min-width: 350px}
 }
-
 @keyframes stay {
   from {min-width: 350px}
   to   {min-width: 350px}
@@ -183,17 +180,14 @@ body {
   from {min-width: 350px;}
   to   {min-width: 50px;}
 }
-
 @keyframes shrink {
   from {min-width: 350px;}
   to   {min-width: 50px;}
 }
-
 @-webkit-keyframes fadeout {
   from {bottom: 30px; opacity: 1;}
   to   {bottom: 60px; opacity: 0;}
 }
-
 @keyframes fadeout {
   from {bottom: 30px; opacity: 1;}
   to   {bottom: 60px; opacity: 0;}

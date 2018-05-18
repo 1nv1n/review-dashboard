@@ -1,5 +1,5 @@
 /*
-* CSS for the Grid-Tables.
+* CSS for the grid (tables).
 */
 
 .jsgrid-grid-header,
@@ -19,11 +19,7 @@
   color: #FFFFFF;
 }
 
-.pending-reviews-container {
-  margin-top: -15px;
-  padding: 10px 10px 10px 10px;
-}
-
+.pending-reviews-container,
 .open-reviews-container {
   margin-top: -15px;
   padding: 10px 10px 10px 10px;

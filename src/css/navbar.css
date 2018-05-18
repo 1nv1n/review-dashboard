@@ -1,4 +1,7 @@
-/* Bootstrap Nav Bar */
+/*
+* CSS for the Navigation bar.
+*/
+
 .navbar {
   background-color: #000000;
   -webkit-app-region: drag;
