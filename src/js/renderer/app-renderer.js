@@ -89,11 +89,16 @@ function logout() {
   // Remove existing elements
   removeServerInput();
 
-  // Clear the Pending & Open Review containers
-  clearPendingOpenReviewTables();
+  // Clear data
+  clearPendingReviewTable();
+  clearOpenReviewTable();
+  clearChartData();
 
-  // Hide the Button & Review Container
+  // Hide the Button & Review Containers
   hideContentContainer();
+  hidePendingReviewDiv();
+  hideOpenReviewDiv();
+  hideReviewStatisticsDiv();
 
   // Launch the Server Modal
   launchServerModal();
@@ -158,20 +163,4 @@ function toggleParticles(toggle) {
     pJSDom[0].pJS.fn.vendors.destroypJS();
     pJSDom = [];
   }
-}
-
-/**
- * Hides the Button & Review Div Containers
- */
-function hideContentContainer() {
-  document.getElementById("mainButtonContainer").style.display = "none";
-  document.getElementById("reviewContainer").style.display = "none";
-}
-
-/**
- * Show the Button & Review Div Containers
- */
-function showContentContainer() {
-  document.getElementById("mainButtonContainer").style.display = "block";
-  document.getElementById("reviewContainer").style.display = "block";
 }
