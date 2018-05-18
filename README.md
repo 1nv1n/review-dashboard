@@ -83,24 +83,27 @@ This will create the following executable containing directories:
 
 ---
 
-| Feature/Component                    | Progress                     |
-| ------------------------------------ | ---------------------------- |
-| Graph Review Statistics              | <ul><li>[ ] In Progress</li> |
-| Display Open Reviews                 | <ul><li>[x] Implemented</li> |
-| Display Pending Reviews              | <ul><li>[x] Implemented</li> |
-| Create Review                        | <ul><li>[x] Implemented</li> |
-| Close Open Review                    | <ul><li>[ ] Planned</li>     |
-| Open Review Remind Reviewers         | <ul><li>[ ] Planned</li>     |
-| Complete Pending Review              | <ul><li>[ ] Planned</li>     |
-| Add Change Sets to Review            | <ul><li>[ ] Planned</li>     |
-| Review Reminders (Tray Notification) | <ul><li>[ ] Planned</li>     |
-| Diff. Change Sets                    | <ul><li>[ ] Planned</li>     |
-| Add Toast Notifications              | <ul><li>[ ] In Progress</li> |
-| Add Themes                           | <ul><li>[ ] Planned</li>     |
-| Multi Server Authentication          | <ul><li>[x] Implemented</li> |
-| Electron Forge Integration           | <ul><li>[x] Implemented</li> |
+### Feature/Component Progress:
+
+- [ ] (In progress) Graph Review Statistics
+- [x] Display Open Reviews
+- [x] Display Pending Reviews
+- [x] Create Review
+- [ ] Close Open Review
+- [ ] Open Review Remind Reviewers
+- [ ] Complete Pending Review
+- [ ] Add Change Sets to Review
+- [ ] Review Reminders (Tray Notification)
+- [ ] Diff. Change Sets
+- [ ] Add Toast Notifications
+- [ ] Add Themes
+- [x] Multi Server Authentication
+- [x] Electron Forge Integration
  
-#### Other To-Dos
+---
+
+### Other To-Dos
+
  - Update electronPackagerConfig
  - Update installer config. with loading GIF & icon.
  - Update config. for Linux & Mac installer.
@@ -109,7 +112,8 @@ This will create the following executable containing directories:
 
 ---
 
-#### Work-In-Progress
+### Work-In-Progress
+
 ![crucible-dash](https://i.imgur.com/exBc6QZ.gif)
 
 ---
