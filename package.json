@@ -9,7 +9,8 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "eslint src --color"
+    "lint": "eslint src --color",
+    "build": "rimraf CrucibleDashboard-* && electron-packager . --platform=win32,darwin,linux --arch=x64 --icon=app"
   },
   "repository": {
     "type": "git",
@@ -45,14 +46,31 @@
         ]
       },
       "electronPackagerConfig": {
-        "packageManager": "yarn",
-        "executableName": "CrucibleDash"
+        "icon": "resources/app/app",
+        "executableName": "CrucibleDash",
+        "appCopyright": "Copyright © CrucibleDashboard, Licensed under the Apache License, Version 2.0"
       },
       "electronWinstallerConfig": {
         "name": "CrucibleDashboard"
       },
-      "electronInstallerDebian": {},
-      "electronInstallerRedhat": {},
+      "electronInstallerDebian": {
+        "icon": "resources/app/app",
+        "categories": [
+          "Utility"
+        ],
+        "homepage": "https://github.com/InViN/crucible-dashboard"
+      },
+      "electronInstallerRedhat": {
+        "license": "Apache-2.0",
+        "requires": [
+          "lsb",
+          "libappindictor"
+        ],
+        "compressionLevel": 9,
+        "categories": [
+          "Utility"
+        ]
+      },
       "github_repository": {
         "owner": "InViN",
         "name": "https://github.com/InViN/crucible-dashboard"
@@ -70,13 +88,16 @@
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-preset-env": "^1.7.0",
+    "electron": "2.0.0",
     "electron-forge": "^5.2.2",
+    "electron-packager": "^12.0.2",
     "electron-prebuilt-compile": "2.0.0",
     "eslint": "^3",
     "eslint-config-airbnb": "^15",
     "eslint-plugin-import": "^2",
     "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.1.0"
+    "eslint-plugin-react": "^7.1.0",
+    "rimraf": "^2.6.2"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free-webfonts": "^1.0.9",
