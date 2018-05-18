@@ -80,12 +80,17 @@ This will create the following executable containing directories:
 | Add Change Sets to Review            | <ul><li>[ ] Planned</li>     |
 | Review Reminders (Tray Notification) | <ul><li>[ ] Planned</li>     |
 | Diff. Change Sets                    | <ul><li>[ ] Planned</li>     |
-| Add Toast Notifications              | <ul><li>[ ] Planned</li>     |
+| Add Toast Notifications              | <ul><li>[ ] In Progress</li> |
 | Add Themes                           | <ul><li>[ ] Planned</li>     |
 | Multi Server Authentication          | <ul><li>[x] Implemented</li> |
-| End-to-End Tests                     | <ul><li>[ ] Planned</li>     |
-| Electron Forge Integration           | <ul><li>[ ] Planned</li>     |
-| Uplift to Angular 5/6                | <ul><li>[ ] Planned</li>     |
+| Electron Forge Integration           | <ul><li>[x] Implemented</li> |
+ 
+#### Other To-Dos
+ - Update electronPackagerConfig
+ - Update installer config. with loading GIF & icon.
+ - Update config. for Linux & Mac installer.
+ - Vanilla JS -> Angular 6
+ - End-to-End Tests
 
 ---
 
