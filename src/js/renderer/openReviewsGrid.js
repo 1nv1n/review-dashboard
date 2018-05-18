@@ -67,13 +67,13 @@
           .attr("title", "Close Review")
           .text("C")
           .on("click", function() {
-            var $grid = $("#openReviewsTable");
-            $grid.jsGrid("deleteItem", item);
+            // var $grid = $("#openReviewsTable");
+            // $grid.jsGrid("deleteItem", item);
 
-            var countElement = document.getElementById("openBadge");
-            var count = parseFloat(countElement.innerHTML);
-            count--;
-            countElement.innerHTML = count;
+            // var countElement = document.getElementById("openBadge");
+            // var count = parseFloat(countElement.innerHTML);
+            // count--;
+            // countElement.innerHTML = count;
 
             //document.getElementById("reviewSummaryModal").style.display = "block";
             //document.getElementById("summaryToCloseReviewID").innerHTML = item.ID;
