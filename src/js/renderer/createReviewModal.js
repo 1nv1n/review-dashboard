@@ -3,9 +3,10 @@
  */
 
 // Counter for the cells in the Reviewer table.
-var insertedCellCnt = -1;
+let insertedCellCnt = -1;
+
 // Index for the last-inserted cell in the Reviewer table.
-var lastInsertedCell = 0;
+let lastInsertedCell = 0;
 
 /**
  * Launch the 'Create Review' modal.
@@ -43,7 +44,7 @@ function dismissCreateReviewModal() {
  * Creates the Server Table used for Review Creation.
  */
 function createReviewServerTable() {
-  var serverTable = document.createElement("table");
+  const serverTable = document.createElement("table");
   serverTable.classList.add("create-review-table");
 
   return serverTable;
@@ -53,7 +54,7 @@ function createReviewServerTable() {
  * Creates the Server Table Data.
  */
 function createServerTableData() {
-  var tableData = document.createElement("td");
+  const tableData = document.createElement("td");
   tableData.style = "width:350px";
 
   return tableData;
@@ -63,7 +64,7 @@ function createServerTableData() {
  * Creates the Outer Div for the Server Table.
  */
 function createServerTableOuterDiv() {
-  var outerDiv = document.createElement("div");
+  const outerDiv = document.createElement("div");
   outerDiv.classList.add("input-group");
   outerDiv.classList.add("radio-input-group");
 
@@ -74,7 +75,7 @@ function createServerTableOuterDiv() {
  * Creates the Middle Div for the Server Table.
  */
 function createServerTableMiddleDiv() {
-  var middleDiv = document.createElement("div");
+  const middleDiv = document.createElement("div");
   middleDiv.classList.add("input-group-prepend");
 
   return middleDiv;
@@ -84,7 +85,7 @@ function createServerTableMiddleDiv() {
  * Creates the Inner Div for the Server Table.
  */
 function createServerTableInnerDiv() {
-  var innerDiv = document.createElement("div");
+  const innerDiv = document.createElement("div");
   innerDiv.classList.add("input-group-text");
 
   return innerDiv;
@@ -96,14 +97,14 @@ function createServerTableInnerDiv() {
  * @param {*} serverIdx
  */
 function createServerInputRadio(serverIdx) {
-  var inputRadio = document.createElement("input");
+  const inputRadio = document.createElement("input");
   inputRadio.type = "radio";
   inputRadio.name = "crucibleServer";
   inputRadio.value = serverIdx;
   inputRadio.setAttribute("aria-label", "Radio For Server");
 
   // Auto-check the first option by default
-  if (serverIdx == 0) {
+  if (serverIdx === 0) {
     inputRadio.checked = true;
   }
 
@@ -116,7 +117,7 @@ function createServerInputRadio(serverIdx) {
  * @param {*} crucibleInstance
  */
 function createServerDisabledText(crucibleInstance) {
-  var disabledText = document.createElement("input");
+  const disabledText = document.createElement("input");
   disabledText.type = "text";
   disabledText.value = crucibleInstance;
   disabledText.classList.add("form-control");
@@ -158,11 +159,11 @@ function populateReviewerList() {
  * Adds a reviewer to the list
  */
 function addReviewer(reviewer) {
-  var reviewerTable = createReviewerTable();
-  var tableData = document.createElement("td");
-  var outerDiv = createReviewerTableOuterDiv();
-  var reviewerTableRow = createReviewerTableRow();
-  var input = createReviewerInput(reviewer);
+  const reviewerTable = createReviewerTable();
+  const tableData = document.createElement("td");
+  const outerDiv = createReviewerTableOuterDiv();
+  const reviewerTableRow = createReviewerTableRow();
+  const input = createReviewerInput(reviewer);
 
   outerDiv.appendChild(input);
   tableData.appendChild(outerDiv);
@@ -198,7 +199,7 @@ function createReviewerTable() {
  * Creates the Outer Div for the Reviewer Table.
  */
 function createReviewerTableOuterDiv() {
-  var outerDiv = document.createElement("div");
+  const outerDiv = document.createElement("div");
   outerDiv.classList.add("input-group");
   outerDiv.classList.add("mb-2");
 
@@ -209,9 +210,9 @@ function createReviewerTableOuterDiv() {
  * Creates the Table Row for a Reviewer.
  */
 function createReviewerTableRow() {
-  var reviewerTableRow;
+  let reviewerTableRow;
 
-  insertedCellCnt++;
+  insertedCellCnt += 1;
   if (isMultipleOfFour(insertedCellCnt)) {
     // Create row
     reviewerTableRow = document.createElement("tr");
@@ -231,7 +232,7 @@ function createReviewerTableRow() {
  * @param {*} reviewer
  */
 function createReviewerInput(reviewer) {
-  var input = document.createElement("input");
+  const input = document.createElement("input");
   input.id = "reviewerIdx" + insertedCellCnt;
   input.type = "text";
   input.placeholder = "ID";
@@ -261,12 +262,12 @@ function createReview() {
   consolidateReviewerList();
 
   // Get Review Information (ToDo: Validation)
-  var serverIdx = document.querySelector('input[name="crucibleServer"]:checked').value;
-  var projectKey = document.getElementById("projectKey").value;
-  var reviewName = document.getElementById("reviewName").value;
-  var reviewDesc = document.getElementById("reviewDesc").value;
-  var jiraKey = document.getElementById("jiraKey").value;
-  var allowReviewersCheck = document.getElementById("allowReviewerJoinCheck").checked;
+  const serverIdx = document.querySelector('input[name="crucibleServer"]:checked').value;
+  const projectKey = document.getElementById("projectKey").value;
+  const reviewName = document.getElementById("reviewName").value;
+  const reviewDesc = document.getElementById("reviewDesc").value;
+  const jiraKey = document.getElementById("jiraKey").value;
+  const allowReviewersCheck = document.getElementById("allowReviewerJoinCheck").checked;
 
   // Send Review Data to the Main Process
   IPC.send("create-review", crucibleServerList[serverIdx].instance, projectKey, reviewName, reviewDesc, jiraKey, allowReviewersCheck, reviewerList);

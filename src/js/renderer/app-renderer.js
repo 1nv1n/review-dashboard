@@ -4,10 +4,10 @@
  */
 
 // Is App Maximized
-var isAppMaximized = false;
+let isAppMaximized = false;
 
 /**
- * App Minimize
+ * Minimize the App.
  */
 function minimizeApp() {
   console.log(new Date().toJSON(), appConstants.LOG_INFO, "Minimizing App.");
@@ -15,7 +15,7 @@ function minimizeApp() {
 }
 
 /**
- * App Maximize
+ * Maximize the App.
  */
 function maximizeApp() {
   if (isAppMaximized) {
@@ -56,7 +56,7 @@ function blackout() {
     document.getElementById("sidebar").classList.add("sidebar-clicked");
   }
 
-  var appWrapper = document.getElementById("appWrapper");
+  const appWrapper = document.getElementById("appWrapper");
   if (!appWrapper.classList.contains("blackout")) {
     appWrapper.classList.add("blackout");
   }
@@ -68,12 +68,12 @@ function blackout() {
 function removeBlackout() {
   console.log(new Date().toJSON(), appConstants.LOG_INFO, "Revert Blackout.");
   // Expand the Sidebar only if it was programmatically collapsed
-  //if(!document.getElementById("sidebar").classList.contains("active") && document.getElementById("sidebar").classList.contains("sidebar-clicked")) {
-  //  document.getElementById("sidebarCollapse").click();
-  //  document.getElementById("sidebar").classList.remove("sidebar-clicked");
-  //}
+  // if(!document.getElementById("sidebar").classList.contains("active") && document.getElementById("sidebar").classList.contains("sidebar-clicked")) {
+  //   document.getElementById("sidebarCollapse").click();
+  //   document.getElementById("sidebar").classList.remove("sidebar-clicked");
+  // }
 
-  var appWrapper = document.getElementById("appWrapper");
+  const appWrapper = document.getElementById("appWrapper");
   if (appWrapper.classList.length > 0) {
     appWrapper.classList.remove("blackout");
   }
@@ -105,7 +105,7 @@ function logout() {
   addServerInstanceInput(null);
 
   // Login Modal after Server details are entered
-  $("#serverModal").on("hidden.bs.modal", function(e) {
+  $("#serverModal").on("hidden.bs.modal", function (element) {
     launchLoginModal();
   });
 }
@@ -140,13 +140,13 @@ function setUserInfo(userID, displayName, avatarURL) {
 
 /**
  * Sets the current Reviewer list.
- * 
+ *
  * @param {*} currentReviewerList 
  */
 function setCurrentReviewerList(currentReviewerList) {
   console.log(new Date().toJSON(), appConstants.LOG_INFO, "Setting", currentReviewerList.length, "Reviewers.");
   reviewerList = [];
-  currentReviewerList.forEach(function(element) {
+  currentReviewerList.forEach(function (element) {
     reviewerList.push(element.reviewer);
   });
 }
@@ -157,7 +157,7 @@ function setCurrentReviewerList(currentReviewerList) {
 function toggleParticles(toggle) {
   if (toggle) {
     console.log(new Date().toJSON(), appConstants.LOG_INFO, "Particles JS Enabled.");
-    particlesJS.load("particles-js", "../src/js/vendor/particles.json", function() {});
+    particlesJS.load("particles-js", "../src/js/vendor/particles.json", function () {});
   } else {
     console.log(new Date().toJSON(), appConstants.LOG_INFO, "Particles JS Disabled.");
     pJSDom[0].pJS.fn.vendors.destroypJS();

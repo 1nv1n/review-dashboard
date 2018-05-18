@@ -21,32 +21,6 @@ function removeSpinner(elementClassList) {
 }
 
 /**
- * Removes the 'Sync' icon & adds the spinner to the provided button.
- * 
- * @param {*} button 
- */
-function startRetrievalSpinner(button) {
-  // Remove the Sync Icon
-  removeSyncIcon(document.getElementById(button).classList);
-
-  // Add the spinner
-  addSpinner(document.getElementById(button).classList);
-}
-
-/**
- * Adds the 'Sync' icon & removes the spinner to the provided button.
- * 
- * @param {*} button 
- */
-function endRetrievalSpinner(button) {
-  // Remove the spinner
-  removeSpinner(document.getElementById(button).classList);
-
-  // Add back the Sync Icon
-  addSyncIcon(document.getElementById(button).classList);
-}
-
-/**
  * Adds the "Sync" Font Awesome Icon to the provided element.
  */
 function addSyncIcon(elementClassList) {
@@ -60,6 +34,32 @@ function addSyncIcon(elementClassList) {
 function removeSyncIcon(elementClassList) {
   elementClassList.remove("fas");
   elementClassList.remove("fa-sync");
+}
+
+/**
+ * Removes the 'Sync' icon & adds the spinner to the provided button.
+ *
+ * @param {*} button
+ */
+function startRetrievalSpinner(button) {
+  // Remove the Sync Icon
+  removeSyncIcon(document.getElementById(button).classList);
+
+  // Add the spinner
+  addSpinner(document.getElementById(button).classList);
+}
+
+/**
+ * Adds the 'Sync' icon & removes the spinner to the provided button.
+ *
+ * @param {*} button
+ */
+function endRetrievalSpinner(button) {
+  // Remove the spinner
+  removeSpinner(document.getElementById(button).classList);
+
+  // Add back the Sync Icon
+  addSyncIcon(document.getElementById(button).classList);
 }
 
 /**
@@ -103,7 +103,7 @@ function isEven(num) {
     return true;
   }
 
-  return num % 2 == 0;
+  return num % 2 === 0;
 }
 
 /**
@@ -116,7 +116,7 @@ function isMultipleOfFour(num) {
     return true;
   }
 
-  return num % 4 == 0;
+  return num % 4 === 0;
 }
 
 /**
@@ -137,17 +137,17 @@ function populateCrucibleServerRadioDiv(crucibleServerRadioDiv) {
   console.log(new Date().toJSON(), appConstants.LOG_INFO, "Populating Server Table.");
 
   // Remove existing
-  var crucibleServerRadioDivNode = document.getElementById(crucibleServerRadioDiv);
+  const crucibleServerRadioDivNode = document.getElementById(crucibleServerRadioDiv);
   removeChildren(crucibleServerRadioDivNode);
 
   if (typeof crucibleServerList === "undefined" || crucibleServerList == null || crucibleServerList.length == 0) {
     // TODO - Handle this
     console.log(new Date().toJSON(), appConstants.LOG_WARN, "crucibleServerList undefined!");
   } else {
-    var serverTable = createReviewServerTable();
+    const serverTable = createReviewServerTable();
 
-    var serverTableRow;
-    var serverIdx;
+    let serverTableRow;
+    let serverIdx;
     for (serverIdx = 0; serverIdx < crucibleServerList.length; serverIdx++) {
       // If even,
       if (isEven(serverIdx)) {
@@ -155,12 +155,12 @@ function populateCrucibleServerRadioDiv(crucibleServerRadioDiv) {
         serverTableRow = document.createElement("tr");
       }
 
-      var tableData = createServerTableData();
-      var outerDiv = createServerTableOuterDiv();
-      var middleDiv = createServerTableMiddleDiv();
-      var innerDiv = createServerTableInnerDiv();
-      var inputRadio = createServerInputRadio(serverIdx);
-      var disabledText = createServerDisabledText(crucibleServerList[serverIdx].instance);
+      const tableData = createServerTableData();
+      const outerDiv = createServerTableOuterDiv();
+      const middleDiv = createServerTableMiddleDiv();
+      const innerDiv = createServerTableInnerDiv();
+      const inputRadio = createServerInputRadio(serverIdx);
+      const disabledText = createServerDisabledText(crucibleServerList[serverIdx].instance);
 
       innerDiv.appendChild(inputRadio);
       middleDiv.appendChild(innerDiv);
@@ -176,7 +176,7 @@ function populateCrucibleServerRadioDiv(crucibleServerRadioDiv) {
 }
 
 function createToast() {
-  var toastDiv = document.getElementById("toast")
+  const toastDiv = document.getElementById("toast")
   toastDiv.className = "show";
   setTimeout(function () {
     toastDiv.className = toastDiv.className.replace("show", "");
