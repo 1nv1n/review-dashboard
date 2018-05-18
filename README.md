@@ -44,7 +44,7 @@
 
 ---
 
-### Run From Source:
+### Run From Source
 ```
 git clone https://github.com/InViN/crucible-dashboard.git
 cd crucible-dashboard
@@ -54,7 +54,7 @@ npm start
 
 ---
 
-### Build Executable:
+### Build Executable
 ```
 git clone https://github.com/InViN/crucible-dashboard.git
 cd crucible-dashboard
@@ -65,6 +65,21 @@ This will create the following executable containing directories:
  - CrucibleDashboard-win32-x64
  - CrucibleDashboard-linux-x64
  - CrucibleDashboard-darwin-x64
+
+---
+
+### Usage
+
+- After launching CrucibleDashboard.exe, input the full server address for your Crucible instance (eg: crucible.server.com).
+  - Toggle between `http` & `https` as needed.
+  - Use the "+" button to add multiple server instances.
+- Input your username & password. Assuming a successful login, the App should load up.
+- Navigate through the App by using the button bar (below the App logo).
+- 'Create' brings up a dialog to create a new Review.
+- 'Search' brings up a dialog to search for Reviews by JIRA identifiers (if properly linked).
+- 'Pending' updates the page with a table of pending reviews (reviews that you need to complete).
+- 'Open' updates the page with a table of open reviews (reviews that you have created & are currently open).
+- 'Statistics' updates the page with review statistics.
 
 ---
 
