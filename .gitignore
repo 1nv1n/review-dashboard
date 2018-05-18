@@ -65,3 +65,8 @@ typings/
 
 # Electron Forge Output Directory
 out/
+
+# Packaged Directories
+CrucibleDashboard-darwin-x64/
+CrucibleDashboard-linux-x64/
+CrucibleDashboard-win32-x64/
