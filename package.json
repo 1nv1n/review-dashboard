@@ -69,7 +69,7 @@
         "name": "CrucibleDashboard",
         "setupIcon": "resources/icons/app.ico",
         "loadingGif": "",
-        "setupExe": "Setup.exe"
+        "setupExe": "CrucibleDashSetup.exe"
       },
       "electronInstallerDebian": {
         "icon": "resources/icons/app",
@@ -96,7 +96,7 @@
         "prerelease": true
       },
       "windowsStoreConfig": {
-        "packageName": "",
+        "packageName": "CrucibleDashboard",
         "name": "CrucibleDashboard"
       }
     }
