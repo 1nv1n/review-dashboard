@@ -241,11 +241,28 @@ function registerGlobalShortcuts() {
 APP.on("ready", (appReady) => {
   console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "app-ready");
 
+  APP.setAppUserModelId("com.crucibledashboard");
+
   // Create the Main Window
   createMainWindow();
 
   // Register Global Shortcuts
   registerGlobalShortcuts();
+
+  // Clear out thumbnail toolbar buttons
+  mainWindow.setThumbarButtons([]);
+
+  // Clear App Taskbar Tasks
+  APP.setUserTasks([]);
+
+  // Enforce single instance
+  APP.makeSingleInstance((commandLine, workingDirectory) => {
+    if (mainWindow.isMinimized()) {
+      mainWindow.restore();
+    }
+
+    mainWindow.focus();
+  });
 
   // End Init Time Log
   console.timeEnd("Startup Time");

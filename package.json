@@ -45,16 +45,34 @@
           "zip"
         ]
       },
+      "publish_targets": {
+        "win32": [
+          "github"
+        ],
+        "darwin": [
+          "github"
+        ],
+        "linux": [
+          "github"
+        ]
+      },
       "electronPackagerConfig": {
-        "icon": "resources/app/app",
+        "icon": "resources/icons/app",
         "executableName": "CrucibleDashboard",
-        "appCopyright": "Copyright © CrucibleDashboard, Licensed under the Apache License, Version 2.0"
+        "appCopyright": "Copyright © CrucibleDashboard, Licensed under the Apache License, Version 2.0",
+        "win32metadata": {
+          "ProductName": "CrucibleDashboard",
+          "CompanyName": "CrucibleDashboard"
+        }
       },
       "electronWinstallerConfig": {
-        "name": "CrucibleDashboard"
+        "name": "CrucibleDashboard",
+        "setupIcon": "resources/icons/app.ico",
+        "loadingGif": "",
+        "setupExe": "Setup.exe"
       },
       "electronInstallerDebian": {
-        "icon": "resources/app/app",
+        "icon": "resources/icons/app",
         "categories": [
           "Utility"
         ],
@@ -73,7 +91,9 @@
       },
       "github_repository": {
         "owner": "InViN",
-        "name": "https://github.com/InViN/crucible-dashboard"
+        "name": "https://github.com/InViN/crucible-dashboard",
+        "draft": false,
+        "prerelease": true
       },
       "windowsStoreConfig": {
         "packageName": "",
