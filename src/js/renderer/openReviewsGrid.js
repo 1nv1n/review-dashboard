@@ -67,26 +67,25 @@
         .attr("title", "Close Review")
         .text("C")
         .on("click", function () {
-          // var $grid = $("#openReviewsTable");
-          // $grid.jsGrid("deleteItem", item);
+          var $grid = $("#openReviewsTable");
+          $grid.jsGrid("deleteItem", item);
 
-          // var countElement = document.getElementById("openBadge");
-          // var count = parseFloat(countElement.innerHTML);
-          // count--;
-          // countElement.innerHTML = count;
+          var countElement = document.getElementById("openBadge");
+          var count = parseFloat(countElement.innerHTML);
+          count -= 1;
+          countElement.innerHTML = count;
 
-          // document.getElementById("reviewSummaryModal").style.display = "block";
-          // document.getElementById("summaryToCloseReviewID").innerHTML = item.ID;
+          closeReview(item.instance, item.reviewID);
         })
       );
+
       $result = $result.add(
         $("<button class='btn btn-primary btn-sm btn-grid'>R</button>")
         .attr("type", "button")
         .attr("title", "Remind Reviewers")
         .text("R")
         .on("click", function () {
-          // document.getElementById("reviewReminderModal").style.display = "block";
-          // document.getElementById("reminderReviewID").innerHTML = item.ID;
+          remindReviewers(item.instance, item.reviewID);
         })
       );
       return $result;

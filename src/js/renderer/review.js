@@ -81,12 +81,33 @@ function getReviewStatistics() {
 }
 
 /**
- * Send the Review ID to the main process to "Complete".
+ * Complete a review..
  *
+ * @param {*} instanceString
  * @param {*} reviewID
  */
-function completeSelectedReview(reviewID) {
-  IPC.send("complete-review", reviewID);
+function completeSelectedReview(instanceString, reviewID) {
+  IPC.send("complete-review", instanceString, reviewID);
+}
+
+/**
+ * Close a review.
+ *
+ * @param {*} instanceString
+ * @param {*} reviewID
+ */
+function closeReview(instanceString, reviewID) {
+  IPC.send("close-review", instanceString, reviewID);
+}
+
+/**
+ * Remind Reviewers.
+ *
+ * @param {*} instanceString
+ * @param {*} reviewID
+ */
+function remindReviewers(instanceString, reviewID) {
+  IPC.send("remind-reviewers", instanceString, reviewID);
 }
 
 /**

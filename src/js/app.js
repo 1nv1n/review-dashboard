@@ -371,6 +371,27 @@ IPC.on("retrieve-statistics", (event, flag) => {
 });
 
 /**
+ * Complete a Review
+ */
+IPC.on("complete-review", (event, instanceString, reviewID) => {
+  REVIEW_PROCESS.completeReview(neDB, mainWindow, instanceString, reviewID);
+});
+
+/**
+ * Close a Review
+ */
+IPC.on("close-review", (event, instanceString, reviewID) => {
+  REVIEW_PROCESS.closeReview(neDB, mainWindow, instanceString, reviewID);
+});
+
+/**
+ * Remind Reviewers
+ */
+IPC.on("remind-reviewers", (event, instanceString, reviewID) => {
+  REVIEW_PROCESS.remindReviewers(neDB, mainWindow, instanceString, reviewID);
+});
+
+/**
  * Clear all user details.
  */
 IPC.on("logout", (event, flag) => {

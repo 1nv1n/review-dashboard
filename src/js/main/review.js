@@ -334,6 +334,84 @@ module.exports = {
         mainWindow.webContents.send("retrieved-reviewer-statistics", reviewerList);
       }
     });
+  },
+
+  // Completes a review.
+  completeReview: function completeReview(neDB, mainWindow, instanceString, reviewID) {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "completeReview()", "Completing Review:", reviewID);
+
+    const COMPLETE_REVIEW_OPTIONS = {
+      method: "POST",
+      uri: instanceString +
+        API_CONSTANTS.CRUCIBLE_REST_BASE_URL +
+        API_CONSTANTS.CRUCIBLE_REST_REVIEWS +
+        reviewID +
+        API_CONSTANTS.COMPLETE_REVIEW,
+      headers: {
+        "User-Agent": "Request-Promise"
+      },
+      body: {},
+      json: true
+    };
+
+    REQUEST_PROMISE(COMPLETE_REVIEW_OPTIONS).then((parsedBody) => {
+      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "completeReview()", "Completed Review.", parsedBody);
+    }).catch((err) => {
+      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "completeReview()", err);
+      mainWindow.webContents.send("complete-review-failed", reviewID);
+    });
+  },
+
+  // Closes a review.
+  closeReview: function closeReview(neDB, mainWindow, instanceString, reviewID) {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "closeReview()", "Closing Review:", reviewID);
+
+    const CLOSE_REVIEW_OPTIONS = {
+      method: "POST",
+      uri: instanceString +
+        API_CONSTANTS.CRUCIBLE_REST_BASE_URL +
+        API_CONSTANTS.CRUCIBLE_REST_REVIEWS +
+        reviewID +
+        API_CONSTANTS.CLOSE_REVIEW,
+      headers: {
+        "User-Agent": "Request-Promise"
+      },
+      body: {},
+      json: true
+    };
+
+    REQUEST_PROMISE(CLOSE_REVIEW_OPTIONS).then((parsedBody) => {
+      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "closeReview()", "Closed Review.", parsedBody);
+    }).catch((err) => {
+      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "closeReview()", err);
+      mainWindow.webContents.send("close-review-failed", reviewID);
+    });
+  },
+
+  // Remind reviewers.
+  remindReviewers: function remindReviewers(neDB, mainWindow, instanceString, reviewID) {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "remindReviewers()", "Reminding Reviewers on Review:", reviewID);
+
+    const REMIND_REVIEWERS_OPTIONS = {
+      method: "POST",
+      uri: instanceString +
+        API_CONSTANTS.CRUCIBLE_REST_BASE_URL +
+        API_CONSTANTS.CRUCIBLE_REST_REVIEWS +
+        reviewID +
+        API_CONSTANTS.REMIND_ABOUT_REVIEW,
+      headers: {
+        "User-Agent": "Request-Promise"
+      },
+      body: {},
+      json: true
+    };
+
+    REQUEST_PROMISE(REMIND_REVIEWERS_OPTIONS).then((parsedBody) => {
+      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "remindReviewers()", "Reminded Reviewers.", parsedBody);
+    }).catch((err) => {
+      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "remindReviewers()", err);
+      mainWindow.webContents.send("remind-reviewers-failed", reviewID);
+    });
   }
 };
 

@@ -72,10 +72,10 @@
 
           var countElement = document.getElementById("pendingBadge");
           var count = parseFloat(countElement.innerHTML);
-          count--;
+          count -= 1;
           countElement.innerHTML = count;
 
-          completeSelectedReview(item.ID);
+          completeSelectedReview(item.instance, item.reviewID);
         })
       );
       return $result;
