@@ -70,16 +70,16 @@ This will create the following executable containing directories:
 
 ### Usage
 
-- After launching CrucibleDashboard.exe, input the full server address for your Crucible instance (eg: crucible.server.com).
+- Launch `CrucibleDashboard.exe` & input the full server address for your Crucible instance (eg: crucible.server.com).
   - Toggle between `http` & `https` as needed.
-  - Use the "+" button to add multiple server instances.
-- Input your username & password. Assuming a successful login, the App should load up.
-- Navigate through the App by using the button bar (below the App logo).
-- 'Create' brings up a dialog to create a new Review.
-- 'Search' brings up a dialog to search for Reviews by JIRA identifiers (if properly linked).
-- 'Pending' updates the page with a table of pending reviews (reviews that you need to complete).
-- 'Open' updates the page with a table of open reviews (reviews that you have created & are currently open).
-- 'Statistics' updates the page with review statistics.
+  - Use the `+` button to add multiple server instances & hit `Save` once done to bring up the login screen.
+- Input your username & password on the login screen.
+- Use the button bar (below the App logo), to go through the views of the App.
+- `Create` button brings up a dialog to create a new Review.
+- `Search` brings up a dialog to search for Reviews by JIRA identifiers (if properly linked).
+- `Pending` updates the App with a table of pending reviews (reviews that you need to complete).
+- `Open` updates the App with a table of open reviews (reviews that you have created & are currently open).
+- `Statistics` updates the App with review statistics.
 
 ---
 
@@ -89,13 +89,13 @@ This will create the following executable containing directories:
 - [x] Display Open Reviews
 - [x] Display Pending Reviews
 - [x] Create Review
-- [ ] Close Open Review
+- [x] Close Open Review
 - [ ] Open Review Remind Reviewers
-- [ ] Complete Pending Review
+- [z] Complete Pending Review
 - [ ] Add Change Sets to Review
 - [ ] Review Reminders (Tray Notification)
 - [ ] Diff. Change Sets
-- [ ] Add Toast Notifications
+- [x] Add Toast Notifications
 - [ ] Add Themes
 - [x] Multi Server Authentication
 - [x] Electron Forge Integration
