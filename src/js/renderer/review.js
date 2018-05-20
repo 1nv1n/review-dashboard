@@ -3,22 +3,30 @@
  */
 
 /**
- * Request the main process to retrieve both "Pending" & "Open" Reviews from the Database.
+ * Request the main process to retrieve from the Database:
+ * - Pending Reviews
+ * - Open Reviews
+ * - Review Statistics
  */
-function retrievePendingOpenReviews() {
+function retrieveReviewData() {
   retrievePendingReviews();
   retrieveOpenReviews();
+  retrieveReviewStatistics();
 
   // Show Pending Reviews after initial retrieval.
   showPendingReviewDiv();
 }
 
 /**
- * Request the main process to force-get both "Pending" & "Open" Reviews from the Database.
+ * Request the main process to force-get from Crucible:
+ * - Pending Reviews
+ * - Open Reviews
+ * - Review Statistics
  */
-function getPendingOpenReviews() {
+function getReviewData() {
   getPendingReviews();
   getOpenReviews();
+  getReviewStatistics();
 
   // Show Pending Reviews after initial retrieval.
   showPendingReviewDiv();
@@ -41,6 +49,14 @@ function retrieveOpenReviews() {
 }
 
 /**
+ * Request the main process to retrieve review statistics from the Database.
+ */
+function retrieveReviewStatistics() {
+  startRetrievalSpinner("refreshStatisticsIcon");
+  IPC.send("retrieve-statistics", false);
+}
+
+/**
  * Request the main process to (force-get) "Pending" reviews.
  */
 function getPendingReviews() {
@@ -57,7 +73,7 @@ function getOpenReviews() {
 }
 
 /**
- * Request the main process to (force-get) "Open" reviews.
+ * Request the main process to (force-get) review staticstics.
  */
 function getReviewStatistics() {
   startRetrievalSpinner("refreshStatisticsIcon");
@@ -194,12 +210,13 @@ function clearOpenReviewTable() {
  * @param {*} pendingReviewList
  */
 function handlePendingRetrieval(pendingReviewList) {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "handlePendingRetrieval()", "Setting", pendingReviewList.length, "Pending Review(s).");
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "handlePendingRetrieval()", "Setting", pendingReviewList.length, "Pending Review(s).");
 
   endRetrievalSpinner("refreshPendingIcon");
 
   // Update the count on the badge
   document.getElementById("pendingBadge").innerHTML = pendingReviewList.length;
+
   // Add Pending Reviews into the grid
   $("#pendingReviewsTable").jsGrid({
     width: "100%",
@@ -218,48 +235,40 @@ function handlePendingRetrieval(pendingReviewList) {
     loadMessage: "<p style='color: #FFFFFF'>Retrieving Pending Reviews...</p>",
     noDataContent: "<p style='color: #FFFFFF'>No Pending Reviews!</p>",
     rowDoubleClick: handleDoubleClick,
-    fields: [
-      {
-        title: "ID",
-        align: "left",
-        name: "reviewID",
-        type: "text",
-        width: 100
-      },
-      {
-        title: "Review Title",
-        align: "left",
-        name: "reviewName",
-        type: "text",
-        width: 375
-      },
-      {
-        title: "Author",
-        align: "left",
-        name: "reviewAuthor",
-        type: "text",
-        width: 125
-      },
-      {
-        title: "Creation",
-        align: "left",
-        name: "createDt",
-        type: "text",
-        width: 40
-      },
-      {
-        type: "pendingReviewControl"
-      }
-    ],
+    fields: [{
+      title: "ID",
+      align: "left",
+      name: "reviewID",
+      type: "text",
+      width: 100
+    }, {
+      title: "Review Title",
+      align: "left",
+      name: "reviewName",
+      type: "text",
+      width: 375
+    }, {
+      title: "Author",
+      align: "left",
+      name: "reviewAuthor",
+      type: "text",
+      width: 125
+    }, {
+      title: "Creation",
+      align: "left",
+      name: "createDt",
+      type: "text",
+      width: 40
+    }, {
+      type: "pendingReviewControl"
+    }],
     controller: {
-      loadData: function(filter) {
-        return $.grep(pendingReviewList, function(item) {
-          return (
-            (!filter.ID || item.ID.indexOf(filter.ID) > -1) &&
+      loadData: function (filter) {
+        return $.grep(pendingReviewList, function (item) {
+          return ((!filter.ID || item.ID.indexOf(filter.ID) > -1) &&
             (!filter.Name || item.Name.indexOf(filter.Name) > -1) &&
             (!filter.Author || item.Author.indexOf(filter.Author) > -1) &&
-            (!filter.Created || item.Created.indexOf(filter.Created) > -1)
-          );
+            (!filter.Created || item.Created.indexOf(filter.Created) > -1));
         });
       }
     }
@@ -273,13 +282,14 @@ function handlePendingRetrieval(pendingReviewList) {
  * @param {*} openReviewList
  */
 function handleOpenRetrieval(openReviewList) {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "handleOpenRetrieval()", "Setting", openReviewList.length, "Open Review(s).");
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "handleOpenRetrieval()", "Setting", openReviewList.length, "Open Review(s).");
 
   endRetrievalSpinner("refreshOpenIcon");
 
   // Update the count on the badge
   document.getElementById("openBadge").innerHTML = openReviewList.length;
-  // Add Pending Reviews into the grid
+
+  // Add Open Reviews into the grid
   $("#openReviewsTable").jsGrid({
     width: "100%",
     heading: true,
@@ -296,40 +306,33 @@ function handleOpenRetrieval(openReviewList) {
     rowDoubleClick: handleDoubleClick,
     loadMessage: "<p style='color: #FFFFFF'>Retrieving Open Reviews...</p>",
     noDataContent: "<p style='color: #FFFFFF'>No Open Reviews!</p>",
-    fields: [
-      {
-        title: "ID",
-        align: "left",
-        name: "reviewID",
-        type: "text",
-        width: 100
-      },
-      {
-        title: "Review Title",
-        align: "left",
-        name: "reviewName",
-        type: "text",
-        width: 450
-      },
-      {
-        title: "Creation",
-        align: "left",
-        name: "createDt",
-        type: "text",
-        width: 40
-      },
-      {
-        type: "openReviewControl"
-      }
-    ],
+    fields: [{
+      title: "ID",
+      align: "left",
+      name: "reviewID",
+      type: "text",
+      width: 100
+    }, {
+      title: "Review Title",
+      align: "left",
+      name: "reviewName",
+      type: "text",
+      width: 450
+    }, {
+      title: "Creation",
+      align: "left",
+      name: "createDt",
+      type: "text",
+      width: 40
+    }, {
+      type: "openReviewControl"
+    }],
     controller: {
-      loadData: function(filter) {
-        return $.grep(openReviewList, function(item) {
-          return (
-            (!filter.ID || item.ID.indexOf(filter.ID) > -1) &&
+      loadData: function (filter) {
+        return $.grep(openReviewList, function (item) {
+          return ((!filter.ID || item.ID.indexOf(filter.ID) > -1) &&
             (!filter.Name || item.Name.indexOf(filter.Name) > -1) &&
-            (!filter.Created || item.Created.indexOf(filter.Created) > -1)
-          );
+            (!filter.Created || item.Created.indexOf(filter.Created) > -1));
         });
       }
     }

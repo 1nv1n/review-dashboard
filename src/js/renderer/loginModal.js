@@ -6,14 +6,19 @@
  * Launch the 'Login' modal.
  */
 function launchLoginModal() {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Launching the Login Modal.");
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Launching the Login Modal.");
 
   // Blackout before opening the Modal
   blackout();
 
   // jQuery
-  $("#loginModal").modal({ backdrop: false, keyboard: false, focus: true, show: true });
-  $("#loginModal").on("shown.bs.modal", function(event) {
+  $("#loginModal").modal({
+    backdrop: false,
+    keyboard: false,
+    focus: true,
+    show: true
+  });
+  $("#loginModal").on("shown.bs.modal", function (event) {
     document.getElementById("userID").focus();
   });
 }
@@ -22,7 +27,7 @@ function launchLoginModal() {
  * Dismiss the 'Login' modal.
  */
 function dismissLoginModal() {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Dismissing the Login Modal.");
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Dismissing the Login Modal.");
 
   // jQuery
   $("#loginModal").modal("hide");
@@ -35,7 +40,7 @@ function dismissLoginModal() {
  * Attempt to log in using the provided credentials
  */
 function login() {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Attempting to Login.");
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Attempting to Login.");
 
   // Send the user:pass to the background process for authentication
   IPC.send("login-attempt", document.getElementById("userID").value, document.getElementById("password").value);
@@ -59,7 +64,7 @@ function clearIDPassInput() {
  * Handle the attempted log-in
  */
 function loginInAttempted(isAuthenticated) {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Login Response: " + isAuthenticated);
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Login Response: " + isAuthenticated);
 
   // Remove the spinner
   removeSpinner(document.getElementById("loginIcon").classList);
@@ -75,13 +80,13 @@ function loginInAttempted(isAuthenticated) {
     // Restore Button & Review Div Containers
     showContentContainer();
 
-    // Retrieve Pending & Open Reviews from the Database
-    getPendingOpenReviews();
+    // Retrieve Review Data from the Database
+    getReviewData();
 
     // Dismiss the Modal.
     dismissLoginModal();
   } else {
-    // TODO
+    createToast("Authentication Failure.");
   }
 }
 

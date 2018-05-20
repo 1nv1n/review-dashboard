@@ -6,13 +6,17 @@
  * Launch the 'Info.' modal.
  */
 function launchInfoModal() {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Launching Information Modal.");
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Launching Info. Modal.");
 
   // Blackout before opening the Modal
   blackout();
 
   // jQuery
-  $("#infoModal").modal({ backdrop: false, keyboard: false, show: true });
+  $("#infoModal").modal({
+    backdrop: false,
+    keyboard: false,
+    show: true
+  });
 
   // Set info.
   setInfoToModal();
@@ -43,7 +47,7 @@ function setInfoToModal() {
  * Dismiss the Info Modal
  */
 function dismissInfoModal() {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Dismissing Information Modal.");
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Dismissing Info. Modal.");
 
   // jQuery
   $("#infoModal").modal("hide");

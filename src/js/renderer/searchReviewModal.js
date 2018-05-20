@@ -6,13 +6,18 @@
  * Launch the 'Search' modal.
  */
 function launchSearchReviewModal() {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Launching Search-Review Modal.");
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Launching Search-Review Modal.");
 
   // Blackout before opening the Modal
   blackout();
 
   // jQuery
-  $("#searchReviewModal").modal({ backdrop: false, keyboard: false, focus: true, show: true });
+  $("#searchReviewModal").modal({
+    backdrop: false,
+    keyboard: false,
+    focus: true,
+    show: true
+  });
 
   // Populate the Crucible serer instances
   populateCrucibleServerRadioDiv("searchCrucibleServerRadioDiv");
@@ -22,33 +27,13 @@ function launchSearchReviewModal() {
  * Dismiss the 'Search' modal.
  */
 function dismissSearchReviewModal() {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Dismissing Search-Review Modal.");
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Dismissing Search-Review Modal.");
 
   // jQuery
   $("#searchReviewModal").modal("hide");
 
   // Display App Wrapper
   removeBlackout();
-}
-
-/**
- * Search for Reviews.
- */
-function searchForReview() {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Searching for Review.");
-
-  // Remove existing search results
-  removeChildren(document.getElementById("searchResultsDiv"));
-
-  // Replace the 'Search' icon with a spinner
-  removeSearchIcon(document.getElementById("searchForReviewIcon").classList);
-  addSpinner(document.getElementById("searchForReviewIcon").classList);
-
-  // Selected Crucible Server Index
-  var serverIdx = document.querySelector('input[name="crucibleServer"]:checked').value;
-
-  // Send JIRA key to the main process to handle
-  IPC.send("search-review", crucibleServerList[serverIdx].instance, document.getElementById("jiraSearchKey").value);
 }
 
 /**
@@ -68,13 +53,33 @@ function removeSearchIcon(elementClassList) {
 }
 
 /**
+ * Search for Reviews.
+ */
+function searchForReview() {
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Searching for Review.");
+
+  // Remove existing search results
+  removeChildren(document.getElementById("searchResultsDiv"));
+
+  // Replace the 'Search' icon with a spinner
+  removeSearchIcon(document.getElementById("searchForReviewIcon").classList);
+  addSpinner(document.getElementById("searchForReviewIcon").classList);
+
+  // Selected Crucible Server Index
+  const SERVER_IDX = document.querySelector('input[name="crucibleServer"]:checked').value;
+
+  // Send JIRA key to the main process to handle
+  IPC.send("search-review", _GLOBAL_CRUCIBLE_SERVER_LIST[SERVER_IDX].instance, document.getElementById("jiraSearchKey").value);
+}
+
+/**
  * Handle Review Search.
  *
  * @param {*} couldSearch
  * @param {*} reviewData
  */
 function handleReviewSearch(couldSearch, reviewData) {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Review Search:", couldSearch);
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Review Search:", couldSearch);
 
   if (couldSearch) {
     // Set results to the modal's table
@@ -84,51 +89,33 @@ function handleReviewSearch(couldSearch, reviewData) {
     removeSpinner(document.getElementById("searchForReviewIcon").classList);
     addSearchIcon(document.getElementById("searchForReviewIcon").classList);
   } else {
-    // ToDo: Handle/Display Toast
+    createToast("Search Failed.");
   }
 }
 
 /**
- * Populates the search result to the modal's table.
- *
- * @param {*} reviewData
+ * Sends the Review ID to the main process to open externally.
  */
-function populateSearchResult(reviewData) {
-  var searchResultTable = createSearchResultTable();
-
-  // Add from the main list
-  reviewData.forEach(function(review) {
-    var searchResultTableRow = createSearchResultTableRow();
-    var reviewIDTableData = createReviewIDTableData(review.permaId.id);
-    var reviewNameTableData = createReviewNameTableData(review.name);
-    var authorTableData = createAuthorTableData(review.author.avatarUrl, review.author.displayName);
-
-    searchResultTableRow.appendChild(authorTableData);
-    searchResultTableRow.appendChild(reviewIDTableData);
-    searchResultTableRow.appendChild(reviewNameTableData);
-
-    searchResultTable.appendChild(searchResultTableRow);
-  });
-
-  document.getElementById("searchResultsDiv").appendChild(searchResultTable);
+function handleSearchResultOpen() {
+  IPC.send("open-review", this.value, this.innerHTML);
 }
 
 /**
  * Creates the Search Result Table.
  */
 function createSearchResultTable() {
-  var searchResultTable = document.createElement("table");
-  searchResultTable.classList.add("create-review-table");
+  const SEARCH_RESULT_TABLE = document.createElement("table");
+  SEARCH_RESULT_TABLE.classList.add("create-review-table");
 
-  return searchResultTable;
+  return SEARCH_RESULT_TABLE;
 }
 
 /**
  * Creates the Search Result Table Row.
  */
 function createSearchResultTableRow() {
-  var searchResultTableRow = document.createElement("tr");
-  return searchResultTableRow;
+  const SEARCH_RESULT_TABLE_ROW = document.createElement("tr");
+  return SEARCH_RESULT_TABLE_ROW;
 }
 
 /**
@@ -137,19 +124,19 @@ function createSearchResultTableRow() {
  * @param {*} reviewID
  */
 function createReviewIDTableData(reviewID) {
-  var reviewButton = document.createElement("button");
-  reviewButton.innerHTML = reviewID;
-  reviewButton.onclick = handleSearchResultOpen;
-  reviewButton.classList.add("btn");
-  reviewButton.classList.add("btn-sm");
-  reviewButton.classList.add("btn-primary");
-  reviewButton.setAttribute("value", crucibleServerList[document.querySelector('input[name="crucibleServer"]:checked').value].instance);
+  const REVIEW_BUTTON = document.createElement("button");
+  REVIEW_BUTTON.innerHTML = reviewID;
+  REVIEW_BUTTON.onclick = handleSearchResultOpen;
+  REVIEW_BUTTON.classList.add("btn");
+  REVIEW_BUTTON.classList.add("btn-sm");
+  REVIEW_BUTTON.classList.add("btn-primary");
+  REVIEW_BUTTON.setAttribute("value", _GLOBAL_CRUCIBLE_SERVER_LIST[document.querySelector("input[name='crucibleServer']:checked").value].instance);
 
-  var reviewIDTableData = document.createElement("td");
-  reviewIDTableData.appendChild(reviewButton);
-  reviewIDTableData.style = "width:200px";
+  const REVIEW_ID_TABLE_DATA = document.createElement("td");
+  REVIEW_ID_TABLE_DATA.appendChild(REVIEW_BUTTON);
+  REVIEW_ID_TABLE_DATA.style = "width:200px";
 
-  return reviewIDTableData;
+  return REVIEW_ID_TABLE_DATA;
 }
 
 /**
@@ -158,10 +145,10 @@ function createReviewIDTableData(reviewID) {
  * @param {*} reviewName
  */
 function createReviewNameTableData(reviewName) {
-  var reviewNameTableData = document.createElement("td");
-  reviewNameTableData.style = "width:400px";
-  reviewNameTableData.innerHTML = reviewName;
-  return reviewNameTableData;
+  const REVIEW_NAME_TABLE_DATA = document.createElement("td");
+  REVIEW_NAME_TABLE_DATA.style = "width:400px";
+  REVIEW_NAME_TABLE_DATA.innerHTML = reviewName;
+  return REVIEW_NAME_TABLE_DATA;
 }
 
 /**
@@ -171,24 +158,42 @@ function createReviewNameTableData(reviewName) {
  * @param {*} displayName
  */
 function createAuthorTableData(avatarURL, displayName) {
-  var reviewAuthorTableData = document.createElement("td");
+  const AUTHOR_TABLE_DATA = document.createElement("td");
 
-  var authorAvatar = document.createElement("img");
-  authorAvatar.alt = "ReviewAuthorAvatar";
-  authorAvatar.title = displayName;
-  authorAvatar.src = avatarURL;
-  authorAvatar.setAttribute("height", "20px");
-  authorAvatar.setAttribute("width", "20px");
+  const AUTHOR_AVATAR_IMG = document.createElement("img");
+  AUTHOR_AVATAR_IMG.alt = "ReviewAuthorAvatar";
+  AUTHOR_AVATAR_IMG.title = displayName;
+  AUTHOR_AVATAR_IMG.src = avatarURL;
+  AUTHOR_AVATAR_IMG.setAttribute("height", "20px");
+  AUTHOR_AVATAR_IMG.setAttribute("width", "20px");
 
-  reviewAuthorTableData.style = "width:50px";
-  reviewAuthorTableData.appendChild(authorAvatar);
+  AUTHOR_TABLE_DATA.style = "width:50px";
+  AUTHOR_TABLE_DATA.appendChild(AUTHOR_AVATAR_IMG);
 
-  return reviewAuthorTableData;
+  return AUTHOR_TABLE_DATA;
 }
 
 /**
- * Sends the Review ID to the main process to open externally.
+ * Populates the search result to the modal's table.
+ *
+ * @param {*} reviewData
  */
-function handleSearchResultOpen() {
-  IPC.send("open-review", this.value, this.innerHTML);
+function populateSearchResult(reviewData) {
+  const SEARCH_RESULT_TABLE = createSearchResultTable();
+
+  // Add from the main list
+  reviewData.forEach((review) => {
+    const SEARCH_RESULT_TABLE_ROW = createSearchResultTableRow();
+    const REVIEW_ID_TABLE_DATA = createReviewIDTableData(review.permaId.id);
+    const REVIEW_NAME_TABLE_DATA = createReviewNameTableData(review.name);
+    const authorTableData = createAuthorTableData(review.author.avatarUrl, review.author.displayName);
+
+    SEARCH_RESULT_TABLE_ROW.appendChild(authorTableData);
+    SEARCH_RESULT_TABLE_ROW.appendChild(REVIEW_ID_TABLE_DATA);
+    SEARCH_RESULT_TABLE_ROW.appendChild(REVIEW_NAME_TABLE_DATA);
+
+    SEARCH_RESULT_TABLE.appendChild(SEARCH_RESULT_TABLE_ROW);
+  });
+
+  document.getElementById("searchResultsDiv").appendChild(SEARCH_RESULT_TABLE);
 }

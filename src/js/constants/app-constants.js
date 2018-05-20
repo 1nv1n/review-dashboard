@@ -6,7 +6,7 @@ function define(name, value) {
 }
 
 // Logger Level Constants
-define("LOG_INFO", "INFO");
-define("LOG_WARN", "WARN");
+define("LOG_INFO",  "INFO");
+define("LOG_WARN",  "WARN");
 define("LOG_DEBUG", "DEBUG");
 define("LOG_ERROR", "ERROR");

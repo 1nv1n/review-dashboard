@@ -2,15 +2,18 @@
  * Handle operations on the Review
  */
 
+const API_CONSTANTS = require("../constants/api-constants");
+const APP_CONSTANTS = require("../constants/app-constants");
+const REQUEST_PROMISE = require("request-promise");
+const ELECTRON = require("electron");
+
+const ELECTRON_SHELL = ELECTRON.shell;
+
 // Export all functions.
 module.exports = {
   // Create Review
-  createReview: function(
+  createReview: function createReview(
     neDB,
-    appConstants,
-    apiConstants,
-    requestPromise,
-    shell,
     mainWindow,
     instanceString,
     currentUser,
@@ -21,153 +24,151 @@ module.exports = {
     allowReviewersToJoin,
     reviewerList
   ) {
-    console.log(new Date().toJSON(), appConstants.LOG_INFO, "createReview(): For:", jiraIssue);
+    console.log(new Date().toJSON(), API_CONSTANTS.LOG_INFO, "createReview()");
 
-    var createDate = new Date();
-    var dueDate = new Date(createDate.getTime() + 604800000); // Default to a one week turnaround
+    const CREATE_DATE = new Date();
+    const DUE_DATE = new Date(CREATE_DATE.getTime() + 604800000); // Default to a one week turnaround
 
-    neDB.find(
-      {
-        type: "CrucibleToken",
-        instance: instanceString
-      },
-      function(err, crucibleRecords) {
-        if (err) {
-          console.log(new Date().toJSON(), appConstants.LOG_ERROR, "createReview()", err);
-        } else {
-          if (crucibleRecords.length === 0) {
-            console.log(new Date().toJSON(), appConstants.LOG_ERROR, "createReview()", "No Crucible records found while attempting to create the review.");
-          } else if (crucibleRecords.length > 1) {
-            console.log(
-              new Date().toJSON(),
-              appConstants.LOG_ERROR,
-              "createReview()",
-              "Multiple Crucible records found while attempting to create the review."
-            );
-          } else {
-            var createOptions = {
-              method: "POST",
-              uri: instanceString + apiConstants.CRUCIBLE_REST_BASE_URL + apiConstants.CRUCIBLE_REST_REVIEWS + apiConstants.FEAUTH + crucibleRecords[0].token,
-              headers: {
-                "User-Agent": "Request-Promise"
+    neDB.find({
+      type: "CrucibleToken",
+      instance: instanceString
+    }, (findErr, crucibleRecords) => {
+      if (findErr) {
+        console.log(new Date().toJSON(), API_CONSTANTS.LOG_ERROR, "createReview()", findErr);
+        return;
+      }
+
+      if (crucibleRecords.length === 0) {
+        console.log(new Date().toJSON(), API_CONSTANTS.LOG_ERROR, "createReview()", "No Crucible records found while attempting to create the review.");
+      } else if (crucibleRecords.length > 1) {
+        console.log(
+          new Date().toJSON(),
+          API_CONSTANTS.LOG_ERROR,
+          "createReview()",
+          "Multiple Crucible records found while attempting to create the review."
+        );
+      } else {
+        const CREATE_REVIEW_OPTIONS = {
+          method: "POST",
+          uri: instanceString +
+            API_CONSTANTS.CRUCIBLE_REST_BASE_URL +
+            API_CONSTANTS.CRUCIBLE_REST_REVIEWS +
+            API_CONSTANTS.FEAUTH + crucibleRecords[0].token,
+          headers: {
+            "User-Agent": "Request-Promise"
+          },
+          body: {},
+          json: true
+        };
+
+        if (typeof reviewerList === "undefined" || reviewerList === null || reviewerList.length <= 0) {
+          CREATE_REVIEW_OPTIONS.body = {
+            reviewData: {
+              projectKey: projectKey,
+              name: reviewName,
+              description: reviewDescription,
+              author: {
+                userName: currentUser.userID,
+                displayName: currentUser.displayName,
+                avatarUrl: currentUser.avatarURL
               },
-              body: {},
-              json: true
-            };
-
-            if (typeof reviewerList === "undefined" || reviewerList === null || reviewerList.length <= 0) {
-              createOptions.body = {
-                reviewData: {
-                  projectKey: projectKey,
-                  name: reviewName,
-                  description: reviewDescription,
-                  author: {
-                    userName: currentUser.userID,
-                    displayName: currentUser.displayName,
-                    avatarUrl: currentUser.avatarURL
-                  },
-                  moderator: {
-                    userName: currentUser.userID,
-                    displayName: currentUser.displayName,
-                    avatarUrl: currentUser.avatarURL
-                  },
-                  creator: {
-                    userName: currentUser.userID,
-                    displayName: currentUser.displayName,
-                    avatarUrl: currentUser.avatarURL
-                  },
-                  state: "Review",
-                  type: "REVIEW",
-                  allowReviewersToJoin: allowReviewersToJoin,
-                  metricsVersion: 4,
-                  createDate: createDate,
-                  dueDate: dueDate,
-                  jiraIssueKey: jiraIssue
-                }
-              };
-            } else {
-              createOptions.body = {
-                detailedReviewData: {
-                  projectKey: projectKey,
-                  name: reviewName,
-                  description: reviewDescription,
-                  author: {
-                    userName: currentUser.userID,
-                    displayName: currentUser.displayName,
-                    avatarUrl: currentUser.avatarURL
-                  },
-                  moderator: {
-                    userName: currentUser.userID,
-                    displayName: currentUser.displayName,
-                    avatarUrl: currentUser.avatarURL
-                  },
-                  creator: {
-                    userName: currentUser.userID,
-                    displayName: currentUser.displayName,
-                    avatarUrl: currentUser.avatarURL
-                  },
-                  state: "Review",
-                  type: "REVIEW",
-                  allowReviewersToJoin: allowReviewersToJoin,
-                  metricsVersion: 4,
-                  createDate: createDate,
-                  dueDate: dueDate,
-                  jiraIssueKey: jiraIssue,
-                  reviewers: {
-                    reviewer: []
-                  }
-                }
-              };
-
-              for (var reviewIdx in reviewerList) {
-                createOptions.body.detailedReviewData.reviewers.reviewer.push({
-                  userName: reviewerList[reviewIdx]
-                });
+              moderator: {
+                userName: currentUser.userID,
+                displayName: currentUser.displayName,
+                avatarUrl: currentUser.avatarURL
+              },
+              creator: {
+                userName: currentUser.userID,
+                displayName: currentUser.displayName,
+                avatarUrl: currentUser.avatarURL
+              },
+              state: "Review",
+              type: "REVIEW",
+              allowReviewersToJoin: allowReviewersToJoin,
+              metricsVersion: 4,
+              createDate: CREATE_DATE,
+              dueDate: DUE_DATE,
+              jiraIssueKey: jiraIssue
+            }
+          };
+        } else {
+          CREATE_REVIEW_OPTIONS.body = {
+            detailedReviewData: {
+              projectKey: projectKey,
+              name: reviewName,
+              description: reviewDescription,
+              author: {
+                userName: currentUser.userID,
+                displayName: currentUser.displayName,
+                avatarUrl: currentUser.avatarURL
+              },
+              moderator: {
+                userName: currentUser.userID,
+                displayName: currentUser.displayName,
+                avatarUrl: currentUser.avatarURL
+              },
+              creator: {
+                userName: currentUser.userID,
+                displayName: currentUser.displayName,
+                avatarUrl: currentUser.avatarURL
+              },
+              state: "Review",
+              type: "REVIEW",
+              allowReviewersToJoin: allowReviewersToJoin,
+              metricsVersion: 4,
+              createDate: CREATE_DATE,
+              dueDate: DUE_DATE,
+              jiraIssueKey: jiraIssue,
+              reviewers: {
+                reviewer: []
               }
             }
+          };
 
-            requestPromise(createOptions)
-              .then(function(parsedBody) {
-                console.log(new Date().toJSON(), appConstants.LOG_INFO, "createReview()", "Created Review: " + parsedBody.permaId.id);
-                mainWindow.webContents.send("review-created", true, parsedBody.permaId.id);
-                shell.openExternal(instanceString + apiConstants.CRUCIBLE_BASE_URL + parsedBody.permaId.id);
-              })
-              .catch(function(err) {
-                console.log(new Date().toJSON(), appConstants.LOG_ERROR, "createReview()", "Error Creating Review: " + err);
-                mainWindow.webContents.send("review-created", false, "");
-              });
-          }
+          reviewerList.forEach((element) => {
+            CREATE_REVIEW_OPTIONS.body.detailedReviewData.reviewers.reviewer.push({
+              userName: element
+            });
+          });
         }
+
+        REQUEST_PROMISE(CREATE_REVIEW_OPTIONS).then((parsedBody) => {
+          console.log(new Date().toJSON(), API_CONSTANTS.LOG_INFO, "createReview()", "Created Review: ", parsedBody.permaId.id);
+          mainWindow.webContents.send("review-created", true, parsedBody.permaId.id);
+          ELECTRON_SHELL.openExternal(instanceString + API_CONSTANTS.CRUCIBLE_BASE_URL + parsedBody.permaId.id);
+        }).catch((err) => {
+          console.log(new Date().toJSON(), API_CONSTANTS.LOG_ERROR, "createReview()", "Error Creating Review: ", err);
+          mainWindow.webContents.send("review-created", false, "");
+        });
       }
-    );
+    });
   },
 
   // Search for Reviews by JIRA
-  searchByJIRA: function(apiConstants, appConstants, requestPromise, mainWindow, instanceString, jiraIssue) {
-    console.log(new Date().toJSON(), appConstants.LOG_INFO, "searchByJIRA()", "Searching for reviews associated to:", jiraIssue, "on", instanceString);
+  searchByJIRA: function searchByJIRA(mainWindow, instanceString, jiraIssue) {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "searchByJIRA()", "Searching for reviews associated to:", jiraIssue, "on", instanceString);
 
-    var searchOptions = {
+    const SEARCH_JIRA_OPTIONS = {
       method: "GET",
-      uri: instanceString + apiConstants.CRUCIBLE_REST_BASE_URL + apiConstants.SEARCH_BY_ISSUE + jiraIssue,
+      uri: instanceString + API_CONSTANTS.CRUCIBLE_REST_BASE_URL + API_CONSTANTS.SEARCH_BY_ISSUE + jiraIssue,
       headers: {
         "User-Agent": "Request-Promise"
       },
       json: true
     };
-    requestPromise(searchOptions)
-      .then(function(parsedBody) {
-        if (typeof parsedBody !== "undefined" && parsedBody !== null && parsedBody.reviewData !== null && parsedBody.reviewData.length >= 0) {
-          console.log(new Date().toJSON(), appConstants.LOG_INFO, "searchByJIRA()", "Found", parsedBody.reviewData.length, "Reviews!");
-          mainWindow.webContents.send("search-results", true, parsedBody.reviewData);
-        } else {
-          console.log(new Date().toJSON(), appConstants.LOG_ERROR, "searchByJIRA()", "Unexpected:", parsedBody);
-          mainWindow.webContents.send("search-results", false, "");
-        }
-      })
-      .catch(function(err) {
-        console.log(new Date().toJSON(), appConstants.LOG_ERROR, "searchByJIRA()", err);
+
+    REQUEST_PROMISE(SEARCH_JIRA_OPTIONS).then((parsedBody) => {
+      if (typeof parsedBody !== "undefined" && parsedBody !== null && parsedBody.reviewData !== null && parsedBody.reviewData.length >= 0) {
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "searchByJIRA()", "Found", parsedBody.reviewData.length, "Reviews!");
+        mainWindow.webContents.send("search-results", true, parsedBody.reviewData);
+      } else {
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "searchByJIRA()", "Unexpected:", parsedBody);
         mainWindow.webContents.send("search-results", false, "");
-      });
+      }
+    }).catch((err) => {
+      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "searchByJIRA()", err);
+      mainWindow.webContents.send("search-results", false, "");
+    });
   },
 
   /**
@@ -176,26 +177,33 @@ module.exports = {
    * Save "Pending" Reviews.
    * Send "Pending" Reviews up to the Renderer.
    */
-  getPending: function(neDB, apiConstants, appConstants, requestPromise, mainWindow) {
-    neDB.remove({ type: "Pending" }, { multi: true }, function(err, numRemoved) {
-      if (err) {
-        console.log(new Date().toJSON(), appConstants.LOG_ERROR, "getPending()", err);
+  getPending: function getPending(neDB, mainWindow) {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "getPending()");
+    neDB.remove({
+      type: "Pending"
+    }, {
+      multi: true
+    }, (removeErr, numRemoved) => {
+      if (removeErr) {
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "getPending()", removeErr);
       } else {
-        console.log(new Date().toJSON(), appConstants.LOG_INFO, "getPending()", "Removed", numRemoved, "Existing Pending Review(s).");
-        neDB.find({ type: "CrucibleToken" }, function(err, crucibleRecords) {
-          if (err) {
-            console.log(new Date().toJSON(), appConstants.LOG_ERROR, "getPending()", err);
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "getPending()", "Removed", numRemoved, "Existing Pending Review(s).");
+        neDB.find({
+          type: "CrucibleToken"
+        }, (findErr, crucibleRecords) => {
+          if (findErr) {
+            console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "getPending()", findErr);
           } else {
             console.log(
               new Date().toJSON(),
-              appConstants.LOG_INFO,
+              APP_CONSTANTS.LOG_INFO,
               "getPending()",
               "Found",
               crucibleRecords.length,
               "Crucible instances to query for Pending Reviews."
             );
             var processedInstanceCount = 0;
-            getPendingReviews(neDB, processedInstanceCount, crucibleRecords, apiConstants, appConstants, requestPromise, mainWindow, []);
+            getPendingReviews(neDB, mainWindow, processedInstanceCount, crucibleRecords, []);
           }
         });
       }
@@ -208,26 +216,33 @@ module.exports = {
    * Save "Open" Reviews.
    * Send "Open" Reviews up to the Renderer.
    */
-  getOpen: function(neDB, apiConstants, appConstants, requestPromise, mainWindow) {
-    neDB.remove({ type: "Open" }, { multi: true }, function(err, numRemoved) {
-      if (err) {
-        console.log(new Date().toJSON(), appConstants.LOG_ERROR, "getOpen()", err);
+  getOpen: function getOpen(neDB, mainWindow) {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "getOpen()");
+    neDB.remove({
+      type: "Open"
+    }, {
+      multi: true
+    }, (removeErr, numRemoved) => {
+      if (removeErr) {
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "getOpen()", removeErr);
       } else {
-        console.log(new Date().toJSON(), appConstants.LOG_INFO, "getOpen()", "Removed", numRemoved, "Existing Open Review(s).");
-        neDB.find({ type: "CrucibleToken" }, function(err, crucibleRecords) {
-          if (err) {
-            console.log(new Date().toJSON(), appConstants.LOG_ERROR, "getOpen()", err);
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "getOpen()", "Removed", numRemoved, "Existing Open Review(s).");
+        neDB.find({
+          type: "CrucibleToken"
+        }, (findErr, crucibleRecords) => {
+          if (findErr) {
+            console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "getOpen()", findErr);
           } else {
             console.log(
               new Date().toJSON(),
-              appConstants.LOG_INFO,
+              APP_CONSTANTS.LOG_INFO,
               "getOpen()",
               "Found",
               crucibleRecords.length,
               "Crucible instances to query for Open Reviews."
             );
             var processedInstanceCount = 0;
-            getOpenReviews(neDB, processedInstanceCount, crucibleRecords, apiConstants, appConstants, requestPromise, mainWindow, []);
+            getOpenReviews(neDB, mainWindow, processedInstanceCount, crucibleRecords, []);
           }
         });
       }
@@ -240,19 +255,28 @@ module.exports = {
    * Save Reviews.
    * Send Review Statistics up to the Renderer.
    */
-  getStats: function(neDB, apiConstants, appConstants, requestPromise, mainWindow, currentUser) {
-    neDB.remove({ type: { $in: ["ReviewStat", "ReviewerStat"] } }, { multi: true }, function(err, numRemoved) {
-      if (err) {
-        console.log(new Date().toJSON(), appConstants.LOG_ERROR, "getStats()", err);
+  getStats: function getStats(neDB, mainWindow, currentUser) {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "getStats()");
+    neDB.remove({
+      type: {
+        $in: ["ReviewStat", "ReviewerStat"]
+      }
+    }, {
+      multi: true
+    }, (removeErr, numRemoved) => {
+      if (removeErr) {
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "getStats()", removeErr);
       } else {
-        console.log(new Date().toJSON(), appConstants.LOG_INFO, "getStats()", "Removed", numRemoved, "Statistics.");
-        neDB.find({ type: "CrucibleToken" }, function(err, crucibleRecords) {
-          if (err) {
-            console.log(new Date().toJSON(), appConstants.LOG_ERROR, "getStats()", err);
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "getStats()", "Removed", numRemoved, "Statistics.");
+        neDB.find({
+          type: "CrucibleToken"
+        }, (findErr, crucibleRecords) => {
+          if (findErr) {
+            console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "getStats()", findErr);
           } else {
-            console.log(new Date().toJSON(), appConstants.LOG_INFO, "getStats()", "Found", crucibleRecords.length, "Crucible instances to query for Reviews.");
+            console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "getStats()", "Found", crucibleRecords.length, "Crucible instances to query for Reviews.");
             var processedInstanceCount = 0;
-            getReviewStatistics(neDB, processedInstanceCount, crucibleRecords, apiConstants, appConstants, requestPromise, mainWindow, currentUser, [], []);
+            getReviewStatistics(neDB, mainWindow, processedInstanceCount, crucibleRecords, currentUser, [], []);
           }
         });
       }
@@ -260,45 +284,53 @@ module.exports = {
   },
 
   // Retrieves "Pending" Reviews from the Database & sends them up to the renderer.
-  retrievePending: function(neDB, appConstants, mainWindow) {
-    neDB.find({ type: "Pending" }, function(err, pendingReviewList) {
-      if (err) {
-        console.log(new Date().toJSON(), appConstants.LOG_ERROR, "retrievePending()", err);
+  retrievePending: function retrievePending(neDB, mainWindow) {
+    neDB.find({
+      type: "Pending"
+    }, (findErr, pendingReviewList) => {
+      if (findErr) {
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "retrievePending()", findErr);
       } else {
-        console.log(new Date().toJSON(), appConstants.LOG_INFO, "retrievePending()", "Retrieved", pendingReviewList.length, "Reviews!");
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "retrievePending()", "Retrieved", pendingReviewList.length, "Reviews!");
         mainWindow.webContents.send("retrieved-pending", pendingReviewList);
       }
     });
   },
 
   // Retrieves "Open" Reviews from the Database & sends them up to the renderer.
-  retrieveOpen: function(neDB, appConstants, mainWindow) {
-    neDB.find({ type: "Open" }, function(err, openReviewList) {
-      if (err) {
-        console.log(new Date().toJSON(), appConstants.LOG_ERROR, "retrieveOpen()", err);
+  retrieveOpen: function retrieveOpen(neDB, mainWindow) {
+    neDB.find({
+      type: "Open"
+    }, (findErr, openReviewList) => {
+      if (findErr) {
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "retrieveOpen()", findErr);
       } else {
-        console.log(new Date().toJSON(), appConstants.LOG_INFO, "retrieveOpen()", "Retrieved", openReviewList.length, "Reviews!");
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "retrieveOpen()", "Retrieved", openReviewList.length, "Reviews!");
         mainWindow.webContents.send("retrieved-open", openReviewList);
       }
     });
   },
 
   // Retrieves Review Statistics from the Database & sends them up to the renderer.
-  retrieveStats: function(neDB, appConstants, mainWindow) {
-    neDB.find({ type: "ReviewStat" }, function(err, reviewList) {
-      if (err) {
-        console.log(new Date().toJSON(), appConstants.LOG_ERROR, "retrieveStats()", err);
+  retrieveStats: function retrieveStats(neDB, mainWindow) {
+    neDB.find({
+      type: "ReviewStat"
+    }, (findErr, reviewList) => {
+      if (findErr) {
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "retrieveStats()", findErr);
       } else {
-        console.log(new Date().toJSON(), appConstants.LOG_INFO, "retrieveStats()", "Retrieved Statistics from", reviewList.length, "Reviews!");
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "retrieveStats()", "Retrieved Statistics from", reviewList.length, "Reviews!");
         mainWindow.webContents.send("retrieved-review-statistics", reviewList);
       }
     });
 
-    neDB.find({ type: "ReviewerStat" }, function(err, reviewerList) {
-      if (err) {
-        console.log(new Date().toJSON(), appConstants.LOG_ERROR, "retrieveStats()", err);
+    neDB.find({
+      type: "ReviewerStat"
+    }, (findErr, reviewerList) => {
+      if (findErr) {
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "retrieveStats()", findErr);
       } else {
-        console.log(new Date().toJSON(), appConstants.LOG_INFO, "retrieveStats()", "Retrieved Statistics from", reviewerList.length, "Reviewers!");
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "retrieveStats()", "Retrieved Statistics from", reviewerList.length, "Reviewers!");
         mainWindow.webContents.send("retrieved-reviewer-statistics", reviewerList);
       }
     });
@@ -309,420 +341,390 @@ module.exports = {
  * Retrieves Pending Reviews using Crucible's API.
  *
  * @param {*} neDB
+ * @param {*} mainWindow
  * @param {*} processedInstanceCount
  * @param {*} crucibleRecords
- * @param {*} apiConstants
- * @param {*} appConstants
- * @param {*} requestPromise
- * @param {*} mainWindow
  * @param {*} pendingReviewList
  */
-function getPendingReviews(neDB, processedInstanceCount, crucibleRecords, apiConstants, appConstants, requestPromise, mainWindow, pendingReviewList) {
+function getPendingReviews(neDB, mainWindow, processedInstanceCount, crucibleRecords, pendingReviewList) {
   console.log(
     new Date().toJSON(),
-    appConstants.LOG_INFO,
+    APP_CONSTANTS.LOG_INFO,
     "getPendingReviews()",
     "Querying",
     crucibleRecords[processedInstanceCount].instance,
     "for Pending Reviews."
   );
-  var retrieveOptions = {
-    uri:
-      crucibleRecords[processedInstanceCount].instance +
-      apiConstants.CRUCIBLE_REST_BASE_URL +
-      apiConstants.CRUCIBLE_REST_REVIEWS +
-      apiConstants.PENDING_REVIEWS_SIMPLE_FILTER +
-      apiConstants.FEAUTH +
+
+  const RETRIEVE_PENDING_OPTIONS = {
+    uri: crucibleRecords[processedInstanceCount].instance +
+      API_CONSTANTS.CRUCIBLE_REST_BASE_URL +
+      API_CONSTANTS.CRUCIBLE_REST_REVIEWS +
+      API_CONSTANTS.PENDING_REVIEWS_SIMPLE_FILTER +
+      API_CONSTANTS.FEAUTH +
       crucibleRecords[processedInstanceCount].token,
     headers: {
       "User-Agent": "Request-Promise"
     },
     json: true // Automatically parses the JSON string in the response
   };
-  requestPromise(retrieveOptions)
-    .then(function(parsedBody) {
-      if (parsedBody.reviewData.length > 0) {
-        var utcDate;
-        var strDate;
-        for (var review in parsedBody.reviewData) {
-          utcDate = new Date(parsedBody.reviewData[review].createDate);
-          strDate = "Y-m-d"
-            .replace("Y", utcDate.getFullYear())
-            .replace("m", utcDate.getMonth() + 1)
-            .replace("d", utcDate.getDate());
 
-          console.log(new Date().toJSON(), appConstants.LOG_INFO, "getPendingReviews()", "Saving Pending Review:", parsedBody.reviewData[review].permaId.id);
-          insertPendingReview(
-            neDB,
-            appConstants,
-            crucibleRecords[processedInstanceCount].instance,
-            parsedBody.reviewData[review].permaId.id,
-            parsedBody.reviewData[review].name,
-            parsedBody.reviewData[review].author.displayName,
-            strDate
-          );
+  REQUEST_PROMISE(RETRIEVE_PENDING_OPTIONS).then((parsedBody) => {
+    if (parsedBody.reviewData.length > 0) {
+      let utcDate;
+      let strDate;
 
-          var pendingReview = {
-            reviewID: parsedBody.reviewData[review].permaId.id,
-            reviewName: parsedBody.reviewData[review].name,
-            reviewAuthor: parsedBody.reviewData[review].author.displayName,
-            createDt: strDate
-          };
-          pendingReviewList.push(pendingReview);
-        }
-      }
-      processedInstanceCount = processedInstanceCount + 1;
-      if (processedInstanceCount < crucibleRecords.length) {
-        getPendingReviews(neDB, processedInstanceCount, crucibleRecords, apiConstants, appConstants, requestPromise, mainWindow, pendingReviewList);
-      } else {
-        console.log(new Date().toJSON(), appConstants.LOG_INFO, "getPendingReviews()", "Retrieved", pendingReviewList.length, "Reviews!");
-        mainWindow.webContents.send("retrieved-pending", pendingReviewList);
-      }
-    })
-    .catch(function(err) {
-      console.log(new Date().toJSON(), appConstants.LOG_ERROR, "getPendingReviews()", err);
-    });
+      parsedBody.reviewData.forEach((element) => {
+        utcDate = new Date(element.createDate);
+        strDate = "Y-m-d"
+          .replace("Y", utcDate.getFullYear())
+          .replace("m", utcDate.getMonth() + 1)
+          .replace("d", utcDate.getDate());
+
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "getPendingReviews()", "Saving Pending Review:", element.permaId.id);
+        insertPendingReview(
+          neDB,
+          crucibleRecords[processedInstanceCount].instance,
+          element.permaId.id,
+          element.name,
+          element.author.displayName,
+          strDate
+        );
+
+        const PENDING_REVIEW = {
+          reviewID: element.permaId.id,
+          reviewName: element.name,
+          reviewAuthor: element.author.displayName,
+          createDt: strDate
+        };
+        pendingReviewList.push(PENDING_REVIEW);
+      });
+    }
+
+    processedInstanceCount += 1;
+    if (processedInstanceCount < crucibleRecords.length) {
+      getPendingReviews(neDB, mainWindow, processedInstanceCount, crucibleRecords, pendingReviewList);
+    } else {
+      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "getPendingReviews()", "Retrieved", pendingReviewList.length, "Reviews!");
+      mainWindow.webContents.send("retrieved-pending", pendingReviewList);
+    }
+  }).catch((err) => {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "getPendingReviews()", err);
+  });
 }
 
 /**
  * Retrieves Open Reviews using Crucible's API.
  *
  * @param {*} neDB
+ * @param {*} mainWindow
  * @param {*} processedInstanceCount
  * @param {*} crucibleRecords
- * @param {*} apiConstants
- * @param {*} appConstants
- * @param {*} requestPromise
- * @param {*} mainWindow
  * @param {*} openReviewList
  */
-function getOpenReviews(neDB, processedInstanceCount, crucibleRecords, apiConstants, appConstants, requestPromise, mainWindow, openReviewList) {
+function getOpenReviews(neDB, mainWindow, processedInstanceCount, crucibleRecords, openReviewList) {
   console.log(
     new Date().toJSON(),
-    appConstants.LOG_INFO,
+    APP_CONSTANTS.LOG_INFO,
     "getOpenReviews()",
     "Querying",
     crucibleRecords[processedInstanceCount].instance,
     "for Open Reviews."
   );
-  var retrieveOptions = {
-    uri:
-      crucibleRecords[processedInstanceCount].instance +
-      apiConstants.CRUCIBLE_REST_BASE_URL +
-      apiConstants.CRUCIBLE_REST_REVIEWS +
-      apiConstants.OPEN_REVIEWS_SIMPLE_FILTER +
-      apiConstants.FEAUTH +
+
+  const RETRIEVE_OPEN_OPTIONS = {
+    uri: crucibleRecords[processedInstanceCount].instance +
+      API_CONSTANTS.CRUCIBLE_REST_BASE_URL +
+      API_CONSTANTS.CRUCIBLE_REST_REVIEWS +
+      API_CONSTANTS.OPEN_REVIEWS_SIMPLE_FILTER +
+      API_CONSTANTS.FEAUTH +
       crucibleRecords[processedInstanceCount].token,
     headers: {
       "User-Agent": "Request-Promise"
     },
     json: true // Automatically parses the JSON string in the response
   };
-  requestPromise(retrieveOptions)
-    .then(function(parsedBody) {
-      if (parsedBody.reviewData.length > 0) {
-        var utcDate;
-        var strDate;
-        for (var review in parsedBody.reviewData) {
-          utcDate = new Date(parsedBody.reviewData[review].createDate);
-          strDate = "Y-m-d"
-            .replace("Y", utcDate.getFullYear())
-            .replace("m", utcDate.getMonth() + 1)
-            .replace("d", utcDate.getDate());
 
-          console.log(new Date().toJSON(), appConstants.LOG_INFO, "getOpenReviews()", "Saving Open Review:", parsedBody.reviewData[review].permaId.id);
-          insertOpenReview(
-            neDB,
-            appConstants,
-            crucibleRecords[processedInstanceCount].instance,
-            parsedBody.reviewData[review].permaId.id,
-            parsedBody.reviewData[review].name,
-            strDate
-          );
+  REQUEST_PROMISE(RETRIEVE_OPEN_OPTIONS).then((parsedBody) => {
+    if (parsedBody.reviewData.length > 0) {
+      let utcDate;
+      let strDate;
 
-          var openReview = {
-            reviewID: parsedBody.reviewData[review].permaId.id,
-            reviewName: parsedBody.reviewData[review].name,
-            reviewAuthor: parsedBody.reviewData[review].author.displayName,
-            createDt: strDate
-          };
-          openReviewList.push(openReview);
-        }
-      }
-      processedInstanceCount = processedInstanceCount + 1;
-      if (processedInstanceCount < crucibleRecords.length) {
-        getOpenReviews(neDB, processedInstanceCount, crucibleRecords, apiConstants, appConstants, requestPromise, mainWindow, openReviewList);
-      } else {
-        console.log(new Date().toJSON(), appConstants.LOG_INFO, "getOpenReviews()", "Retrieved", openReviewList.length, "Reviews!");
-        mainWindow.webContents.send("retrieved-open", openReviewList);
-      }
-    })
-    .catch(function(err) {
-      console.log(new Date().toJSON(), appConstants.LOG_ERROR, "getOpenReviews()", err);
-    });
+      parsedBody.reviewData.forEach((element) => {
+        utcDate = new Date(element.createDate);
+        strDate = "Y-m-d"
+          .replace("Y", utcDate.getFullYear())
+          .replace("m", utcDate.getMonth() + 1)
+          .replace("d", utcDate.getDate());
+
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "getOpenReviews()", "Saving Open Review:", element.permaId.id);
+        insertOpenReview(
+          neDB,
+          crucibleRecords[processedInstanceCount].instance,
+          element.permaId.id,
+          element.name,
+          strDate
+        );
+
+        const OPEN_REVIEW = {
+          reviewID: element.permaId.id,
+          reviewName: element.name,
+          reviewAuthor: element.author.displayName,
+          createDt: strDate
+        };
+        openReviewList.push(OPEN_REVIEW);
+      });
+    }
+
+    processedInstanceCount += 1;
+    if (processedInstanceCount < crucibleRecords.length) {
+      getOpenReviews(neDB, processedInstanceCount, crucibleRecords, mainWindow, openReviewList);
+    } else {
+      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "getOpenReviews()", "Retrieved", openReviewList.length, "Reviews!");
+      mainWindow.webContents.send("retrieved-open", openReviewList);
+    }
+  }).catch((err) => {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "getOpenReviews()", err);
+  });
 }
 
 /**
  * Retrieves Review Statistics using Crucible's API.
  *
  * @param {*} neDB
+ * @param {*} mainWindow
  * @param {*} processedInstanceCount
  * @param {*} crucibleRecords
- * @param {*} apiConstants
- * @param {*} appConstants
- * @param {*} requestPromise
- * @param {*} mainWindow
  * @param {*} currentUser
  * @param {*} reviewStatistics
  * @param {*} reviewerStatistics
  */
 function getReviewStatistics(
   neDB,
+  mainWindow,
   processedInstanceCount,
   crucibleRecords,
-  apiConstants,
-  appConstants,
-  requestPromise,
-  mainWindow,
   currentUser,
   reviewStatistics,
   reviewerStatistics
 ) {
   console.log(
     new Date().toJSON(),
-    appConstants.LOG_INFO,
+    APP_CONSTANTS.LOG_INFO,
     "getReviewStatistics()",
     "Querying",
     crucibleRecords[processedInstanceCount].instance,
     "to gather Review Statistics."
   );
 
-  var retrieveOptions = {
-    uri:
-      crucibleRecords[processedInstanceCount].instance +
-      apiConstants.CRUCIBLE_REST_BASE_URL +
-      apiConstants.CRUCIBLE_REST_REVIEWS +
-      apiConstants.FILTER_DETAILS +
-      apiConstants.FEAUTH +
+  const RETRIEVE_ALL_OPTIONS = {
+    uri: crucibleRecords[processedInstanceCount].instance +
+      API_CONSTANTS.CRUCIBLE_REST_BASE_URL +
+      API_CONSTANTS.CRUCIBLE_REST_REVIEWS +
+      API_CONSTANTS.FILTER_DETAILS +
+      API_CONSTANTS.FEAUTH +
       crucibleRecords[processedInstanceCount].token +
-      apiConstants.CREATOR +
+      API_CONSTANTS.CREATOR +
       currentUser.userID,
     headers: {
       "User-Agent": "Request-Promise"
     },
     json: true // Automatically parses the JSON string in the response
   };
-  requestPromise(retrieveOptions)
-    .then(function(parsedBody) {
-      if (parsedBody.detailedReviewData.length > 0) {
-        for (var reviewIdx in parsedBody.detailedReviewData) {
-          var currentReview = {};
-          var utcDate;
 
-          utcDate = new Date(parsedBody.detailedReviewData[reviewIdx].createDate);
-          currentReview.createDate = "Y-m-d"
+  REQUEST_PROMISE(RETRIEVE_ALL_OPTIONS).then((parsedBody) => {
+    if (parsedBody.detailedReviewData.length > 0) {
+      parsedBody.detailedReviewData.forEach((element) => {
+        const CURRENT_REVIEW = {};
+        let utcDate;
+
+        utcDate = new Date(element.createDate);
+        CURRENT_REVIEW.createDate = "Y-m-d"
+          .replace("Y", utcDate.getFullYear())
+          .replace("m", utcDate.getMonth() + 1)
+          .replace("d", utcDate.getDate());
+
+        if (element.hasOwnProperty("dueDate")) {
+          utcDate = new Date(element.dueDate);
+          CURRENT_REVIEW.dueDate = "Y-m-d"
             .replace("Y", utcDate.getFullYear())
             .replace("m", utcDate.getMonth() + 1)
             .replace("d", utcDate.getDate());
-
-          if (parsedBody.detailedReviewData[reviewIdx].hasOwnProperty("dueDate")) {
-            utcDate = new Date(parsedBody.detailedReviewData[reviewIdx].dueDate);
-            currentReview.dueDate = "Y-m-d"
-              .replace("Y", utcDate.getFullYear())
-              .replace("m", utcDate.getMonth() + 1)
-              .replace("d", utcDate.getDate());
-          }
-
-          if (parsedBody.detailedReviewData[reviewIdx].hasOwnProperty("closeDate")) {
-            currentReview.closeDate = new Date(parsedBody.detailedReviewData[reviewIdx].closeDate);
-          }
-
-          if (parsedBody.detailedReviewData[reviewIdx].hasOwnProperty("jiraIssueKey")) {
-            currentReview.jiraIssueKey = parsedBody.detailedReviewData[reviewIdx].jiraIssueKey;
-          }
-
-          if (parsedBody.detailedReviewData[reviewIdx].hasOwnProperty("name")) {
-            currentReview.name = new Date(parsedBody.detailedReviewData[reviewIdx].jiraIssueKey);
-          }
-
-          currentReview.id = parsedBody.detailedReviewData[reviewIdx].permaId.id;
-
-          if (parsedBody.detailedReviewData[reviewIdx].hasOwnProperty("stats")) {
-            for (commentIdx in parsedBody.detailedReviewData[reviewIdx].stats) {
-              setUserCommentStatistics(reviewerStatistics, parsedBody.detailedReviewData[reviewIdx].stats[commentIdx], appConstants);
-            }
-          }
-
-          if (
-            parsedBody.detailedReviewData[reviewIdx].hasOwnProperty("generalComments") &&
-            parsedBody.detailedReviewData[reviewIdx].generalComments.hasOwnProperty("comments")
-          ) {
-            for (commentIdx in parsedBody.detailedReviewData[reviewIdx].generalComments.comments) {
-              setGeneralCommentStatistics(reviewerStatistics, parsedBody.detailedReviewData[reviewIdx].generalComments.comments[commentIdx], appConstants);
-            }
-          }
-
-          if (
-            parsedBody.detailedReviewData[reviewIdx].hasOwnProperty("reviewers") &&
-            parsedBody.detailedReviewData[reviewIdx].reviewers.hasOwnProperty("reviewer")
-          ) {
-            for (reviewerIdx in parsedBody.detailedReviewData[reviewIdx].reviewers.reviewer) {
-              setReviewerStatistics(reviewerStatistics, parsedBody.detailedReviewData[reviewIdx].reviewers.reviewer[reviewerIdx], appConstants);
-            }
-          }
-
-          console.log(new Date().toJSON(), appConstants.LOG_INFO, "getReviewStatistics()", "Saving Statistics for Review:", currentReview.id);
-          insertReviewStat(neDB, appConstants, crucibleRecords[processedInstanceCount].instance, currentReview);
-          reviewStatistics.push(currentReview);
         }
-      }
-      processedInstanceCount = processedInstanceCount + 1;
-      if (processedInstanceCount < crucibleRecords.length) {
-        getReviewStatistics(
-          neDB,
-          processedInstanceCount,
-          crucibleRecords,
-          apiConstants,
-          appConstants,
-          requestPromise,
-          mainWindow,
-          currentUser,
-          reviewStatistics,
-          reviewerStatistics
-        );
-      } else {
-        console.log(new Date().toJSON(), appConstants.LOG_INFO, "getReviewStatistics()", "Saving Statistics for", reviewerStatistics.length, " Reviewers.");
-        insertReviewerStat(neDB, appConstants, reviewerStatistics);
-        mainWindow.webContents.send("retrieved-review-statistics", reviewStatistics);
-        mainWindow.webContents.send("retrieved-reviewer-statistics", reviewerStatistics);
-      }
-    })
-    .catch(function(err) {
-      console.log(new Date().toJSON(), appConstants.LOG_ERROR, "getReviewStatistics()", err);
-    });
+
+        if (element.hasOwnProperty("closeDate")) {
+          CURRENT_REVIEW.closeDate = new Date(element.closeDate);
+        }
+
+        if (element.hasOwnProperty("jiraIssueKey")) {
+          CURRENT_REVIEW.jiraIssueKey = element.jiraIssueKey;
+        }
+
+        if (element.hasOwnProperty("name")) {
+          CURRENT_REVIEW.name = new Date(element.jiraIssueKey);
+        }
+
+        CURRENT_REVIEW.id = element.permaId.id;
+
+        if (element.hasOwnProperty("stats")) {
+          element.stats.forEach((statComment) => {
+            if (statComment.user !== currentUser.userID) {
+              setUserCommentStatistics(reviewerStatistics, statComment);
+            }
+          });
+        }
+
+        if (element.hasOwnProperty("generalComments") && element.generalComments.hasOwnProperty("comments")) {
+          element.generalComments.comments.forEach((genComment) => {
+            if (genComment.user.userName !== currentUser.userID) {
+              setGeneralCommentStatistics(reviewerStatistics, genComment);
+            }
+          });
+        }
+
+        if (element.hasOwnProperty("reviewers") && element.reviewers.hasOwnProperty("reviewer")) {
+          element.reviewers.reviewer.forEach((reviewerElement) => {
+            if (reviewerElement.userName !== currentUser.userID) {
+              setReviewerStatistics(reviewerStatistics, reviewerElement);
+            }
+          });
+        }
+
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "getReviewStatistics()", "Saving Statistics for Review:", CURRENT_REVIEW.id);
+        insertReviewStat(neDB, crucibleRecords[processedInstanceCount].instance, CURRENT_REVIEW);
+        reviewStatistics.push(CURRENT_REVIEW);
+      });
+    }
+
+    processedInstanceCount += 1;
+    if (processedInstanceCount < crucibleRecords.length) {
+      getReviewStatistics(
+        neDB,
+        mainWindow,
+        processedInstanceCount,
+        crucibleRecords,
+        currentUser,
+        reviewStatistics,
+        reviewerStatistics
+      );
+    } else {
+      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "getReviewStatistics()", "Saving Statistics for", reviewerStatistics.length, " Reviewers.");
+      insertReviewerStat(neDB, reviewerStatistics);
+      mainWindow.webContents.send("retrieved-review-statistics", reviewStatistics);
+      mainWindow.webContents.send("retrieved-reviewer-statistics", reviewerStatistics);
+    }
+  }).catch((err) => {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "getReviewStatistics()", err);
+  });
 }
 
 /**
  * Inserts a Pending Review into the Database.
  *
  * @param {*} neDB
- * @param {*} appConstants
  * @param {*} instanceString
  * @param {*} reviewID
  * @param {*} reviewName
  * @param {*} reviewAuthor
  * @param {*} createDt
  */
-function insertPendingReview(neDB, appConstants, instanceString, reviewID, reviewName, reviewAuthor, createDt) {
-  neDB.insert(
-    {
-      type: "Pending",
-      instance: instanceString,
-      reviewID: reviewID,
-      reviewName: reviewName,
-      reviewAuthor: reviewAuthor,
-      createDt: createDt
-    },
-    function(err, insertedRecord) {
-      if (err) {
-        console.log(new Date().toJSON(), appConstants.LOG_ERROR, "insertPendingReview()", err);
-      } else {
-        console.log(new Date().toJSON(), appConstants.LOG_INFO, "insertPendingReview() Inserted Pending Review:", reviewID);
-      }
+function insertPendingReview(neDB, instanceString, reviewID, reviewName, reviewAuthor, createDt) {
+  console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "insertPendingReview()", "Inserting:", reviewID);
+  neDB.insert({
+    type: "Pending",
+    instance: instanceString,
+    reviewID: reviewID,
+    reviewName: reviewName,
+    reviewAuthor: reviewAuthor,
+    createDt: createDt
+  }, (err, insertedRecord) => {
+    if (err) {
+      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "insertPendingReview()", err);
+    } else {
+      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "insertPendingReview()", "Inserted Pending Review.", insertedRecord.reviewID);
     }
-  );
+  });
 }
 
 /**
  * Inserts an Open Review into the Database.
  *
  * @param {*} neDB
- * @param {*} appConstants
  * @param {*} instanceString
  * @param {*} reviewID
  * @param {*} reviewName
  * @param {*} createDt
  */
-function insertOpenReview(neDB, appConstants, instanceString, reviewID, reviewName, createDt) {
-  neDB.insert(
-    {
-      type: "Open",
-      instance: instanceString,
-      reviewID: reviewID,
-      reviewName: reviewName,
-      createDt: createDt
-    },
-    function(err, insertedRecord) {
-      if (err) {
-        console.log(new Date().toJSON(), appConstants.LOG_ERROR, "insertOpenReview()", err);
-      } else {
-        console.log(new Date().toJSON(), appConstants.LOG_INFO, "insertOpenReview() Inserted Open Review:", reviewID);
-      }
+function insertOpenReview(neDB, instanceString, reviewID, reviewName, createDt) {
+  console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "insertPendingReview()", "Inserting:", reviewID);
+  neDB.insert({
+    type: "Open",
+    instance: instanceString,
+    reviewID: reviewID,
+    reviewName: reviewName,
+    createDt: createDt
+  }, (err, insertedRecord) => {
+    if (err) {
+      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "insertOpenReview()", err);
+    } else {
+      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "insertOpenReview()", "Inserted Open Review:", insertedRecord.reviewID);
     }
-  );
+  });
 }
 
 /**
  * Inserts a Review's statistics into the Database.
  *
  * @param {*} neDB
- * @param {*} appConstants
  * @param {*} instanceString
  * @param {*} review
  */
-function insertReviewStat(neDB, appConstants, instanceString, review) {
-  neDB.insert(
-    {
-      type: "ReviewStat",
-      instance: instanceString,
-      review: review
-    },
-    function(err, insertedRecord) {
-      if (err) {
-        console.log(new Date().toJSON(), appConstants.LOG_ERROR, "insertReviewStat()", err);
-      } else {
-        console.log(new Date().toJSON(), appConstants.LOG_INFO, "insertReviewStat() Inserted Review:", review.id);
-      }
+function insertReviewStat(neDB, instanceString, review) {
+  console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "insertPendingReview()", "Inserting:", review.id);
+  neDB.insert({
+    type: "ReviewStat",
+    instance: instanceString,
+    review: review
+  }, (err, insertedRecord) => {
+    if (err) {
+      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "insertReviewStat()", err);
+    } else {
+      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "insertReviewStat()", "Inserted Review.", insertedRecord.review.id);
     }
-  );
+  });
 }
 
 /**
  * Inserts Reviewer statistics into the Database.
  *
  * @param {*} neDB
- * @param {*} appConstants
  * @param {*} reviewerStatistics
  */
-function insertReviewerStat(neDB, appConstants, reviewerStatistics) {
-  reviewerStatistics.forEach(function(reviewer) {
-    neDB.insert(
-      {
-        type: "ReviewerStat",
-        defectCommentCount: reviewer.defectCommentCount,
-        draftCommentCount: reviewer.draftCommentCount,
-        leaveUnreadCommentCount: reviewer.leaveUnreadCommentCount,
-        publishedCommentCount: reviewer.publishedCommentCount,
-        readCommentCount: reviewer.readCommentCount,
-        unreadCommentCount: reviewer.unreadCommentCount,
-        userName: reviewer.userName,
-        completedReviewCount: reviewer.completedReviewCount,
-        avatarURL: reviewer.avatarURL,
-        displayName: reviewer.displayName,
-        reviewCount: reviewer.reviewCount,
-        avgTimeSpent: reviewer.avgTimeSpent,
-        timeSpent: reviewer.timeSpent
-      },
-      function(err, insertedRecord) {
-        if (err) {
-          console.log(new Date().toJSON(), appConstants.LOG_ERROR, "insertReviewStat()", err);
-        } else {
-          console.log(new Date().toJSON(), appConstants.LOG_INFO, "insertReviewStat() Inserted Reviewer:", reviewer.userName);
-        }
+function insertReviewerStat(neDB, reviewerStatistics) {
+  reviewerStatistics.forEach((reviewer) => {
+    neDB.insert({
+      type: "ReviewerStat",
+      defectCommentCount: reviewer.defectCommentCount,
+      draftCommentCount: reviewer.draftCommentCount,
+      leaveUnreadCommentCount: reviewer.leaveUnreadCommentCount,
+      publishedCommentCount: reviewer.publishedCommentCount,
+      readCommentCount: reviewer.readCommentCount,
+      unreadCommentCount: reviewer.unreadCommentCount,
+      userName: reviewer.userName,
+      completedReviewCount: reviewer.completedReviewCount,
+      avatarURL: reviewer.avatarURL,
+      displayName: reviewer.displayName,
+      reviewCount: reviewer.reviewCount,
+      avgTimeSpent: reviewer.avgTimeSpent,
+      timeSpent: reviewer.timeSpent
+    }, (err, insertedRecord) => {
+      if (err) {
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "insertReviewStat()", err);
+      } else {
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "insertReviewStat()", "Inserted Reviewer:", insertedRecord.userName);
       }
-    );
+    });
   });
-  console.log(reviewerStatistics[0]);
 }
 
 /**
@@ -730,14 +732,13 @@ function insertReviewerStat(neDB, appConstants, reviewerStatistics) {
  *
  * @param {*} userList
  * @param {*} comment
- * @param {*} appConstants
  */
-function setUserCommentStatistics(userList, comment, appConstants) {
-  var currentUser = {};
-  var filteredUserList = userList.filter(user => user.userName === comment.user);
-  if (filteredUserList.length === 1) {
-    console.log(new Date().toJSON(), appConstants.LOG_INFO, "setReviewerStatistics() Updating Comment Stats for:", comment.user);
-    currentUser = filteredUserList[0];
+function setUserCommentStatistics(userList, comment) {
+  let currentUser = {};
+  const FILTERED_USER_LIST = userList.filter(user => user.userName === comment.user);
+  if (FILTERED_USER_LIST.length === 1) {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "setReviewerStatistics() Updating Comment Stats for:", comment.user);
+    currentUser = FILTERED_USER_LIST[0];
 
     if (typeof currentUser.draftCommentCount === "undefined" || currentUser.draftCommentCount === null) {
       currentUser.draftCommentCount = 0;
@@ -781,8 +782,8 @@ function setUserCommentStatistics(userList, comment, appConstants) {
     if (comment.hasOwnProperty("leaveUnread")) {
       currentUser.leaveUnreadCommentCount += comment.leaveUnread;
     }
-  } else if (filteredUserList.length === 0) {
-    console.log(new Date().toJSON(), appConstants.LOG_INFO, "setReviewerStatistics() Setting Comment Stats for:", comment.user);
+  } else if (FILTERED_USER_LIST.length === 0) {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "setReviewerStatistics() Setting Comment Stats for:", comment.user);
     currentUser.userName = comment.user;
     if (comment.hasOwnProperty("published")) {
       currentUser.publishedCommentCount = comment.published;
@@ -822,7 +823,7 @@ function setUserCommentStatistics(userList, comment, appConstants) {
 
     userList.push(currentUser);
   } else {
-    console.log(new Date().toJSON(), appConstants.LOG_ERROR, "setReviewerStatistics()", "userList contains duplicates (", comment.user, ")");
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "setReviewerStatistics()", "userList contains duplicates (", comment.user, ")");
   }
 }
 
@@ -831,14 +832,13 @@ function setUserCommentStatistics(userList, comment, appConstants) {
  *
  * @param {*} userList
  * @param {*} comment
- * @param {*} appConstants
  */
-function setGeneralCommentStatistics(userList, comment, appConstants) {
-  var currentUser = {};
-  var filteredUserList = userList.filter(user => user.userName === comment.user.userName);
-  if (filteredUserList.length === 1) {
-    console.log(new Date().toJSON(), appConstants.LOG_INFO, "setReviewerStatistics() Updating Gen. Comment Stats for:", comment.user.userName);
-    currentUser = filteredUserList[0];
+function setGeneralCommentStatistics(userList, comment) {
+  let currentUser = {};
+  const FILTERED_USER_LIST = userList.filter(user => user.userName === comment.user.userName);
+  if (FILTERED_USER_LIST.length === 1) {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "setReviewerStatistics() Updating Gen. Comment Stats for:", comment.user.userName);
+    currentUser = FILTERED_USER_LIST[0];
 
     if (typeof currentUser.draftCommentCount === "undefined" || currentUser.draftCommentCount === null) {
       currentUser.draftCommentCount = 0;
@@ -857,20 +857,20 @@ function setGeneralCommentStatistics(userList, comment, appConstants) {
     }
 
     if (comment.hasOwnProperty("draft") && comment.draft) {
-      currentUser.draftCommentCount++;
+      currentUser.draftCommentCount += 1;
     } else if (comment.hasOwnProperty("defectRaised") && comment.defectRaised) {
-      currentUser.defectCommentCount++;
+      currentUser.defectCommentCount += 1;
     } else {
-      currentUser.publishedCommentCount++;
+      currentUser.publishedCommentCount += 1;
     }
 
     if (comment.hasOwnProperty("readStatus") && comment.readStatus === "READ") {
-      currentUser.readCommentCount++;
+      currentUser.readCommentCount += 1;
     } else {
-      currentUser.unreadCommentCount++;
+      currentUser.unreadCommentCount += 1;
     }
-  } else if (filteredUserList.length === 0) {
-    console.log(new Date().toJSON(), appConstants.LOG_INFO, "setReviewerStatistics() Setting Gen. Comment Stats for:", comment.user.userName);
+  } else if (FILTERED_USER_LIST.length === 0) {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "setReviewerStatistics() Setting Gen. Comment Stats for:", comment.user.userName);
     currentUser.userName = comment.user.userName;
 
     if (comment.hasOwnProperty("draft") && comment.draft) {
@@ -897,7 +897,7 @@ function setGeneralCommentStatistics(userList, comment, appConstants) {
 
     userList.push(currentUser);
   } else {
-    console.log(new Date().toJSON(), appConstants.LOG_ERROR, "setReviewerStatistics()", "userList contains duplicates (", comment.user.userName, ")");
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "setReviewerStatistics()", "userList contains duplicates (", comment.user.userName, ")");
   }
 }
 
@@ -906,15 +906,14 @@ function setGeneralCommentStatistics(userList, comment, appConstants) {
  *
  * @param {*} userList
  * @param {*} comment
- * @param {*} appConstants
  */
-function setReviewerStatistics(userList, reviewer, appConstants) {
-  var currentUser = {};
-  var filteredUserList = userList.filter(user => user.userName === reviewer.userName);
-  if (filteredUserList.length === 1) {
-    console.log(new Date().toJSON(), appConstants.LOG_INFO, "setReviewerStatistics() Updating Stats for:", reviewer.userName);
-    currentUser = filteredUserList[0];
-    currentUser.reviewCount++;
+function setReviewerStatistics(userList, reviewer) {
+  let currentUser = {};
+  const FILTERED_USER_LIST = userList.filter(user => user.userName === reviewer.userName);
+  if (FILTERED_USER_LIST.length === 1) {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "setReviewerStatistics() Updating Stats for:", reviewer.userName);
+    currentUser = FILTERED_USER_LIST[0];
+    currentUser.reviewCount += 1;
 
     if (typeof currentUser.timeSpent === "undefined" || currentUser.timeSpent === null) {
       currentUser.timeSpent = 0;
@@ -926,9 +925,9 @@ function setReviewerStatistics(userList, reviewer, appConstants) {
     }
 
     if (reviewer.hasOwnProperty("timeSpent") && reviewer.timeSpent > 0) {
-      currentUser.timeSpentReviewCnt++;
+      currentUser.timeSpentReviewCnt += 1;
       currentUser.timeSpent += reviewer.timeSpent;
-      if (currentUser.timeSpentReviewCnt == 1) {
+      if (currentUser.timeSpentReviewCnt === 1) {
         currentUser.avgTimeSpent = reviewer.timeSpent;
       } else {
         currentUser.avgTimeSpent = currentUser.timeSpent / currentUser.timeSpentReviewCnt;
@@ -936,7 +935,7 @@ function setReviewerStatistics(userList, reviewer, appConstants) {
     }
 
     if (reviewer.hasOwnProperty("completed") && reviewer.completed) {
-      currentUser.completedReviewCount++;
+      currentUser.completedReviewCount += 1;
     }
 
     if (typeof currentUser.displayName === "undefined" || currentUser.displayName === null) {
@@ -946,8 +945,8 @@ function setReviewerStatistics(userList, reviewer, appConstants) {
     if (typeof currentUser.avatarURL === "undefined" || currentUser.avatarURL === null) {
       currentUser.avatarURL = reviewer.avatarURL;
     }
-  } else if (filteredUserList.length === 0) {
-    console.log(new Date().toJSON(), appConstants.LOG_INFO, "setReviewerStatistics() Setting Stats for:", reviewer.userName);
+  } else if (FILTERED_USER_LIST.length === 0) {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "setReviewerStatistics() Setting Stats for:", reviewer.userName);
     currentUser.userName = reviewer.userName;
     currentUser.displayName = reviewer.displayName;
     currentUser.avatarURL = reviewer.avatarUrl;
@@ -970,6 +969,6 @@ function setReviewerStatistics(userList, reviewer, appConstants) {
 
     userList.push(currentUser);
   } else {
-    console.log(new Date().toJSON(), appConstants.LOG_ERROR, "setReviewerStatistics()", "userList contains duplicates (", reviewer.userName, ")");
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "setReviewerStatistics()", "userList contains duplicates (", reviewer.userName, ")");
   }
 }

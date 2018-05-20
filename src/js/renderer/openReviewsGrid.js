@@ -1,4 +1,4 @@
-(function(jsGrid, $, undefined) {
+(function (jsGrid, $, undefined) {
   var Field = jsGrid.Field;
 
   function ControlField(config) {
@@ -45,87 +45,87 @@
     clearFilterButton: true,
     modeSwitchButton: true,
 
-    _initConfig: function() {
+    _initConfig: function () {
       this._hasFiltering = this._grid.filtering;
       this._hasInserting = false;
       this._grid.inserting = false;
       this._configInitialized = true;
     },
 
-    headerTemplate: function() {
+    headerTemplate: function () {
       if (!this._configInitialized) {
         this._initConfig();
       }
       return this._createFilterSwitchButton();
     },
 
-    itemTemplate: function(value, item) {
+    itemTemplate: function (value, item) {
       var $result = $([]);
       $result = $result.add(
         $("<button class='btn btn-primary btn-sm btn-grid'>C</button>")
-          .attr("type", "button")
-          .attr("title", "Close Review")
-          .text("C")
-          .on("click", function() {
-            // var $grid = $("#openReviewsTable");
-            // $grid.jsGrid("deleteItem", item);
+        .attr("type", "button")
+        .attr("title", "Close Review")
+        .text("C")
+        .on("click", function () {
+          // var $grid = $("#openReviewsTable");
+          // $grid.jsGrid("deleteItem", item);
 
-            // var countElement = document.getElementById("openBadge");
-            // var count = parseFloat(countElement.innerHTML);
-            // count--;
-            // countElement.innerHTML = count;
+          // var countElement = document.getElementById("openBadge");
+          // var count = parseFloat(countElement.innerHTML);
+          // count--;
+          // countElement.innerHTML = count;
 
-            //document.getElementById("reviewSummaryModal").style.display = "block";
-            //document.getElementById("summaryToCloseReviewID").innerHTML = item.ID;
-          })
+          // document.getElementById("reviewSummaryModal").style.display = "block";
+          // document.getElementById("summaryToCloseReviewID").innerHTML = item.ID;
+        })
       );
       $result = $result.add(
         $("<button class='btn btn-primary btn-sm btn-grid'>R</button>")
-          .attr("type", "button")
-          .attr("title", "Remind Reviewers")
-          .text("R")
-          .on("click", function() {
-            //document.getElementById("reviewReminderModal").style.display = "block";
-            //document.getElementById("reminderReviewID").innerHTML = item.ID;
-          })
+        .attr("type", "button")
+        .attr("title", "Remind Reviewers")
+        .text("R")
+        .on("click", function () {
+          // document.getElementById("reviewReminderModal").style.display = "block";
+          // document.getElementById("reminderReviewID").innerHTML = item.ID;
+        })
       );
       return $result;
     },
 
-    filterTemplate: function() {
+    filterTemplate: function () {
       var $result = this._createSearchButton();
       return this.clearFilterButton ? $result.add(this._createClearFilterButton()) : $result;
     },
 
-    _createFilterSwitchButton: function() {
+    _createFilterSwitchButton: function () {
       var isOn = true;
-      var updateButtonState = $.proxy(function() {
+      var updateButtonState = $.proxy(function () {
         $button.toggleClass(this.modeOnButtonClass, isOn);
       }, this);
 
-      var $button = this._createGridButton(this.modeButtonClass + " " + this.searchModeButtonClass, "", function(grid) {
+      var $button = this._createGridButton(this.modeButtonClass + " " + this.searchModeButtonClass, "", function (grid) {
         isOn = !isOn;
         grid.option("filtering", isOn);
         updateButtonState();
       });
-      
+
       updateButtonState();
       return $button;
     },
 
-    _createSearchButton: function() {
-      return this._createGridButton(this.searchButtonClass, this.searchButtonTooltip, function(grid) {
+    _createSearchButton: function () {
+      return this._createGridButton(this.searchButtonClass, this.searchButtonTooltip, function (grid) {
         grid.search();
       });
     },
 
-    _createClearFilterButton: function() {
-      return this._createGridButton(this.clearFilterButtonClass, this.clearFilterButtonTooltip, function(grid) {
+    _createClearFilterButton: function () {
+      return this._createGridButton(this.clearFilterButtonClass, this.clearFilterButtonTooltip, function (grid) {
         grid.clearFilter();
       });
     },
 
-    _createGridButton: function(cls, tooltip, clickHandler) {
+    _createGridButton: function (cls, tooltip, clickHandler) {
       var grid = this._grid;
       return $("<input>")
         .addClass(this.buttonClass)
@@ -134,11 +134,11 @@
           type: "button",
           title: tooltip
         })
-        .on("click", function(e) {
+        .on("click", function (e) {
           clickHandler(grid, e);
         });
     },
-    editValue: function() {
+    editValue: function () {
       return "";
     }
   });

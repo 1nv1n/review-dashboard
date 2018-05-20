@@ -2,17 +2,22 @@
  * Handle operations on list of servers
  */
 
+const APP_CONSTANTS = require("../constants/app-constants");
+
 // Export all functions.
 module.exports = {
   // Retrieve Crucible Server list
-  retrieveCrucibleServerList: function(neDB, appConstants) {
-    return new Promise(function(resolve, reject) {
-      neDB.find({ type: "CrucibleServerInstance" }, function(err, crucibleServerList) {
+  retrieveCrucibleServerList: function retrieveCrucibleServerList(neDB) {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "retrieveCrucibleServerList()");
+    return new Promise((resolve, reject) => {
+      neDB.find({
+        type: "CrucibleServerInstance"
+      }, (err, crucibleServerList) => {
         if (err) {
-          console.log(new Date().toJSON(), appConstants.LOG_ERROR, "retrieveCrucibleServerList()", err);
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "retrieveCrucibleServerList()", err);
           reject([]);
         } else {
-          console.log(new Date().toJSON(), appConstants.LOG_INFO, "retrieveCrucibleServerList(): Retrieved:", crucibleServerList.length, "Crucible Instances!");
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "retrieveCrucibleServerList(): Retrieved:", crucibleServerList.length, "Crucible Instances!");
           resolve(crucibleServerList);
         }
       });
@@ -20,39 +25,43 @@ module.exports = {
   },
 
   // Saves the list of servers to the database
-  saveCrucibleServerList: function(neDB, appConstants, crucibleServerList, mainWindow) {
+  saveCrucibleServerList: function saveCrucibleServerList(neDB, mainWindow, crucibleServerList) {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "saveCrucibleServerList()");
     // Remove existing servers
-    neDB.remove({ type: "CrucibleServerInstance" }, { multi: true }, function(err, numRemoved) {
-      if (err) {
-        console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveCrucibleServerList", err);
+    neDB.remove({
+      type: "CrucibleServerInstance"
+    }, {
+      multi: true
+    }, (removeErr, numRemoved) => {
+      if (removeErr) {
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "saveCrucibleServerList", removeErr);
       } else {
-        console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveCrucibleServerList: Removed:", numRemoved, "entry(s)!");
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "saveCrucibleServerList: Removed:", numRemoved, "entry(s)!");
 
         // Insert passed-in server list
-        for (var serverIdx in crucibleServerList) {
-          neDB.insert(
-            {
-              type: "CrucibleServerInstance",
-              instance: crucibleServerList[serverIdx]
-            },
-            function(err, insertedRecord) {
-              if (err) {
-                console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveCrucibleServerList", err);
-                mainWindow.webContents.send("save-server-list", []);
-              } else {
-                console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveCrucibleServerList: Saved:", insertedRecord.instance);
-              }
+        crucibleServerList.forEach((element) => {
+          neDB.insert({
+            type: "CrucibleServerInstance",
+            instance: element
+          }, (insertErr, insertedRecord) => {
+            if (insertErr) {
+              console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "saveCrucibleServerList", insertErr);
+              mainWindow.webContents.send("save-server-list", []);
+            } else {
+              console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "saveCrucibleServerList: Saved:", insertedRecord.instance);
             }
-          );
-        }
+          });
+        });
 
-        neDB.find({ type: "CrucibleServerInstance" }, function(err, crucibleServerList) {
-          if (err) {
-            console.log(new Date().toJSON(), appConstants.LOG_ERROR, "retrieveCrucibleServerList()", err);
+        neDB.find({
+          type: "CrucibleServerInstance"
+        }, (findErr, retrievedCrucibleServerList) => {
+          if (findErr) {
+            console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "retrieveCrucibleServerList()", findErr);
             mainWindow.webContents.send("save-server-list", []);
           } else {
-            console.log(new Date().toJSON(), appConstants.LOG_INFO, "retrieveCrucibleServerList(): Retrieved:", crucibleServerList.length, "Crucible Instances!");
-            mainWindow.webContents.send("save-server-list", crucibleServerList);
+            console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "retrieveCrucibleServerList(): Retrieved:", retrievedCrucibleServerList.length, "Crucible Instances!");
+            mainWindow.webContents.send("save-server-list", retrievedCrucibleServerList);
           }
         });
       }

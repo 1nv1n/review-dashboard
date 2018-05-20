@@ -12,13 +12,18 @@ let lastInsertedCell = 0;
  * Launch the 'Create Review' modal.
  */
 function launchCreateReviewModal() {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Launching Create-Review Modal.");
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Launching 'Create Review' Modal.");
 
   // Blackout before opening the Modal
   blackout();
 
   // jQuery
-  $("#createReviewModal").modal({ backdrop: false, keyboard: false, focus: true, show: true });
+  $("#createReviewModal").modal({
+    backdrop: false,
+    keyboard: false,
+    focus: true,
+    show: true
+  });
 
   // Populate the Crucible serer instances
   populateCrucibleServerRadioDiv("crucibleServerRadioDiv");
@@ -31,7 +36,7 @@ function launchCreateReviewModal() {
  * Dismiss the 'Create Review' modal.
  */
 function dismissCreateReviewModal() {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Dismissing Create-Review Modal.");
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Dismissing 'Create Review' Modal.");
 
   // jQuery
   $("#createReviewModal").modal("hide");
@@ -44,51 +49,51 @@ function dismissCreateReviewModal() {
  * Creates the Server Table used for Review Creation.
  */
 function createReviewServerTable() {
-  const serverTable = document.createElement("table");
-  serverTable.classList.add("create-review-table");
+  const SERVER_TABLE = document.createElement("table");
+  SERVER_TABLE.classList.add("create-review-table");
 
-  return serverTable;
+  return SERVER_TABLE;
 }
 
 /**
  * Creates the Server Table Data.
  */
 function createServerTableData() {
-  const tableData = document.createElement("td");
-  tableData.style = "width:350px";
+  const TABLE_DATA = document.createElement("td");
+  TABLE_DATA.style = "width:350px";
 
-  return tableData;
+  return TABLE_DATA;
 }
 
 /**
  * Creates the Outer Div for the Server Table.
  */
 function createServerTableOuterDiv() {
-  const outerDiv = document.createElement("div");
-  outerDiv.classList.add("input-group");
-  outerDiv.classList.add("radio-input-group");
+  const OUTER_DIV = document.createElement("div");
+  OUTER_DIV.classList.add("input-group");
+  OUTER_DIV.classList.add("radio-input-group");
 
-  return outerDiv;
+  return OUTER_DIV;
 }
 
 /**
  * Creates the Middle Div for the Server Table.
  */
 function createServerTableMiddleDiv() {
-  const middleDiv = document.createElement("div");
-  middleDiv.classList.add("input-group-prepend");
+  const MIDDLE_DIV = document.createElement("div");
+  MIDDLE_DIV.classList.add("input-group-prepend");
 
-  return middleDiv;
+  return MIDDLE_DIV;
 }
 
 /**
  * Creates the Inner Div for the Server Table.
  */
 function createServerTableInnerDiv() {
-  const innerDiv = document.createElement("div");
-  innerDiv.classList.add("input-group-text");
+  const INNER_DIV = document.createElement("div");
+  INNER_DIV.classList.add("input-group-text");
 
-  return innerDiv;
+  return INNER_DIV;
 }
 
 /**
@@ -97,18 +102,18 @@ function createServerTableInnerDiv() {
  * @param {*} serverIdx
  */
 function createServerInputRadio(serverIdx) {
-  const inputRadio = document.createElement("input");
-  inputRadio.type = "radio";
-  inputRadio.name = "crucibleServer";
-  inputRadio.value = serverIdx;
-  inputRadio.setAttribute("aria-label", "Radio For Server");
+  const INPUT_RADIO = document.createElement("input");
+  INPUT_RADIO.type = "radio";
+  INPUT_RADIO.name = "crucibleServer";
+  INPUT_RADIO.value = serverIdx;
+  INPUT_RADIO.setAttribute("aria-label", "Radio For Server");
 
   // Auto-check the first option by default
   if (serverIdx === 0) {
-    inputRadio.checked = true;
+    INPUT_RADIO.checked = true;
   }
 
-  return inputRadio;
+  return INPUT_RADIO;
 }
 
 /**
@@ -117,16 +122,16 @@ function createServerInputRadio(serverIdx) {
  * @param {*} crucibleInstance
  */
 function createServerDisabledText(crucibleInstance) {
-  const disabledText = document.createElement("input");
-  disabledText.type = "text";
-  disabledText.value = crucibleInstance;
-  disabledText.classList.add("form-control");
-  disabledText.classList.add("form-control-sm");
-  disabledText.classList.add("server-input-disabled");
-  disabledText.setAttribute("aria-label", "Radio Button Text");
-  disabledText.setAttribute("disabled", "disabled");
+  const DIABLED_TEXT = document.createElement("input");
+  DIABLED_TEXT.type = "text";
+  DIABLED_TEXT.value = crucibleInstance;
+  DIABLED_TEXT.classList.add("form-control");
+  DIABLED_TEXT.classList.add("form-control-sm");
+  DIABLED_TEXT.classList.add("server-input-disabled");
+  DIABLED_TEXT.setAttribute("aria-label", "Radio Button Text");
+  DIABLED_TEXT.setAttribute("disabled", "disabled");
 
-  return disabledText;
+  return DIABLED_TEXT;
 }
 
 /**
@@ -150,27 +155,9 @@ function populateReviewerList() {
   lastInsertedCell = 0;
 
   // Add from the main list
-  reviewerList.forEach(function(reviewer) {
+  _GLOBAL_REVIEWER_LIST.forEach((reviewer) => {
     addReviewer(reviewer);
   });
-}
-
-/**
- * Adds a reviewer to the list
- */
-function addReviewer(reviewer) {
-  const reviewerTable = createReviewerTable();
-  const tableData = document.createElement("td");
-  const outerDiv = createReviewerTableOuterDiv();
-  const reviewerTableRow = createReviewerTableRow();
-  const input = createReviewerInput(reviewer);
-
-  outerDiv.appendChild(input);
-  tableData.appendChild(outerDiv);
-  reviewerTableRow.appendChild(tableData);
-  reviewerTable.appendChild(reviewerTableRow);
-
-  input.focus();
 }
 
 /**
@@ -180,14 +167,14 @@ function addReviewer(reviewer) {
  * If the table exists, returns it.
  */
 function createReviewerTable() {
-  var reviewerTable = document.getElementById("reviewerTable");
+  let reviewerTable = document.getElementById("reviewerTable");
   if (typeof reviewerTable === "undefined" || reviewerTable === null) {
     reviewerTable = document.createElement("table");
     reviewerTable.id = "reviewerTable";
 
-    var reviewerTableBody = document.createElement("tbody");
-    reviewerTableBody.classList.add("create-review-table");
-    reviewerTable.appendChild(reviewerTableBody);
+    const REVIEWER_TABLE_BODY = document.createElement("tbody");
+    REVIEWER_TABLE_BODY.classList.add("create-review-table");
+    reviewerTable.appendChild(REVIEWER_TABLE_BODY);
 
     document.getElementById("reviewerListDiv").appendChild(reviewerTable);
   }
@@ -199,11 +186,11 @@ function createReviewerTable() {
  * Creates the Outer Div for the Reviewer Table.
  */
 function createReviewerTableOuterDiv() {
-  const outerDiv = document.createElement("div");
-  outerDiv.classList.add("input-group");
-  outerDiv.classList.add("mb-2");
+  const OUTER_DIV = document.createElement("div");
+  OUTER_DIV.classList.add("input-group");
+  OUTER_DIV.classList.add("mb-2");
 
-  return outerDiv;
+  return OUTER_DIV;
 }
 
 /**
@@ -232,28 +219,63 @@ function createReviewerTableRow() {
  * @param {*} reviewer
  */
 function createReviewerInput(reviewer) {
-  const input = document.createElement("input");
-  input.id = "reviewerIdx" + insertedCellCnt;
-  input.type = "text";
-  input.placeholder = "ID";
-  input.classList.add("form-control");
-  input.classList.add("form-control-sm");
-  input.classList.add("reviewer");
-  input.classList.add("reviewer-" + insertedCellCnt);
-  input.setAttribute("aria-describedby", "basic-addon3");
+  const INPUT_ELEMENT = document.createElement("input");
+  INPUT_ELEMENT.id = "reviewerIdx" + insertedCellCnt;
+  INPUT_ELEMENT.type = "text";
+  INPUT_ELEMENT.placeholder = "ID";
+  INPUT_ELEMENT.classList.add("form-control");
+  INPUT_ELEMENT.classList.add("form-control-sm");
+  INPUT_ELEMENT.classList.add("reviewer");
+  INPUT_ELEMENT.classList.add("reviewer-" + insertedCellCnt);
+  INPUT_ELEMENT.setAttribute("aria-describedby", "basic-addon3");
 
   if (typeof reviewer !== "undefined" || reviewer !== null) {
-    input.value = reviewer;
+    INPUT_ELEMENT.value = reviewer;
   }
 
-  return input;
+  return INPUT_ELEMENT;
+}
+
+/**
+ * Adds a reviewer to the list
+ */
+function addReviewer(reviewer) {
+  const REVIEWER_TABLE = createReviewerTable();
+  const TABLE_DATA = document.createElement("td");
+  const OUTER_DIV = createReviewerTableOuterDiv();
+  const REVIEWER_TABLE_ROW = createReviewerTableRow();
+  const INPUT_ELEMENT = createReviewerInput(reviewer);
+
+  OUTER_DIV.appendChild(INPUT_ELEMENT);
+  TABLE_DATA.appendChild(OUTER_DIV);
+  REVIEWER_TABLE_ROW.appendChild(TABLE_DATA);
+  REVIEWER_TABLE.appendChild(REVIEWER_TABLE_ROW);
+
+  INPUT_ELEMENT.focus();
+}
+
+/**
+ * Loop through the current reviewer div, set the reviewer list & remove empty/invalid elements.
+ */
+function consolidateReviewerList() {
+  // Clear out the existing list prior to consolidation.
+  _GLOBAL_REVIEWER_LIST = [];
+
+  // Set the reviewer list & remove empty/invalid elements.
+  Array.from(document.getElementsByClassName("reviewer")).forEach((element) => {
+    if (typeof element === "undefined" || element === null || element.value.length <= 0) {
+      element.parentNode.parentNode.removeChild(element.parentNode);
+    } else {
+      _GLOBAL_REVIEWER_LIST.push(element.value);
+    }
+  });
 }
 
 /**
  * Creates a Review.
  */
 function createReview() {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Creating Review.");
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Creating Review.");
 
   // Add the spinner
   addSpinner(document.getElementById("createReviewIcon").classList);
@@ -270,7 +292,7 @@ function createReview() {
   const allowReviewersCheck = document.getElementById("allowReviewerJoinCheck").checked;
 
   // Send Review Data to the Main Process
-  IPC.send("create-review", crucibleServerList[serverIdx].instance, projectKey, reviewName, reviewDesc, jiraKey, allowReviewersCheck, reviewerList);
+  IPC.send("create-review", _GLOBAL_CRUCIBLE_SERVER_LIST[serverIdx].instance, projectKey, reviewName, reviewDesc, jiraKey, allowReviewersCheck, _GLOBAL_REVIEWER_LIST);
 }
 
 /**
@@ -283,30 +305,13 @@ function clearReviewSpecificInput() {
 }
 
 /**
- * Loop through the current reviewer div, set the reviewer list & remove empty/invalid elements.
- */
-function consolidateReviewerList() {
-  // Clear out the existing list prior to consolidation.
-  reviewerList = [];
-
-  // Set the reviewer list & remove empty/invalid elements.
-  Array.from(document.getElementsByClassName("reviewer")).forEach(function(element) {
-    if (typeof element === "undefined" || element === null || element.value.length <= 0) {
-      element.parentNode.parentNode.removeChild(element.parentNode);
-    } else {
-      reviewerList.push(element.value);
-    }
-  });
-}
-
-/**
  * Handle 'Create Review'
  *
  * @param {bool} isCreated
  * @param {String} reviewID
  */
 function handleReviewCreated(isCreated, reviewID) {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "handleReviewCreated():isCreated", isCreated, ":reviewID:", reviewID);
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "handleReviewCreated():isCreated", isCreated, ":reviewID:", reviewID);
 
   // Remove the spinner
   removeSpinner(document.getElementById("createReviewIcon").classList);
@@ -318,6 +323,6 @@ function handleReviewCreated(isCreated, reviewID) {
     // Dismiss the Modal
     dismissCreateReviewModal();
   } else {
-    // TODO: Display Toast.
+    createToast("Failed to create Review.");
   }
 }

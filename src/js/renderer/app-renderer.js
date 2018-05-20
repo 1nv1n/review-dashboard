@@ -3,6 +3,11 @@
  * Look at IPC JS for operations stemming from events sent up from the server.
  */
 
+// Browser Window Object
+const {
+  BrowserWindow
+} = require("electron").remote;
+
 // Is App Maximized
 let isAppMaximized = false;
 
@@ -10,7 +15,7 @@ let isAppMaximized = false;
  * Minimize the App.
  */
 function minimizeApp() {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Minimizing App.");
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Minimizing App.");
   BrowserWindow.getFocusedWindow().minimize();
 }
 
@@ -19,11 +24,11 @@ function minimizeApp() {
  */
 function maximizeApp() {
   if (isAppMaximized) {
-    console.log(new Date().toJSON(), appConstants.LOG_INFO, "Restoring App.");
+    console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Restoring App.");
     BrowserWindow.getFocusedWindow().restore();
     isAppMaximized = false;
   } else {
-    console.log(new Date().toJSON(), appConstants.LOG_INFO, "Maximizing App.");
+    console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Maximizing App.");
     BrowserWindow.getFocusedWindow().maximize();
     isAppMaximized = true;
   }
@@ -33,7 +38,7 @@ function maximizeApp() {
  * Close the App.
  */
 function closeApp() {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Quitting App.");
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Quitting App.");
   BrowserWindow.getFocusedWindow().close();
 }
 
@@ -41,7 +46,7 @@ function closeApp() {
  * Reload the current page (force-refresh)
  */
 function reloadPage() {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "HTML Reload.");
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "HTML Reload.");
   window.location.reload(true);
 }
 
@@ -49,7 +54,6 @@ function reloadPage() {
  * Backout
  */
 function blackout() {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Blackout.");
   // Attempt to collapse the Sidebar only if it's currently open
   if (document.getElementById("sidebar").classList.contains("active")) {
     document.getElementById("sidebarCollapse").click();
@@ -66,7 +70,6 @@ function blackout() {
  * Remove Backout
  */
 function removeBlackout() {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Revert Blackout.");
   // Expand the Sidebar only if it was programmatically collapsed
   // if(!document.getElementById("sidebar").classList.contains("active") && document.getElementById("sidebar").classList.contains("sidebar-clicked")) {
   //   document.getElementById("sidebarCollapse").click();
@@ -83,7 +86,7 @@ function removeBlackout() {
  * Logout & clear DB
  */
 function logout() {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Logout Attempted.");
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Logout Attempted.");
   IPC.send("logout", 1);
 
   // Remove existing elements
@@ -105,7 +108,8 @@ function logout() {
   addServerInstanceInput(null);
 
   // Login Modal after Server details are entered
-  $("#serverModal").on("hidden.bs.modal", function (element) {
+  $("#serverModal").on("hidden.bs.modal", function onServerModalHide(element) {
+    console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "onServerModalHide");
     launchLoginModal();
   });
 }
@@ -117,12 +121,12 @@ function logout() {
  */
 function setCurrentUser(currentUser) {
   if (typeof currentUser !== "undefined" && currentUser !== null) {
-    console.log(new Date().toJSON(), appConstants.LOG_INFO, "Setting User:" + currentUser.userID);
+    console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Setting User:", currentUser.userID);
 
-    user = currentUser;
-    setUserInfo(user.userID, user.displayName, user.avatarURL);
+    _GLOBAL_USER = currentUser;
+    setUserInfo(_GLOBAL_USER.userID, _GLOBAL_USER.displayName, _GLOBAL_USER.avatarURL);
   } else {
-    console.log(new Date().toJSON(), appConstants.LOG_INFO, "User not defined!");
+    console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "User not defined!");
   }
 }
 
@@ -134,6 +138,7 @@ function setCurrentUser(currentUser) {
  * @param {String} avatarURL
  */
 function setUserInfo(userID, displayName, avatarURL) {
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "setUserInfo", userID);
   document.getElementById("userIDLabel").innerHTML = userID;
   document.getElementById("profilePicture").src = avatarURL;
 }
@@ -144,10 +149,10 @@ function setUserInfo(userID, displayName, avatarURL) {
  * @param {*} currentReviewerList 
  */
 function setCurrentReviewerList(currentReviewerList) {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Setting", currentReviewerList.length, "Reviewers.");
-  reviewerList = [];
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Setting", currentReviewerList.length, "Reviewers.");
+  _GLOBAL_REVIEWER_LIST = [];
   currentReviewerList.forEach(function (element) {
-    reviewerList.push(element.reviewer);
+    _GLOBAL_REVIEWER_LIST.push(element.reviewer);
   });
 }
 
@@ -156,10 +161,10 @@ function setCurrentReviewerList(currentReviewerList) {
  */
 function toggleParticles(toggle) {
   if (toggle) {
-    console.log(new Date().toJSON(), appConstants.LOG_INFO, "Particles JS Enabled.");
+    console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Particles JS Enabled.");
     particlesJS.load("particles-js", "../src/js/vendor/particles.json", function () {});
   } else {
-    console.log(new Date().toJSON(), appConstants.LOG_INFO, "Particles JS Disabled.");
+    console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Particles JS Disabled.");
     pJSDom[0].pJS.fn.vendors.destroypJS();
     pJSDom = [];
   }

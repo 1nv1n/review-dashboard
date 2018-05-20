@@ -33,7 +33,12 @@
     For jQuery (Required by Bootstrap & JSGrid)
     Should be declared before other JS imports.
    -->
-  <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+  <script>
+    if (typeof module === 'object') {
+      window.module = module;
+      module = undefined;
+    }
+  </script>
 
   <!-- Vendor Imports (JS) -->
   <script src="../node_modules/jquery/dist/jquery.slim.min.js"></script>
@@ -41,28 +46,30 @@
   <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="../node_modules/jsgrid/dist/jsgrid.min.js"></script>
   <script src="../node_modules/chart.js/dist/Chart.min.js"></script>
-
   <script src="../src/js/vendor/particles.js"></script>
 
-  <script>if (window.module) module = window.module;</script>
+  <!-- For jQuery (Required by Bootstrap & JSGrid) -->
+  <script>
+    if (window.module) module = window.module;
+  </script>
 
   <!-- Global Variables -->
   <script type="text/javascript">
-    // Constants
-    const appConstants = require("../src/js/constants/app-constants");
+    // App Constants
+    const _GLOBAL_APP_CONSTANTS = require("../src/js/constants/app-constants");
 
     // Review Grids
-    const openReviewGrid = require("../src/js/renderer/openReviewsGrid");
-    const pendingReviewGrid = require("../src/js/renderer/pendingReviewsGrid");
+    require("../src/js/renderer/openReviewsGrid");
+    require("../src/js/renderer/pendingReviewsGrid");
 
     // List of Crucible Server instances
-    var crucibleServerList = [];
+    let _GLOBAL_CRUCIBLE_SERVER_LIST = [];
 
     // User object
-    var user;
+    let _GLOBAL_USER;
 
     // List of reviewers
-    var reviewerList = [];
+    let _GLOBAL_REVIEWER_LIST = [];
   </script>
 
   <!-- App JS -->
@@ -88,7 +95,6 @@
     <!-- App Side Nav Bar -->
     <nav id="sidebar">
       <div class="sidebar-header"></div>
-
       <!-- App Side Nav Bar Components -->
       <ul class="list-unstyled list-components">
         <li>
@@ -98,7 +104,6 @@
           <label class="user-id-label" id="userIDLabel"></label>
         </li>
       </ul>
-
       <ul class="list-unstyled list-components side-nav-btn-list">
         <li>
           <button class="btn btn-dark nav-btn-sml navbar-btn" onclick="launchServerModal()" title="Server Instances">
@@ -150,7 +155,6 @@
         </ul>
       </nav>
     </header>
-
 
     <!-- Main Content -->
     <main role="main" class="container content">
@@ -239,9 +243,9 @@
       </div>
     </main>
 
-    <div id="toast">
-      <div id="toastImg">Icon</div>
-      <div id="toastDesc">A notification message..</div>
+    <!-- Toast Div -->
+    <div id="toastDiv">
+      <div id="toastDesc"></div>
     </div>
 
     <!-- Footer -->
@@ -265,7 +269,6 @@
         </a>
       </div>
     </footer>
-
   </div>
 
   <!-- Server Instances Modal -->
@@ -476,6 +479,7 @@
     </div>
   </div>
 
+  <!-- Document Ready Script -->
   <script>
     // Self executing function for 'active' class toggle on Side Bar Collapse
     // jQuery:

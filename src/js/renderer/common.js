@@ -134,51 +134,59 @@ function isHidden(element) {
  * @param {String} crucibleServerRadioDiv
  */
 function populateCrucibleServerRadioDiv(crucibleServerRadioDiv) {
-  console.log(new Date().toJSON(), appConstants.LOG_INFO, "Populating Server Table.");
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Populating Crucible Server Table.");
 
   // Remove existing
   const crucibleServerRadioDivNode = document.getElementById(crucibleServerRadioDiv);
   removeChildren(crucibleServerRadioDivNode);
 
-  if (typeof crucibleServerList === "undefined" || crucibleServerList == null || crucibleServerList.length == 0) {
-    // TODO - Handle this
-    console.log(new Date().toJSON(), appConstants.LOG_WARN, "crucibleServerList undefined!");
+  if (typeof _GLOBAL_CRUCIBLE_SERVER_LIST === "undefined" || _GLOBAL_CRUCIBLE_SERVER_LIST == null || _GLOBAL_CRUCIBLE_SERVER_LIST.length === 0) {
+    console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_WARN, "_GLOBAL_CRUCIBLE_SERVER_LIST undefined!");
+    createToast("Server list needs at least one entry.");
   } else {
-    const serverTable = createReviewServerTable();
+    const SERVER_TABLE = createReviewServerTable();
 
     let serverTableRow;
     let serverIdx;
-    for (serverIdx = 0; serverIdx < crucibleServerList.length; serverIdx++) {
+    for (serverIdx = 0; serverIdx < _GLOBAL_CRUCIBLE_SERVER_LIST.length; serverIdx++) {
       // If even,
       if (isEven(serverIdx)) {
         // Create row
         serverTableRow = document.createElement("tr");
       }
 
-      const tableData = createServerTableData();
-      const outerDiv = createServerTableOuterDiv();
-      const middleDiv = createServerTableMiddleDiv();
-      const innerDiv = createServerTableInnerDiv();
-      const inputRadio = createServerInputRadio(serverIdx);
-      const disabledText = createServerDisabledText(crucibleServerList[serverIdx].instance);
+      const TABLE_DATA = createServerTableData();
+      const OUTER_DIV = createServerTableOuterDiv();
+      const MIDDLE_DIV = createServerTableMiddleDiv();
+      const INNER_DIV = createServerTableInnerDiv();
+      const INPUT_RADIO = createServerInputRadio(serverIdx);
+      const DISABLED_TEXT = createServerDisabledText(_GLOBAL_CRUCIBLE_SERVER_LIST[serverIdx].instance);
 
-      innerDiv.appendChild(inputRadio);
-      middleDiv.appendChild(innerDiv);
-      outerDiv.appendChild(middleDiv);
-      outerDiv.appendChild(disabledText);
-      tableData.appendChild(outerDiv);
-      serverTableRow.appendChild(tableData);
-      serverTable.appendChild(serverTableRow);
+      INNER_DIV.appendChild(INPUT_RADIO);
+      MIDDLE_DIV.appendChild(INNER_DIV);
+      OUTER_DIV.appendChild(MIDDLE_DIV);
+      OUTER_DIV.appendChild(DISABLED_TEXT);
+      TABLE_DATA.appendChild(OUTER_DIV);
+      serverTableRow.appendChild(TABLE_DATA);
+      SERVER_TABLE.appendChild(serverTableRow);
     }
 
-    crucibleServerRadioDivNode.appendChild(serverTable);
+    crucibleServerRadioDivNode.appendChild(SERVER_TABLE);
   }
 }
 
-function createToast() {
-  const toastDiv = document.getElementById("toast")
+/**
+ * Shows the toast message.
+ *
+ * @param {*} message
+ */
+function createToast(message) {
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "createToast()", message);
+  const toastDiv = document.getElementById("toastDiv");
+  document.getElementById("toastDesc").innerHTML = message;
+
   toastDiv.className = "show";
-  setTimeout(function () {
+  setTimeout(() => {
     toastDiv.className = toastDiv.className.replace("show", "");
-  }, 2500);
+  }, 2000);
 }

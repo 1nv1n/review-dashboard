@@ -2,63 +2,76 @@
  * Handles user & related operations.
  */
 
+const API_CONSTANTS = require("../constants/api-constants");
+const APP_CONSTANTS = require("../constants/app-constants");
+const REQUEST_PROMISE = require("request-promise");
+
 // Export all functions.
 module.exports = {
   // Retrieve User
-  retrieveUser: function(neDB, appConstants) {
-    return new Promise(function(resolve, reject) {
-      neDB.find({ type: "User" }, function(err, user) {
+  retrieveUser: function retrieveUser(neDB) {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "retrieveUser()");
+    return new Promise((resolve, reject) => {
+      neDB.find({
+        type: "User"
+      }, (err, user) => {
         if (err) {
-          console.log(new Date().toJSON(), appConstants.LOG_ERROR, "retrieveUser()", err);
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "retrieveUser()", err);
           reject(null);
+        }
+
+        if (typeof user !== "undefined" && user !== null && user.length === 1 && typeof user[0].userID !== "undefined" && user[0].userID !== null) {
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "retrieveUser(): Retrieved:", user[0].userID);
+          resolve(user[0]);
         } else {
-          if (typeof user !== "undefined" && user !== null && user.length == 1 && typeof user[0].userID !== "undefined" && user[0].userID !== null) {
-            console.log(new Date().toJSON(), appConstants.LOG_INFO, "retrieveUser(): Retrieved:", user[0].userID);
-            resolve(user[0]);
-          } else {
-            console.log(new Date().toJSON(), appConstants.LOG_ERROR, "retrieveUser(): Unexpected Retrieval:", user);
-            reject(null);
-          }
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_WARN, "retrieveUser(): Unexpected Retrieval:", user);
+          reject(null);
         }
       });
     });
   },
 
   // Retrieve Reviewer List
-  retrieveReviewerList: function(neDB, appConstants) {
-    return new Promise(function(resolve, reject) {
-      neDB.find({ type: "Reviewer" }, function(err, reviewerList) {
+  retrieveReviewerList: function retrieveReviewerList(neDB) {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "retrieveReviewerList()");
+    return new Promise((resolve, reject) => {
+      neDB.find({
+        type: "Reviewer"
+      }, (err, reviewerList) => {
         if (err) {
-          console.log(new Date().toJSON(), appConstants.LOG_ERROR, "retrieveReviewerList()", err);
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "retrieveReviewerList()", err);
           reject(null);
+        }
+
+        if (typeof reviewerList !== "undefined" && reviewerList !== null && reviewerList.length > 0) {
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "retrieveReviewerList(): Retrieved:", reviewerList.length, "Reviewers.");
+          resolve(reviewerList);
         } else {
-          if (typeof reviewerList !== "undefined" && reviewerList !== null && reviewerList.length > 0) {
-            console.log(new Date().toJSON(), appConstants.LOG_INFO, "retrieveReviewerList(): Retrieved:", reviewerList.length, "Reviewers.");
-            resolve(reviewerList);
-          } else {
-            console.log(new Date().toJSON(), appConstants.LOG_ERROR, "retrieveReviewerList(): Unexpected Retrieval:", reviewerList);
-            resolve([]);
-          }
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_WARN, "retrieveReviewerList(): Unexpected Retrieval:", reviewerList);
+          resolve([]);
         }
       });
     });
   },
 
   // Retrieve Project Key
-  retrieveProjectKey: function(neDB, appConstants) {
-    return new Promise(function(resolve, reject) {
-      neDB.find({ type: "ProjectKey" }, function(err, project) {
+  retrieveProjectKey: function retrieveProjectKey(neDB) {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "retrieveProjectKey()");
+    return new Promise((resolve, reject) => {
+      neDB.find({
+        type: "ProjectKey"
+      }, (err, project) => {
         if (err) {
-          console.log(new Date().toJSON(), appConstants.LOG_ERROR, "retrieveProjectKey()", err);
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "retrieveProjectKey()", err);
           reject(null);
+        }
+
+        if (typeof project !== "undefined" && project !== null && project.length > 0 && project[0].projectKey !== null && project[0].projectKey.length > 0) {
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "retrieveProjectKey(): Retrieved:", project[0].projectKey);
+          resolve(project[0].projectKey);
         } else {
-          if (typeof project !== "undefined" && project !== null && project.length > 0 && project[0].projectKey !== null && project[0].projectKey.length > 0) {
-            console.log(new Date().toJSON(), appConstants.LOG_INFO, "retrieveProjectKey(): Retrieved:", project[0].projectKey);
-            resolve(project[0].projectKey);
-          } else {
-            console.log(new Date().toJSON(), appConstants.LOG_ERROR, "retrieveProjectKey(): Unexpected Retrieval:", project);
-            resolve("");
-          }
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_WARN, "retrieveProjectKey(): Unexpected Retrieval:", project);
+          resolve("");
         }
       });
     });
@@ -69,53 +82,57 @@ module.exports = {
    * - Save it to the DB.
    * - Send it up to the renderer.
    */
-  saveUserInfo: function(neDB, apiConstants, appConstants, userID, crucibleServerInstance, mainWindow, requestPromise) {
-    return new Promise(function(resolve, reject) {
+  saveUserInfo: function saveUserInfo(neDB, mainWindow, userID, crucibleServerInstance) {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "saveUserInfo()");
+    return new Promise((resolve, reject) => {
       // Remove any existing user information
-      neDB.remove({ type: "User" }, { multi: true }, function(err, numRemoved) {
-        if (err) {
-          console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveUserInfo()", err);
+      neDB.remove({
+        type: "User"
+      }, {
+        multi: true
+      }, (removeErr, numRemoved) => {
+        if (removeErr) {
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "saveUserInfo()", removeErr);
           reject(null);
         } else {
-          console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveUserInfo()", "Removed Existing User.");
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "saveUserInfo()", "Removed Existing User.");
 
           // GET Parameters
-          var userGET = {
+          const USER_GET_PARAMETERS = {
             method: "GET",
-            uri: crucibleServerInstance + apiConstants.CRUCIBLE_REST_BASE_URL + apiConstants.CRUCIBLE_REST_USERS + apiConstants.USER_ID + userID,
+            uri: crucibleServerInstance +
+              API_CONSTANTS.CRUCIBLE_REST_BASE_URL +
+              API_CONSTANTS.CRUCIBLE_REST_USERS +
+              API_CONSTANTS.USER_ID +
+              userID,
             json: true
           };
 
           // Handle GET Call
-          requestPromise(userGET)
-            .then(function(parsedBody) {
-              var userName = parsedBody.userData[0].userName;
-              var formattedName = parsedBody.userData[0].displayName;
-              var userAvatarURL = parsedBody.userData[0].avatarUrl;
+          REQUEST_PROMISE(USER_GET_PARAMETERS).then((parsedBody) => {
+            const USER_NAME = parsedBody.userData[0].userName;
+            const FORMATTED_NAME = parsedBody.userData[0].displayName;
+            const USER_AVATAR_URL = parsedBody.userData[0].avatarUrl;
 
-              neDB.insert(
-                {
-                  type: "User",
-                  userID: userName,
-                  displayName: formattedName,
-                  avatarURL: userAvatarURL
-                },
-                function(err, insertedRecord) {
-                  if (err) {
-                    console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveUserInfo()", err);
-                    reject(null);
-                  } else {
-                    console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveUserInfo()", userName);
-                    mainWindow.webContents.send("user-info", userName, formattedName, userAvatarURL);
-                    resolve(insertedRecord);
-                  }
-                }
-              );
-            })
-            .catch(function(err) {
-              console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveUserInfo()", err);
-              reject(null);
+            neDB.insert({
+              type: "User",
+              userID: USER_NAME,
+              displayName: FORMATTED_NAME,
+              avatarURL: USER_AVATAR_URL
+            }, (insertErr, insertedRecord) => {
+              if (insertErr) {
+                console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "saveUserInfo()", insertErr);
+                reject(null);
+              } else {
+                console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "saveUserInfo()", USER_NAME);
+                mainWindow.webContents.send("user-info", USER_NAME, FORMATTED_NAME, USER_AVATAR_URL);
+                resolve(insertedRecord);
+              }
             });
+          }).catch((err) => {
+            console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "saveUserInfo()", err);
+            reject(null);
+          });
         }
       });
     });
@@ -124,29 +141,31 @@ module.exports = {
   /**
    * Save Reviewers.
    */
-  saveReviewerDetails: function(neDB, appConstants, currentReviewerList) {
+  saveReviewerDetails: (neDB, currentReviewerList) => {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "saveReviewerDetails()");
     // Remove existing Reviewers
-    neDB.remove({ type: "Reviewer" }, { multi: true }, function(err, numRemoved) {
-      if (err) {
-        console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveReviewerDetails()", err);
+    neDB.remove({
+      type: "Reviewer"
+    }, {
+      multi: true
+    }, (removeErr, numRemoved) => {
+      if (removeErr) {
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "saveReviewerDetails()", removeErr);
       } else {
-        console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveReviewerDetails()", "Removed " + numRemoved + " Existing Reviewer(s).");
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "saveReviewerDetails()", "Removed", numRemoved, " Existing Reviewer(s).");
 
         // Insert current Reviewers
-        currentReviewerList.forEach(function(element) {
-          neDB.insert(
-            {
-              type: "Reviewer",
-              reviewer: element
-            },
-            function(err, insertedRecord) {
-              if (err) {
-                console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveReviewerDetails()", err);
-              } else {
-                console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveReviewerDetails(): Saved Reviewer: " + insertedRecord.reviewer);
-              }
+        currentReviewerList.forEach((element) => {
+          neDB.insert({
+            type: "Reviewer",
+            reviewer: element
+          }, (insertErr, insertedRecord) => {
+            if (insertErr) {
+              console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "saveReviewerDetails()", insertErr);
+            } else {
+              console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "saveReviewerDetails(): Saved Reviewer:", insertedRecord.reviewer);
             }
-          );
+          });
         });
       }
     });
@@ -155,28 +174,30 @@ module.exports = {
   /**
    * Save Project Key.
    */
-  saveProjectDetails: function(neDB, appConstants, projKey) {
+  saveProjectDetails: (neDB, projKey) => {
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "saveProjectDetails()");
     // Remove existing Project Key
-    neDB.remove({ type: "ProjectKey" }, { multi: true }, function(err, numRemoved) {
-      if (err) {
-        console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveProjectDetails()", err);
+    neDB.remove({
+      type: "ProjectKey"
+    }, {
+      multi: true
+    }, (removeErr, numRemoved) => {
+      if (removeErr) {
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "saveProjectDetails()", removeErr);
       } else {
-        console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveProjectDetails()", "Removed Existing Project Key.");
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "saveProjectDetails()", "Removed Existing Project Key.");
 
         // Save current Project key
-        neDB.insert(
-          {
-            type: "ProjectKey",
-            projectKey: projKey
-          },
-          function(err, insertedRecord) {
-            if (err) {
-              console.log(new Date().toJSON(), appConstants.LOG_ERROR, "saveProjectDetails()", err);
-            } else {
-              console.log(new Date().toJSON(), appConstants.LOG_INFO, "saveProjectDetails(): Saved (" + projKey + ") Project Key!");
-            }
+        neDB.insert({
+          type: "ProjectKey",
+          projectKey: projKey
+        }, (insertErr, insertedRecord) => {
+          if (insertErr) {
+            console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "saveProjectDetails()", insertErr);
+          } else {
+            console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "saveProjectDetails(): Saved (", projKey, ") Project Key!");
           }
-        );
+        });
       }
     });
   }
