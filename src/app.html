@@ -228,17 +228,42 @@
           </div>
           <div id="chartButtonDiv" class="chart-button-div">
             <div class="btn-group btn-group-sm" role="group" aria-label="ChartSwitcherGroup">
-              <button id="totalTimeChart" type="button" class="btn btn-primary btn-sm btn-chart-switch" disabled>Total Time</button>
-              <button id="avgTimeChart" type="button" class="btn btn-primary btn-sm btn-chart-switch" disabled>Average Time</button>
-              <button id="commentChart" type="button" class="btn btn-primary btn-sm btn-chart-switch" disabled>Comment Count</button>
-              <button id="defectChart" type="button" class="btn btn-primary btn-sm btn-chart-switch" disabled>Defect Timeline</button>
+              <button id="totalTimeChartButton" type="button" class="btn btn-primary btn-sm btn-chart-switch" onclick="setTotalTimeChart()" disabled>Total Time</button>
+              <button id="avgTimeChartButton" type="button" class="btn btn-primary btn-sm btn-chart-switch" onclick="setAvgTimeChart()">Average Time</button>
+              <button id="commentChartButton" type="button" class="btn btn-primary btn-sm btn-chart-switch" onclick="setCommentChart()">Comments</button>
+              <!-- <button id="defectChart" type="button" class="btn btn-primary btn-sm btn-chart-switch" disabled>Defect Timeline</button> -->
             </div>
           </div>
 
-          <div id="statChartContainer" class="stat-chart-container">
-            <canvas id="statChart" width="800" height="400"></canvas>
+          <div id="statChartContainer" class="stat-chart-container" style="display: block;">
+            <canvas id="statChart" width="100%" height="30%"></canvas>
           </div>
-          <div id="statTableContainer" class="stat-table-container"></div>
+          <div id="statTableContainer" class="stat-table-container" style="display: none;">
+            <table id="statTable" class="table table-stat borderless-table">
+              <tbody>
+                <tr>
+                  <th class="borderless-table" scope="row">Review Count</th>
+                  <td class="borderless-table" id="statTableReviewCount"></td>
+                </tr>
+                <tr>
+                  <th class="borderless-table" scope="row">Reviewer Count</th>
+                  <td class="borderless-table" id="statTableReviewerCount"></td>
+                </tr>
+                <tr>
+                  <th class="borderless-table" scope="row">Total Published Comments</th>
+                  <td class="borderless-table" id="statTableCommentCount"></td>
+                </tr>
+                <tr>
+                  <th class="borderless-table" scope="row">Total Time Spent (ms)</th>
+                  <td class="borderless-table" id="statTableTotalTimeSpent"></td>
+                </tr>
+                <tr>
+                  <th class="borderless-table" scope="row">Average Time Spent (ms)</th>
+                  <td class="borderless-table" id="statTableAvgTimeSpent"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </main>

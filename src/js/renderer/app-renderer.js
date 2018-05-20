@@ -96,6 +96,7 @@ function logout() {
   clearPendingReviewTable();
   clearOpenReviewTable();
   clearChartData();
+  clearTableData();
 
   // Hide the Button & Review Containers
   hideContentContainer();
@@ -106,12 +107,6 @@ function logout() {
   // Launch the Server Modal
   launchServerModal();
   addServerInstanceInput(null);
-
-  // Login Modal after Server details are entered
-  $("#serverModal").on("hidden.bs.modal", function onServerModalHide(element) {
-    console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "onServerModalHide");
-    launchLoginModal();
-  });
 }
 
 /**

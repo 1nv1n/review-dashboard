@@ -2,6 +2,7 @@
  * Handle operations on the Review Statistics Div
  */
 
+let statReviewList = [];
 let statReviewerList = [];
 
 /**
@@ -9,6 +10,8 @@ let statReviewerList = [];
  *  Toggle the 'Chart' & 'Table' buttons & containers.
  */
 function statChartToggle() {
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "statChartToggle()");
+
   // Enable the Table Button, but hide the Container
   document.getElementById("statTableButton").disabled = false;
   document.getElementById("statTableContainer").style.display = "none";
@@ -17,7 +20,7 @@ function statChartToggle() {
   document.getElementById("statChartButton").disabled = true;
   document.getElementById("statChartContainer").style.display = "block";
 
-  setChart();
+  setTotalTimeChart();
 }
 
 /**
@@ -25,6 +28,8 @@ function statChartToggle() {
  *  Toggle the 'Chart' & 'Table' buttons & containers.
  */
 function statTableToggle() {
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "statTableToggle()");
+
   // Enable the Chart Button, but hide the Container
   document.getElementById("statChartButton").disabled = false;
   document.getElementById("statChartContainer").style.display = "none";
@@ -32,11 +37,158 @@ function statTableToggle() {
   // Disable the Table Button, but show the Container
   document.getElementById("statTableButton").disabled = true;
   document.getElementById("statTableContainer").style.display = "block";
+
+  // Disable the Chart Buttons
+  document.getElementById("totalTimeChartButton").disabled = true;
+  document.getElementById("avgTimeChartButton").disabled = true;
+  document.getElementById("commentChartButton").disabled = true;
 }
 
-function clearChartData() {
-  statReviewerList = [];
-  setChart();
+/**
+ * Set the Chart for the provided flag.
+ *
+ * @param {*} optionFlag (0: Total Time, 1: Avg. Time, 2: Comment)
+ */
+function setChart(optionFlag) {
+  console.log(new Date().toJSON(),
+    _GLOBAL_APP_CONSTANTS.LOG_INFO,
+    "setChart()",
+    "Setting Chart for",
+    statReviewerList.length,
+    "Reviewers. (Option",
+    optionFlag,
+    ").");
+
+  document.getElementById("statChart").remove();
+  const CHART_CANVAS = document.createElement("canvas");
+  CHART_CANVAS.id = "statChart";
+  CHART_CANVAS.height = "30%";
+  CHART_CANVAS.width = "100%";
+  document.getElementById("statChartContainer").appendChild(CHART_CANVAS);
+
+  let chartLabel = "";
+  let secondaryChartLabel = "";
+
+  const LABEL_LIST = [];
+  const DATA_LIST = [];
+  const SECONDARY_DATA_LIST = [];
+
+  const BORDER_COLOR_LIST = [];
+  const BACKGROUND_COLOR_LIST = [];
+  const SECONDARY_BORDER_COLOR_LIST = [];
+  const SECONDARY_BACKGROUND_COLOR_LIST = [];
+
+  statReviewerList.forEach((reviewer) => {
+    LABEL_LIST.push(reviewer.userName.toUpperCase());
+
+    if (typeof optionFlag === "undefined" || optionFlag === null || optionFlag === 0) {
+      chartLabel = "Total Time Spent (min.)";
+      DATA_LIST.push(reviewer.timeSpent / 60000);
+    } else if (optionFlag === 1) {
+      chartLabel = "Avg. Time Spent (min.)";
+      DATA_LIST.push(reviewer.avgTimeSpent / 60000);
+    } else if (optionFlag === 2) {
+      chartLabel = "Comments";
+      secondaryChartLabel = "Defects";
+
+      DATA_LIST.push(reviewer.publishedCommentCount);
+      SECONDARY_DATA_LIST.push(reviewer.defectCommentCount);
+
+      SECONDARY_BORDER_COLOR_LIST.push("rgba(255,99,132,1)");
+      SECONDARY_BACKGROUND_COLOR_LIST.push("rgba(255, 99, 132, 0.2)");
+    }
+
+    BORDER_COLOR_LIST.push("rgba(54, 162, 235, 1)");
+    BACKGROUND_COLOR_LIST.push("rgba(54, 162, 235, 0.2)");
+  });
+
+  const CTX = document.getElementById("statChart").getContext("2d");
+
+  if (optionFlag === 2) {
+    new Chart(CTX, {
+      type: "bar",
+      data: {
+        labels: LABEL_LIST,
+        datasets: [{
+          label: chartLabel,
+          data: DATA_LIST,
+          borderColor: BORDER_COLOR_LIST,
+          backgroundColor: BACKGROUND_COLOR_LIST,
+          borderWidth: 1
+        }, {
+          label: secondaryChartLabel,
+          data: SECONDARY_DATA_LIST,
+          borderColor: SECONDARY_BORDER_COLOR_LIST,
+          backgroundColor: SECONDARY_BACKGROUND_COLOR_LIST,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true
+      }
+    });
+  } else {
+    new Chart(CTX, {
+      type: "bar",
+      data: {
+        labels: LABEL_LIST,
+        datasets: [{
+          label: chartLabel,
+          data: DATA_LIST,
+          backgroundColor: BACKGROUND_COLOR_LIST,
+          borderColor: BORDER_COLOR_LIST,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true
+      }
+    });
+  }
+}
+
+/**
+ * Set statistics to the table.
+ */
+function setStatTable() {
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "setStatTable()");
+
+  let totalCommentCount = 0;
+  let totalTimeSpent = 0;
+  let totalAvgTimeSpent = 0;
+
+  statReviewerList.forEach((reviewer) => {
+    if (reviewer.hasOwnProperty("defectCommentCount")) {
+      totalCommentCount += reviewer.defectCommentCount;
+    }
+
+    if (reviewer.hasOwnProperty("draftCommentCount")) {
+      totalCommentCount += reviewer.draftCommentCount;
+    }
+
+    if (reviewer.hasOwnProperty("publishedCommentCount")) {
+      totalCommentCount += reviewer.publishedCommentCount;
+    }
+
+    totalTimeSpent += reviewer.timeSpent;
+    totalAvgTimeSpent += reviewer.avgTimeSpent;
+  });
+
+  document.getElementById("statTableReviewCount").innerHTML = statReviewList.length;
+  document.getElementById("statTableReviewerCount").innerHTML = statReviewerList.length;
+  document.getElementById("statTableCommentCount").innerHTML = totalCommentCount;
+  document.getElementById("statTableTotalTimeSpent").innerHTML = totalTimeSpent;
+  document.getElementById("statTableAvgTimeSpent").innerHTML = totalAvgTimeSpent;
+}
+
+/**
+ * Handle review stat retrieval.
+ *
+ * @param {*} retrievedReviewList
+ */
+function handleReviewStatRetrieval(retrievedReviewList) {
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "handleReviewStatRetrieval()", "Setting Statistics for", retrievedReviewList.length, "Reviews.");
+  statReviewList = retrievedReviewList;
 }
 
 /**
@@ -48,53 +200,62 @@ function handleStatRetrieval(retrievedReviewerList) {
   console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "handleStatRetrieval()", "Setting Statistics for", retrievedReviewerList.length, "Reviewers.");
   statReviewerList = retrievedReviewerList;
   endRetrievalSpinner("refreshStatisticsIcon");
-  setChart();
+  setTotalTimeChart();
+  setStatTable();
 }
 
-function setChart() {
-  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "setChart()", "Setting Chart for", statReviewerList.length, "Reviewers.");
-  let LABEL_LIST = [];
-  let TIME_SPENT_LIST = [];
-  let AVG_TIME_SPENT_LIST = [];
-  let TOTAL_TIME_BACKGROUND_COLOR_LIST = [];
-  let TOTAL_TIME_BORDER_COLOR_LIST = [];
-  let AVG_TIME_BACKGROUND_COLOR_LIST = [];
-  let AVG_TIME_BORDER_COLOR_LIST = [];
+/**
+ * Clear out the statistics data.
+ */
+function clearChartData() {
+  statReviewerList = [];
+  setTotalTimeChart();
+}
 
-  statReviewerList.forEach((reviewer) => {
-    LABEL_LIST.push(reviewer.userName.toUpperCase());
-    TIME_SPENT_LIST.push(reviewer.timeSpent / 60000);
-    AVG_TIME_SPENT_LIST.push(reviewer.avgTimeSpent / 60000);
+/**
+ * Clear out the table statistics.
+ */
+function clearTableData() {
+  statReviewList = [];
+  document.getElementById("statTableReviewCount").innerHTML = "";
+  document.getElementById("statTableReviewerCount").innerHTML = "";
+  document.getElementById("statTableCommentCount").innerHTML = "";
+  document.getElementById("statTableTotalTimeSpent").innerHTML = "";
+  document.getElementById("statTableAvgTimeSpent").innerHTML = "";
+}
 
-    TOTAL_TIME_BORDER_COLOR_LIST.push("rgba(54, 162, 235, 1)");
-    TOTAL_TIME_BACKGROUND_COLOR_LIST.push("rgba(54, 162, 235, 0.2)");
+/**
+ * Set Total Time data to the Chart.
+ */
+function setTotalTimeChart() {
+  setChart(0);
 
-    AVG_TIME_BORDER_COLOR_LIST.push("rgba(75, 192, 192, 1)");
-    AVG_TIME_BACKGROUND_COLOR_LIST.push("rgba(75, 192, 192, 0.2)");
-  });
+  // Diable the Total Time button, enable all else.
+  document.getElementById("totalTimeChartButton").disabled = true;
+  document.getElementById("avgTimeChartButton").disabled = false;
+  document.getElementById("commentChartButton").disabled = false;
+}
 
-  let CTX = document.getElementById("statChart").getContext("2d");
-  let CHART = new Chart(CTX, {
-    type: "bar",
-    data: {
-      labels: LABEL_LIST,
-      datasets: [{
-        label: "Total Time Spent (min.)",
-        data: TIME_SPENT_LIST,
-        backgroundColor: TOTAL_TIME_BACKGROUND_COLOR_LIST,
-        borderColor: TOTAL_TIME_BORDER_COLOR_LIST,
-        borderWidth: 1
-      }]
-    },
-    options: {
-      maintainAspectRatio: false,
-      scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: true
-          }
-        }]
-      }
-    }
-  });
+/**
+ * Set Avg. Time data to the Chart.
+ */
+function setAvgTimeChart() {
+  setChart(1);
+
+  // Diable the Avg. Time button, enable all else.
+  document.getElementById("totalTimeChartButton").disabled = false;
+  document.getElementById("avgTimeChartButton").disabled = true;
+  document.getElementById("commentChartButton").disabled = false;
+}
+
+/**
+ * Set comment data to the Chart.
+ */
+function setCommentChart() {
+  setChart(2);
+
+  // Diable the comment button, enable all else.
+  document.getElementById("totalTimeChartButton").disabled = false;
+  document.getElementById("avgTimeChartButton").disabled = false;
+  document.getElementById("commentChartButton").disabled = true;
 }

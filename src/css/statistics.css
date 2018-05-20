@@ -2,6 +2,11 @@
 * CSS for the Review Statistics Div.
 */
 
+canvas{
+  width: 1600px !important;
+  height: 500px !important;
+}
+
 .review-statistics-container {
   margin-top: -15px;
   padding: 10px 10px 10px 10px;

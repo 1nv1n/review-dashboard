@@ -135,6 +135,13 @@ IPC.on("retrieved-reviewer-statistics", (event, reviewerList) => {
 });
 
 /**
+ * Triggered on Review Statistics retrieval.
+ */
+IPC.on("retrieved-review-statistics", (event, reviewList) => {
+  handleReviewStatRetrieval(reviewList);
+});
+
+/**
  * Send the "clicked" item to the main process.
  *
  * @param {*} clickedItem

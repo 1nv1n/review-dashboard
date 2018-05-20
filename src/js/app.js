@@ -114,8 +114,6 @@ function initialize() {
     console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "initialize():retrieveCrucibleServerList:", err);
     mainWindow.webContents.send("initial-state", [], null, [], null);
   });
-
-  REVIEW_PROCESS.retrieveStats(neDB, mainWindow);
 }
 
 // Create the main browser window

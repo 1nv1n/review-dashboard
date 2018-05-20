@@ -180,7 +180,6 @@ function isReviewStatisticsDivVisible() {
  */
 function showReviewStatisticsDiv() {
   document.getElementById("reviewStatisticsContainer").style.display = "block";
-  setChart();
 }
 
 /**
