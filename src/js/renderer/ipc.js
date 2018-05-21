@@ -145,21 +145,28 @@ IPC.on("retrieved-review-statistics", (event, reviewList) => {
  * Triggered on review completion failure.
  */
 IPC.on("complete-review-failed", (event, reviewID) => {
-  createToast("Failed to complete review:", reviewID);
+  createToast("Failed to complete review " + reviewID);
 });
 
 /**
  * Triggered on review closure failure.
  */
 IPC.on("close-review-failed", (event, reviewID) => {
-  createToast("Failed to close review:", reviewID);
+  createToast("Failed to close review " + reviewID);
 });
 
 /**
  * Triggered on review remind failure.
  */
 IPC.on("remind-reviewers-failed", (event, reviewID) => {
-  createToast("Failed to remind reviews on review:", reviewID);
+  createToast("Failed to remind reviews on review " + reviewID);
+});
+
+/**
+ * When the main process wants to send up a toast to the renderer.
+ */
+IPC.on("handle-toast", (event, message) => {
+  createToast(message);
 });
 
 /**
