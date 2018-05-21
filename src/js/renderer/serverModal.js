@@ -234,7 +234,23 @@ function saveServerInput() {
   // Launch login Modal
   if (hasServerListUpdated) {
     console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "saveServerInput()", "Server List Updated.");
+    // For a new/updated server list; authentication needs to happen again to refresh tokens.
+    // Instead of storing the password, clear out the User object neccesiating re-authentication.
     _GLOBAL_USER = null;
+
+    // Clear existing data because new/updated data will be fetched from the updated server list.
+    clearPendingReviewTable();
+    clearOpenReviewTable();
+    clearChartData();
+    clearTableData();
+
+    // Hide the Button & Review Containers (Will be re-enabled after successful authentication).
+    hideContentContainer();
+    hidePendingReviewDiv();
+    hideOpenReviewDiv();
+    hideReviewStatisticsDiv();
+
+    // Dismiss the Server Modal.
     dismissServerModal();
   }
 }
