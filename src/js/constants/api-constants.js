@@ -40,6 +40,7 @@ define("PENDING_REVIEWS_DETAILED_FILTER", "filter/toReview/details");
 define("CLOSE_REVIEW",          "/close");
 define("REMIND_ABOUT_REVIEW",   "/remind");
 define("COMPLETE_REVIEW",       "/complete");
+define("COMPLETE_IGNORE_WARN",  "&ignoreWarnings=true");
 define("REVIEWERS_UNCOMPLETED", "/reviewers/uncompleted");
 define("SEARCH_BY_ISSUE",       "/search-v1/reviewsForIssue?jiraKey=");
 

@@ -338,79 +338,165 @@ module.exports = {
 
   // Completes a review.
   completeReview: function completeReview(neDB, mainWindow, instanceString, reviewID) {
-    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "completeReview()", "Completing Review:", reviewID);
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "completeReview()", "Completing Review:", reviewID, "on", instanceString);
 
-    const COMPLETE_REVIEW_OPTIONS = {
-      method: "POST",
-      uri: instanceString +
-        API_CONSTANTS.CRUCIBLE_REST_BASE_URL +
-        API_CONSTANTS.CRUCIBLE_REST_REVIEWS +
-        reviewID +
-        API_CONSTANTS.COMPLETE_REVIEW,
-      headers: {
-        "User-Agent": "Request-Promise"
-      },
-      body: {},
-      json: true
-    };
+    neDB.find({
+      type: "CrucibleToken",
+      instance: instanceString
+    }, (findErr, crucibleRecordList) => {
+      if (findErr) {
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "completeReview()", "Errored out on fetching token.", findErr);
+      } else {
+        if (typeof crucibleRecordList === "undefined" || crucibleRecordList === null || crucibleRecordList.length !== 1) {
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "completeReview()", "Multiple records found for", instanceString);
+          mainWindow.webContents.send("complete-review-failed", reviewID);
+          return;
+        }
 
-    REQUEST_PROMISE(COMPLETE_REVIEW_OPTIONS).then((parsedBody) => {
-      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "completeReview()", "Completed Review.", parsedBody);
-    }).catch((err) => {
-      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "completeReview()", err);
-      mainWindow.webContents.send("complete-review-failed", reviewID);
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "completeReview()", "Retrieved token for", instanceString);
+        const COMPLETE_REVIEW_OPTIONS = {
+          method: "POST",
+          uri: instanceString +
+            API_CONSTANTS.CRUCIBLE_REST_BASE_URL +
+            API_CONSTANTS.CRUCIBLE_REST_REVIEWS +
+            reviewID +
+            API_CONSTANTS.COMPLETE_REVIEW +
+            API_CONSTANTS.FEAUTH +
+            crucibleRecordList[0].token +
+            API_CONSTANTS.COMPLETE_IGNORE_WARN,
+          headers: {
+            "User-Agent": "Request-Promise"
+          },
+          body: {},
+          json: true
+        };
+
+        REQUEST_PROMISE(COMPLETE_REVIEW_OPTIONS).then((parsedBody) => {
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "completeReview()", "Completed Review.");
+          mainWindow.webContents.send("handle-toast", "Completed Review!");
+
+          // Remove the Pending Review from the DB
+          neDB.remove({
+            type: "Pending",
+            reviewID: reviewID
+          }, {
+            multi: false
+          }, (removeErr, numRemoved) => {
+            if (removeErr) {
+              console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "completeReview()", "Failed to remove Pending Review:", reviewID, removeErr);
+            } else {
+              console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "completeReview()", "Removed Pending Review:", reviewID);
+            }
+          });
+        }).catch((err) => {
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "completeReview()", err);
+          mainWindow.webContents.send("complete-review-failed", reviewID);
+        });
+      }
     });
   },
 
   // Closes a review.
   closeReview: function closeReview(neDB, mainWindow, instanceString, reviewID) {
-    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "closeReview()", "Closing Review:", reviewID);
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "closeReview()", "Closing Review:", reviewID, "on", instanceString);
 
-    const CLOSE_REVIEW_OPTIONS = {
-      method: "POST",
-      uri: instanceString +
-        API_CONSTANTS.CRUCIBLE_REST_BASE_URL +
-        API_CONSTANTS.CRUCIBLE_REST_REVIEWS +
-        reviewID +
-        API_CONSTANTS.CLOSE_REVIEW,
-      headers: {
-        "User-Agent": "Request-Promise"
-      },
-      body: {},
-      json: true
-    };
+    neDB.find({
+      type: "CrucibleToken",
+      instance: instanceString
+    }, (findErr, crucibleRecordList) => {
+      if (findErr) {
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "closeReview()", "Errored out on fetching token.", findErr);
+      } else {
+        if (typeof crucibleRecordList === "undefined" || crucibleRecordList === null || crucibleRecordList.length !== 1) {
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "closeReview()", "Multiple records found for", instanceString);
+          mainWindow.webContents.send("close-review-failed", reviewID);
+          return;
+        }
 
-    REQUEST_PROMISE(CLOSE_REVIEW_OPTIONS).then((parsedBody) => {
-      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "closeReview()", "Closed Review.", parsedBody);
-    }).catch((err) => {
-      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "closeReview()", err);
-      mainWindow.webContents.send("close-review-failed", reviewID);
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "closeReview()", "Retrieved token for", instanceString);
+        const CLOSE_REVIEW_OPTIONS = {
+          method: "POST",
+          uri: instanceString +
+            API_CONSTANTS.CRUCIBLE_REST_BASE_URL +
+            API_CONSTANTS.CRUCIBLE_REST_REVIEWS +
+            reviewID +
+            API_CONSTANTS.CLOSE_REVIEW +
+            API_CONSTANTS.FEAUTH +
+            crucibleRecordList[0].token,
+          headers: {
+            "User-Agent": "Request-Promise"
+          },
+          body: {},
+          json: true
+        };
+
+        REQUEST_PROMISE(CLOSE_REVIEW_OPTIONS).then((parsedBody) => {
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "closeReview()", "Closed Review.");
+          mainWindow.webContents.send("handle-toast", "Closed Review!");
+
+          // Remove the Open Review from the DB
+          neDB.remove({
+            type: "Open",
+            reviewID: reviewID
+          }, {
+            multi: false
+          }, (removeErr, numRemoved) => {
+            if (removeErr) {
+              console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "closeReview()", "Failed to remove Open Review:", reviewID, removeErr);
+            } else {
+              console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "closeReview()", "Removed Open Review:", reviewID);
+            }
+          });
+        }).catch((err) => {
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "closeReview()", err);
+          mainWindow.webContents.send("close-review-failed", reviewID);
+        });
+      }
     });
   },
 
   // Remind reviewers.
   remindReviewers: function remindReviewers(neDB, mainWindow, instanceString, reviewID) {
-    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "remindReviewers()", "Reminding Reviewers on Review:", reviewID);
+    console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "remindReviewers()", "Reminding Reviewers on Review:", reviewID, "on", instanceString);
 
-    const REMIND_REVIEWERS_OPTIONS = {
-      method: "POST",
-      uri: instanceString +
-        API_CONSTANTS.CRUCIBLE_REST_BASE_URL +
-        API_CONSTANTS.CRUCIBLE_REST_REVIEWS +
-        reviewID +
-        API_CONSTANTS.REMIND_ABOUT_REVIEW,
-      headers: {
-        "User-Agent": "Request-Promise"
-      },
-      body: {},
-      json: true
-    };
+    neDB.find({
+      type: "CrucibleToken",
+      instance: instanceString
+    }, (findErr, crucibleRecordList) => {
+      if (findErr) {
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "remindReviewers()", "Errored out on fetching token.", findErr);
+      } else {
+        if (typeof crucibleRecordList === "undefined" || crucibleRecordList === null || crucibleRecordList.length !== 1) {
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "remindReviewers()", "Multiple records found for", instanceString);
+          mainWindow.webContents.send("remind-reviewers-failed", reviewID);
+          return;
+        }
 
-    REQUEST_PROMISE(REMIND_REVIEWERS_OPTIONS).then((parsedBody) => {
-      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "remindReviewers()", "Reminded Reviewers.", parsedBody);
-    }).catch((err) => {
-      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "remindReviewers()", err);
-      mainWindow.webContents.send("remind-reviewers-failed", reviewID);
+        console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "remindReviewers()", "Retrieved token for", instanceString);
+        const REMIND_REVIEWERS_OPTIONS = {
+          method: "POST",
+          uri: instanceString +
+            API_CONSTANTS.CRUCIBLE_REST_BASE_URL +
+            API_CONSTANTS.CRUCIBLE_REST_REVIEWS +
+            reviewID +
+            API_CONSTANTS.REMIND_ABOUT_REVIEW +
+            API_CONSTANTS.FEAUTH +
+            crucibleRecordList[0].token,
+          headers: {
+            "User-Agent": "Request-Promise"
+          },
+          body: {},
+          json: true
+        };
+
+        REQUEST_PROMISE(REMIND_REVIEWERS_OPTIONS).then((parsedBody) => {
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "remindReviewers()", "Reminded Reviewers.");
+          mainWindow.webContents.send("handle-toast", "Reminded Reviewers!");
+        }).catch((err) => {
+          console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "remindReviewers()", err);
+          mainWindow.webContents.send("remind-reviewers-failed", reviewID);
+        });
+      }
     });
   }
 };
@@ -470,6 +556,7 @@ function getPendingReviews(neDB, mainWindow, processedInstanceCount, crucibleRec
         );
 
         const PENDING_REVIEW = {
+          instance: crucibleRecords[processedInstanceCount].instance,
           reviewID: element.permaId.id,
           reviewName: element.name,
           reviewAuthor: element.author.displayName,
@@ -545,6 +632,7 @@ function getOpenReviews(neDB, mainWindow, processedInstanceCount, crucibleRecord
         );
 
         const OPEN_REVIEW = {
+          instance: crucibleRecords[processedInstanceCount].instance,
           reviewID: element.permaId.id,
           reviewName: element.name,
           reviewAuthor: element.author.displayName,
@@ -556,7 +644,7 @@ function getOpenReviews(neDB, mainWindow, processedInstanceCount, crucibleRecord
 
     processedInstanceCount += 1;
     if (processedInstanceCount < crucibleRecords.length) {
-      getOpenReviews(neDB, processedInstanceCount, crucibleRecords, mainWindow, openReviewList);
+      getOpenReviews(neDB, mainWindow, processedInstanceCount, crucibleRecords, openReviewList);
     } else {
       console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "getOpenReviews()", "Retrieved", openReviewList.length, "Reviews!");
       mainWindow.webContents.send("retrieved-open", openReviewList);
@@ -767,7 +855,7 @@ function insertReviewStat(neDB, instanceString, review) {
     if (err) {
       console.log(new Date().toJSON(), APP_CONSTANTS.LOG_ERROR, "insertReviewStat()", err);
     } else {
-      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "insertReviewStat()", "Inserted Review.", insertedRecord.review.id);
+      console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "insertReviewStat()", "Inserted Review:", insertedRecord.review.id);
     }
   });
 }
