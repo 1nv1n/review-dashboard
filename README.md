@@ -91,7 +91,7 @@ This will create the following executable containing directories:
 - [x] Create Review
 - [x] Close Open Review
 - [ ] Open Review Remind Reviewers
-- [z] Complete Pending Review
+- [x] Complete Pending Review
 - [ ] Add Change Sets to Review
 - [ ] Review Reminders (Tray Notification)
 - [ ] Diff. Change Sets
@@ -112,8 +112,9 @@ This will create the following executable containing directories:
 
 ---
 
-### Work-In-Progress
+### Work-In-Progress GIFs
 
+2018-04-09
 ![crucible-dash](https://i.imgur.com/exBc6QZ.gif)
 
 ---
