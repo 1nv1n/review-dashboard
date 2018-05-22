@@ -89,6 +89,9 @@ function logout() {
   console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Logout Attempted.");
   IPC.send("logout", 1);
 
+  // Clear out the User object neccesiating re-authentication.
+  _GLOBAL_USER = null;
+
   // Remove existing elements
   removeServerInput();
 
