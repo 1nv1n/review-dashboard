@@ -69,17 +69,78 @@ This will create the following executable containing directories:
 ---
 
 ### Usage
+ 
+<details>
+  <summary>
+    Initial launch & Server Entry
+    <ul>
+      <li>
+        Launch <code>CrucibleDashboard.exe</code> & input the full server address for your Crucible instance (eg: crucible.server.com).
+      </li>
+      <ul>
+        <li>
+          Toggle between <code>http</code> & <code>https</code> as needed.
+        </li>
+        <li>
+          Use the `+` button to add multiple server instances & hit `Save` once done to bring up the login screen.
+        </li>
+      </ul>
+    </ul>
+  </summary>
+  <a href="#"><img src="https://imgur.com/nOmnfCz.gif" title="CrucibleDashboard" /></a>
+</details>
 
-- Launch `CrucibleDashboard.exe` & input the full server address for your Crucible instance (eg: crucible.server.com).
-  - Toggle between `http` & `https` as needed.
-  - Use the `+` button to add multiple server instances & hit `Save` once done to bring up the login screen.
-- Input your username & password on the login screen.
-- Use the button bar (below the App logo), to go through the views of the App.
-- `Create` button brings up a dialog to create a new Review.
-- `Search` brings up a dialog to search for Reviews by JIRA identifiers (if properly linked).
-- `Pending` updates the App with a table of pending reviews (reviews that you need to complete).
-- `Open` updates the App with a table of open reviews (reviews that you have created & are currently open).
-- `Statistics` updates the App with review statistics.
+<details>
+  <summary>
+    Login
+    <ul>
+      <li>
+        Input your username & password on the login screen.
+      </li>
+    </ul>
+  </summary>
+  <a href="#"><img src="https://imgur.com/Q8Gb8op.gif" title="CrucibleDashboard" /></a>
+</details>
+
+<details>
+  <summary>
+    Use the button bar (below the App logo), to go through the views of the App.
+  </summary>
+  <a href="#"><img src="https://i.imgur.com/FsAOcFE.png" title="CrucibleDashboard" /></a>
+</details>
+
+<details>
+  <summary>
+    <code>Create</code> button brings up a dialog to create a new Review.
+  </summary>
+  <a href="#"><img src="https://imgur.com/Szcg81J.gif" title="CrucibleDashboard" /></a>
+</details>
+
+<details>
+  <summary>
+    <code>Search</code> brings up a dialog to search for Reviews by JIRA identifiers (if properly linked).
+  </summary>
+</details>
+
+<details>
+  <summary>
+    <code>Pending</code> updates the App with a table of pending reviews (reviews that you need to complete).
+  </summary>
+  <a href="#"><img src="https://imgur.com/9q10ke8.gif" title="CrucibleDashboard" /></a>
+</details>
+
+<details>
+  <summary>
+    <code>Open</code> updates the App with a table of open reviews (reviews that you have created & are currently open).
+  </summary>
+</details>
+
+<details>
+  <summary>
+    <code>Statistics</code> updates the App with review statistics.
+  </summary>
+  <a href="#"><img src="https://imgur.com/MUL3k7G.gif" title="CrucibleDashboard" /></a>
+</details>
 
 ---
 
