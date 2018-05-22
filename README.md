@@ -68,6 +68,13 @@ This will create the following executable containing directories:
 
 ---
 
+### Download (BETA)
+
+- [Windows](https://github.com/InViN/crucible-dashboard/releases/download/v0.1.0-beta/CrucibleDashboard-win32-x64.zip)
+- [Linux](https://github.com/InViN/crucible-dashboard/releases/download/v0.1.0-beta/CrucibleDashboard-linux-x64.zip)
+- [Mac](https://github.com/InViN/crucible-dashboard/releases/download/v0.1.0-beta/CrucibleDashboard-darwin-x64.zip)
+
+---
 ### Usage
  
 <details>
