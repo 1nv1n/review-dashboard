@@ -111,10 +111,3 @@ This will create the following executable containing directories:
  - End-to-End Tests
 
 ---
-
-### Work-In-Progress GIFs
-
-2018-04-09
-![crucible-dash](https://i.imgur.com/exBc6QZ.gif)
-
----
