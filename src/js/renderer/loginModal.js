@@ -86,7 +86,7 @@ function loginInAttempted(isAuthenticated) {
     // Dismiss the Modal.
     dismissLoginModal();
   } else {
-    createToast("Authentication Failure.");
+    createToast("Authentication Failure. Check credentials/URL.");
   }
 }
 
