@@ -184,6 +184,12 @@ function setHTTPProtocol() {
 function setServerList(httpProtocol) {
   const CURRENT_SERVER_LIST = [];
   Array.from(document.getElementsByClassName("crucible-server")).forEach((element) => {
+    if (element.value.substring(0, 7) === "http://") {
+      element.value = element.value.slice(7);
+    } else if (element.value.substring(0, 8) === "https://") {
+      element.value = element.value.slice(8);
+    }
+
     CURRENT_SERVER_LIST.push(httpProtocol + element.value);
   });
   return CURRENT_SERVER_LIST;
