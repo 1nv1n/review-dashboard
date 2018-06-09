@@ -38,6 +38,10 @@
   margin-top: -15px;
 }
 
+.nav-btn-sml-list {
+  margin-left: 15px;
+}
+
 .navbar-brand-label {
   font-family: 'Mina', sans-serif; /* Apply Google's Font */
   color: #FFFFFF;
