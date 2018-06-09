@@ -67,9 +67,9 @@ const ElectronContextMenu = ELECTRON_MENU.buildFromTemplate([{
 }]);
 
 // Create/Autoload the Database at the 'User Data' directory.
-// On Windows: "C:\Users\<USER>\AppData\Roaming\CrucibleDashboard"
+// On Windows: "C:\Users\<USER>\AppData\Roaming\ReviewDashboard"
 const neDB = new NEDB({
-  filename: APP.getPath("userData") + "/crucible-dash.db",
+  filename: APP.getPath("userData") + "/review-dash.db",
   autoload: true
 });
 
@@ -136,7 +136,7 @@ function createMainWindow() {
 
   appTray = new ELECTRON_TRAY(PATH.join(__dirname, "../../resources/icons", "app.ico"));
   appTray.setContextMenu(ElectronContextMenu);
-  appTray.setToolTip("Crucible Dashboard");
+  appTray.setToolTip("Review Dashboard");
 
   appTray.on("click", () => {
     console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "appTray", "click");
@@ -241,7 +241,7 @@ function registerGlobalShortcuts() {
 APP.on("ready", (appReady) => {
   console.log(new Date().toJSON(), APP_CONSTANTS.LOG_INFO, "app-ready");
 
-  APP.setAppUserModelId("com.crucibledashboard");
+  APP.setAppUserModelId("com.reviewdashboard");
 
   // Create the Main Window
   createMainWindow();

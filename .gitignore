@@ -67,6 +67,6 @@ typings/
 out/
 
 # Packaged Directories
-CrucibleDashboard-darwin-x64/
-CrucibleDashboard-linux-x64/
-CrucibleDashboard-win32-x64/
+ReviewDashboard-darwin-x64/
+ReviewDashboard-linux-x64/
+ReviewDashboard-win32-x64/

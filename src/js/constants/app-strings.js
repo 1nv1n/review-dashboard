@@ -6,4 +6,4 @@ function define(name, value) {
 }
 
 // Labels
-define("APP_NAME", "Crucible Dashboard");
+define("APP_NAME", "Review Dashboard");

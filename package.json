@@ -1,8 +1,8 @@
 {
-  "name": "crucible-dash",
-  "productName": "CrucibleDashboard",
+  "name": "review-dash",
+  "productName": "ReviewDashboard",
   "version": "0.1.1",
-  "description": "Crucible Dashboard built with Electron",
+  "description": "A dashboard for code reviews, built with Electron",
   "main": "src/js/app.js",
   "scripts": {
     "start": "electron-forge start",
@@ -10,11 +10,11 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint src --color",
-    "build": "rimraf CrucibleDashboard-* && electron-packager . --platform=win32,darwin,linux --arch=x64 --icon=app"
+    "build": "rimraf ReviewDashboard-* && electron-packager . --platform=win32,darwin,linux --arch=x64 --icon=app"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/InViN/crucible-dashboard.git"
+    "url": "git+https://github.com/InViN/review-dashboard.git"
   },
   "keywords": [
     "atlassian",
@@ -58,25 +58,25 @@
       },
       "electronPackagerConfig": {
         "icon": "resources/icons/app",
-        "executableName": "CrucibleDashboard",
-        "appCopyright": "Copyright © CrucibleDashboard, Licensed under the Apache License, Version 2.0",
+        "executableName": "ReviewDashboard",
+        "appCopyright": "Copyright © ReviewDashboard, Licensed under the Apache License, Version 2.0",
         "win32metadata": {
-          "ProductName": "CrucibleDashboard",
-          "CompanyName": "CrucibleDashboard"
+          "ProductName": "ReviewDashboard",
+          "CompanyName": "ReviewDashboard"
         }
       },
       "electronWinstallerConfig": {
-        "name": "CrucibleDashboard",
+        "name": "ReviewDashboard",
         "setupIcon": "resources/icons/app.ico",
         "loadingGif": "",
-        "setupExe": "CrucibleDashSetup.exe"
+        "setupExe": "ReviewDashSetup.exe"
       },
       "electronInstallerDebian": {
         "icon": "resources/icons/app",
         "categories": [
           "Utility"
         ],
-        "homepage": "https://github.com/InViN/crucible-dashboard"
+        "homepage": "https://github.com/InViN/review-dashboard"
       },
       "electronInstallerRedhat": {
         "license": "Apache-2.0",
@@ -91,27 +91,27 @@
       },
       "github_repository": {
         "owner": "InViN",
-        "name": "https://github.com/InViN/crucible-dashboard",
+        "name": "https://github.com/InViN/review-dashboard",
         "draft": false,
         "prerelease": true
       },
       "windowsStoreConfig": {
-        "packageName": "CrucibleDashboard",
-        "name": "CrucibleDashboard"
+        "packageName": "ReviewDashboard",
+        "name": "ReviewDashboard"
       }
     }
   },
   "bugs": {
-    "url": "https://github.com/InViN/crucible-dashboard/issues"
+    "url": "https://github.com/InViN/review-dashboard/issues"
   },
-  "homepage": "https://github.com/InViN/crucible-dashboard#readme",
+  "homepage": "https://github.com/InViN/review-dashboard#readme",
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-preset-env": "^1.7.0",
-    "electron": "2.0.0",
+    "electron": "2.0.2",
     "electron-forge": "^5.2.2",
-    "electron-packager": "^12.0.2",
-    "electron-prebuilt-compile": "2.0.0",
+    "electron-packager": "^12.1.0",
+    "electron-prebuilt-compile": "2.0.2",
     "eslint": "^4",
     "eslint-config-airbnb": "^16",
     "eslint-plugin-import": "^2",
@@ -129,7 +129,7 @@
     "jsgrid": "^1.5.3",
     "nedb": "^1.8.0",
     "popper.js": "^1.14.3",
-    "request": "^2.85.0",
+    "request": "^2.87.0",
     "request-promise": "^4.2.2"
   }
 }
