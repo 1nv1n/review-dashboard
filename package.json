@@ -1,7 +1,7 @@
 {
   "name": "review-dash",
   "productName": "ReviewDashboard",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A dashboard for code reviews, built with Electron",
   "main": "src/js/app.js",
   "scripts": {
