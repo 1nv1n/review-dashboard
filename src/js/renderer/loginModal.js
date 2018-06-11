@@ -21,6 +21,13 @@ function launchLoginModal() {
   $("#loginModal").on("shown.bs.modal", function (event) {
     document.getElementById("userID").focus();
   });
+
+  // Listen to 'Enter' key press
+  document.getElementById("password").addEventListener("keyup", function(event) {
+    if (event.key === "Enter") {
+      login();
+    }
+});
 }
 
 /**
