@@ -306,14 +306,15 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-body modal-background">
-          <p class="lead">A Code Review Dashboard for Crucible.</p>
-          <p>Start by entering in the servers (instance URLs, eg: crucible.server.com) that host your code reviews.</p>
-          <p>Then, log in as you would on crucible.server.com</p>
-          <p>On succesful authentication, review data will be fetched from Crucible. The landing page will display 'Pending'
-            (reviews you need to complete), should you have any.</p>
-          <p>Clicking the 'Open' button will display reviews that have been opened by you. And to display statistics for your
-            reviews, click the 'Statistics' button.</p>
-          <p>To refresh data from Crucible, click the green buttons next to Pending/Open/Statistics.</p>
+          <p class="lead">Review Dashboard</p>
+          <a class="btn btn-primary" data-toggle="collapse" href="#faqRefreshDataCollapse" role="button" aria-expanded="false" aria-controls="faqRefreshDataCollapse">
+            How do I refresh/fetch the latest review data?
+          </a>
+          <div class="collapse" id="faqRefreshDataCollapse">
+            <p>
+              To fetch the latest data &amp; refresh the views, click the green buttons next to Pending/Open/Statistics.
+            </p>
+          </div>
           <div class="modal-footer modal-background">
             <button type="button" class="btn btn-primary" onclick="dismissFAQModal()">OK!</button>
           </div>
