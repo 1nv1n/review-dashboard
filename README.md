@@ -172,6 +172,7 @@ This will create the following executable containing directories:
 
 ### Other To-Dos
 
+ - Responsive Design
  - Update electronPackagerConfig
  - Update installer config. with loading GIF & icon.
  - Update config. for Linux & Mac installer.
