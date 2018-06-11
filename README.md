@@ -1,31 +1,31 @@
-# crucible-dashboard
+# review-dashboard
 
 <p align="center">
- <a href="https://raw.githubusercontent.com/InViN/crucible-dashboard/master/package.json">
-  <img src="https://badge.fury.io/gh/InViN%2Fcrucible-dashboard.svg" alt="version" />
+ <a href="https://github.com/InViN/review-dashboard/releases">
+  <img src="https://badge.fury.io/gh/InViN%2Freview-dashboard.svg" alt="version" />
  </a>
  <a href="https://opensource.org/licenses/Apache-2.0">
   <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="license-apache-2.0" />
  </a>
- <a href="https://gitter.im/crucible-dashboard">
+ <a href="https://gitter.im/review-dashboard">
   <img src="https://badges.gitter.im/Join%20Chat.svg" alt="gitter" />
  </a>
- <a href="https://github.com/InViN/crucible-dashboard/pulls">
+ <a href="https://github.com/InViN/review-dashboard/pulls">
   <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="pr-welcome" />
  </a>
 </p>
 <p align="center">
- <a href="https://circleci.com/gh/InViN/crucible-dashboard">
-  <img src="https://circleci.com/gh/InViN/crucible-dashboard.svg?style=shield" alt="circle-ci" />
+ <a href="https://circleci.com/gh/InViN/review-dashboard">
+  <img src="https://circleci.com/gh/InViN/review-dashboard.svg?style=shield" alt="circle-ci" />
  </a>
- <a href="https://codeclimate.com/github/InViN/crucible-dashboard/maintainability">
-  <img src="https://api.codeclimate.com/v1/badges/a0494913c00643a957e4/maintainability" alt="code-climate"/>
+ <a href="https://codeclimate.com/github/InViN/review-dashboard/maintainability">
+  <img src="https://api.codeclimate.com/v1/badges/c1ed2e39a2588049dc7f/maintainability" alt="code-climate"/>
  </a>
- <a href="https://snyk.io/test/github/InViN/crucible-dashboard">
-  <img src="https://snyk.io/test/github/InViN/crucible-dashboard/badge.svg" alt="Known Vulnerabilities" data-canonical-src="https://snyk.io/test/github/InViN/crucible-dashboard" style="max-width:100%;" />
+ <a href="https://snyk.io/test/github/InViN/review-dashboard">
+  <img src="https://snyk.io/test/github/InViN/review-dashboard/badge.svg" alt="Known Vulnerabilities" data-canonical-src="https://snyk.io/test/github/InViN/review-dashboard" style="max-width:100%;" />
  </a>
- <a href="https://david-dm.org/InViN/crucible-dashboard">
-  <img src="https://david-dm.org/InViN/crucible-dashboard.svg" alt="davis-dm" />
+ <a href="https://david-dm.org/InViN/review-dashboard">
+  <img src="https://david-dm.org/InViN/review-dashboard.svg" alt="davis-dm" />
  </a>
 </p>
 
@@ -35,10 +35,10 @@
 
 <p align="center">
  <a href="https://electronjs.org/">
-  <img src="https://raw.githubusercontent.com/InViN/crucible-dashboard/master/resources/logo/electron-logo.svg?sanitize=true" alt="ElectronJS" height="100" width="100" />
+  <img src="https://raw.githubusercontent.com/InViN/review-dashboard/master/resources/logo/electron-logo.svg?sanitize=true" alt="ElectronJS" height="100" width="100" />
  </a>
  <a href="https://getbootstrap.com/">
-  <img src="https://raw.githubusercontent.com/InViN/crucible-dashboard/master/resources/logo/bootstrap-logo.svg?sanitize=true" alt="ElectronJS" height="100" width="100" />
+  <img src="https://raw.githubusercontent.com/InViN/review-dashboard/master/resources/logo/bootstrap-logo.svg?sanitize=true" alt="Bootstrap" height="100" width="100" />
  </a>
 </p>
 
@@ -46,8 +46,8 @@
 
 ### Run From Source
 ```
-git clone https://github.com/InViN/crucible-dashboard.git
-cd crucible-dashboard
+git clone https://github.com/InViN/review-dashboard.git
+cd review-dashboard
 npm install
 npm start
 ```
@@ -56,23 +56,23 @@ npm start
 
 ### Build Executable
 ```
-git clone https://github.com/InViN/crucible-dashboard.git
-cd crucible-dashboard
+git clone https://github.com/InViN/review-dashboard.git
+cd review-dashboard
 npm install
 npm run build
 ```
 This will create the following executable containing directories:
- - CrucibleDashboard-win32-x64
- - CrucibleDashboard-linux-x64
- - CrucibleDashboard-darwin-x64
+ - ReviewDashboard-win32-x64
+ - ReviewDashboard-linux-x64
+ - ReviewDashboard-darwin-x64
 
 ---
 
 ### Download (BETA)
 
-- [Windows](https://github.com/InViN/crucible-dashboard/releases/download/v0.1.0-beta/CrucibleDashboard-win32-x64.zip)
-- [Linux](https://github.com/InViN/crucible-dashboard/releases/download/v0.1.0-beta/CrucibleDashboard-linux-x64.zip)
-- [Mac](https://github.com/InViN/crucible-dashboard/releases/download/v0.1.0-beta/CrucibleDashboard-darwin-x64.zip)
+- [Windows](https://github.com/InViN/review-dashboard/releases/download/v0.1.0-beta/ReviewDashboard-win32-x64.zip)
+- [Linux](https://github.com/InViN/review-dashboard/releases/download/v0.1.0-beta/ReviewDashboard-linux-x64.zip)
+- [Mac](https://github.com/InViN/review-dashboard/releases/download/v0.1.0-beta/ReviewDashboard-darwin-x64.zip)
 
 ---
 ### Usage
@@ -82,7 +82,7 @@ This will create the following executable containing directories:
     Initial launch & Server Entry
     <ul>
       <li>
-        Launch <code>CrucibleDashboard.exe</code> & input the full server address for your Crucible instance (eg: crucible.server.com).
+        Launch <code>ReviewDashboard.exe</code> & input the full server address for your Crucible instance (eg: crucible.server.com).
       </li>
       <ul>
         <li>
@@ -94,7 +94,7 @@ This will create the following executable containing directories:
       </ul>
     </ul>
   </summary>
-  <a href="#"><img src="https://imgur.com/nOmnfCz.gif" title="CrucibleDashboard" /></a>
+  <a href="#"><img src="https://imgur.com/nOmnfCz.gif" title="ReviewDashboard" /></a>
 </details>
 
 <details>
@@ -106,21 +106,21 @@ This will create the following executable containing directories:
       </li>
     </ul>
   </summary>
-  <a href="#"><img src="https://imgur.com/Q8Gb8op.gif" title="CrucibleDashboard" /></a>
+  <a href="#"><img src="https://imgur.com/Q8Gb8op.gif" title="ReviewDashboard" /></a>
 </details>
 
 <details>
   <summary>
     Use the button bar (below the App logo), to go through the views of the App.
   </summary>
-  <a href="#"><img src="https://i.imgur.com/FsAOcFE.png" title="CrucibleDashboard" /></a>
+  <a href="#"><img src="https://i.imgur.com/FsAOcFE.png" title="ReviewDashboard" /></a>
 </details>
 
 <details>
   <summary>
     <code>Create</code> button brings up a dialog to create a new Review.
   </summary>
-  <a href="#"><img src="https://imgur.com/Szcg81J.gif" title="CrucibleDashboard" /></a>
+  <a href="#"><img src="https://imgur.com/Szcg81J.gif" title="ReviewDashboard" /></a>
 </details>
 
 <details>
@@ -133,7 +133,7 @@ This will create the following executable containing directories:
   <summary>
     <code>Pending</code> updates the App with a table of pending reviews (reviews that you need to complete).
   </summary>
-  <a href="#"><img src="https://imgur.com/9q10ke8.gif" title="CrucibleDashboard" /></a>
+  <a href="#"><img src="https://imgur.com/9q10ke8.gif" title="ReviewDashboard" /></a>
 </details>
 
 <details>
@@ -146,12 +146,12 @@ This will create the following executable containing directories:
   <summary>
     <code>Statistics</code> updates the App with review statistics.
   </summary>
-  <a href="#"><img src="https://imgur.com/MUL3k7G.gif" title="CrucibleDashboard" /></a>
+  <a href="#"><img src="https://imgur.com/MUL3k7G.gif" title="ReviewDashboard" /></a>
 </details>
 
 ---
 
-### Feature/Component Progress:
+### Features:
 
 - [ ] (In progress) Graph Review Statistics
 - [x] Display Open Reviews
