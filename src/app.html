@@ -307,14 +307,20 @@
       <div class="modal-content">
         <div class="modal-body modal-background">
           <p class="lead">Review Dashboard</p>
-          <a class="btn btn-primary" data-toggle="collapse" href="#faqRefreshDataCollapse" role="button" aria-expanded="false" aria-controls="faqRefreshDataCollapse">
+          <a class="btn btn-primary" class="faqButton" data-toggle="collapse" href="#faqPasswordSaveCollapse" role="button" aria-expanded="false"
+            aria-controls="faqPasswordSaveCollapse">
+            Are passwords saved?
+          </a>
+          <p class="collapse" id="faqPasswordSaveCollapse">
+            No. After using the password for authentication, only the authentication token is saved by the app.
+          </p>
+          <a class="btn btn-primary" class="faqButton" data-toggle="collapse" href="#faqRefreshDataCollapse" role="button" aria-expanded="false"
+            aria-controls="faqRefreshDataCollapse">
             How do I refresh/fetch the latest review data?
           </a>
-          <div class="collapse" id="faqRefreshDataCollapse">
-            <p>
-              To fetch the latest data &amp; refresh the views, click the green buttons next to Pending/Open/Statistics.
-            </p>
-          </div>
+          <p class="collapse faqAnswer" id="faqRefreshDataCollapse">
+            To fetch the latest data &amp; refresh the views, click the green buttons next to Pending/Open/Statistics.
+          </p>
           <div class="modal-footer modal-background">
             <button type="button" class="btn btn-primary" onclick="dismissFAQModal()">OK!</button>
           </div>

@@ -112,6 +112,11 @@ body {
   margin-left: 85px;
 }
 
+.faqButton, 
+.faqAnswer {
+  padding: 5px 5px 5px 5px;
+}
+
 /* Toast CSS */
 #toastDiv {
   visibility: hidden;
