@@ -151,7 +151,7 @@ This will create the following executable containing directories:
 
 ---
 
-### Features:
+### Features
 
 - [ ] (In progress) Graph Review Statistics
 - [x] Display Open Reviews
