@@ -70,3 +70,8 @@ out/
 ReviewDashboard-darwin-x64/
 ReviewDashboard-linux-x64/
 ReviewDashboard-win32-x64/
+
+# Zipped Package
+ReviewDashboard-darwin-x64.zip
+ReviewDashboard-linux-x64.zip
+ReviewDashboard-win32-x64.zip
