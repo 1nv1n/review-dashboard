@@ -23,7 +23,7 @@ IPC.on("initial-state", (event, retrievedServerList, currentUser, currentReviewe
   }
 
   // Remove existing elements
-  removeServerInput();
+  clearServerInput();
 
   // Determine & set the server list if defined
   let isServerListDefined = false;

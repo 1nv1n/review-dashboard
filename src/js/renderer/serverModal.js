@@ -18,7 +18,7 @@ function launchServerModal() {
     focus: true,
     show: true
   });
-  // To Do: Switch to JavaScript
+  // TODO: Switch from jQuery to JavaScript
   // var serverModal = new Modal('#serverModal', {backdrop: true});
   // serverModal.show();
 }
@@ -41,7 +41,7 @@ function dismissServerModal() {
   // jQuery
   $("#serverModal").modal("hide");
 
-  // Display App Wrapper
+  // Remove blackout
   removeBlackout();
 }
 
@@ -68,7 +68,7 @@ function setCurrentServerList(retrievedServerList) {
 }
 
 /**
- * Adds an Input (text) field for additional Server inputs
+ * Adds an Input (text) field for additional Server inputs.
  */
 function addServerInstanceInput(server) {
   console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Adding Server Instance Input.");
@@ -82,6 +82,7 @@ function addServerInstanceInput(server) {
   OUTER_DIV.appendChild(INNER_DIV);
   OUTER_DIV.appendChild(INPUT_ELEMENT);
 
+  // Append to the modal's Div.
   document.getElementById("crucibleServerInputDiv").appendChild(OUTER_DIV);
 
   INPUT_ELEMENT.focus();
@@ -117,7 +118,7 @@ function createServerInputSpan() {
   SPAN_ELEMENT.classList.add("server-modal-input-https-span");
   SPAN_ELEMENT.id = "basic-addon3";
 
-  if (document.getElementById("httpsCheckBox").checked == true) {
+  if (document.getElementById("httpsCheckBox").checked === true) {
     SPAN_ELEMENT.innerHTML = "https://";
   } else {
     SPAN_ELEMENT.innerHTML = "http://";
@@ -141,7 +142,7 @@ function createServerInputBox(server) {
   INPUT_ELEMENT.setAttribute("aria-describedby", "basic-addon3");
 
   if (typeof server !== "undefined" && server !== null && server.instance.length > 0) {
-    console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Setting Server: " + server.instance);
+    console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Setting Server:", server.instance);
 
     if (server.instance.startsWith("http://")) {
       INPUT_ELEMENT.value = server.instance.substring(7);
@@ -156,9 +157,9 @@ function createServerInputBox(server) {
 }
 
 /**
- * Remove existing server input elements & add a default one.
+ * Remove existing server input elements.
  */
-function removeServerInput() {
+function clearServerInput() {
   const SERVER_INPUT_DIV = document.getElementById("crucibleServerInputDiv");
   while (SERVER_INPUT_DIV.firstChild) {
     SERVER_INPUT_DIV.removeChild(SERVER_INPUT_DIV.firstChild);
@@ -168,7 +169,7 @@ function removeServerInput() {
 /**
  * Returns "https://" if the modal's HTTPS checkbox is checked, "http://" otherwise.
  */
-function setHTTPProtocol() {
+function getCurrentHTTP() {
   if (document.getElementById("httpsCheckBox").checked === true) {
     return "https://";
   }
@@ -177,11 +178,11 @@ function setHTTPProtocol() {
 }
 
 /**
- * Returns all the servers from the Modal in a list with the provided HTTP protocol prefix.
+ * Returns all the servers from the Modal in a list with the provided HTTP prefix.
  *
- * @param {*} httpProtocol
+ * @param {*} hTTP
  */
-function setServerList(httpProtocol) {
+function setServerList(hTTP) {
   const CURRENT_SERVER_LIST = [];
   Array.from(document.getElementsByClassName("crucible-server")).forEach((element) => {
     if (element.value.substring(0, 7) === "http://") {
@@ -190,7 +191,7 @@ function setServerList(httpProtocol) {
       element.value = element.value.slice(8);
     }
 
-    CURRENT_SERVER_LIST.push(httpProtocol + element.value);
+    CURRENT_SERVER_LIST.push(hTTP + element.value);
   });
   return CURRENT_SERVER_LIST;
 }
@@ -214,35 +215,31 @@ function saveServerInput() {
   addSpinner(document.getElementById("saveServerIcon").classList);
 
   // Set HTTP/S
-  const HTTP_PROTOCOL = setHTTPProtocol();
+  const CURRENT_HTTP = getCurrentHTTP();
 
   // Create the current Crucible server list
-  const CURRENT_SERVER_LIST = setServerList(HTTP_PROTOCOL);
+  const CURRENT_SERVER_LIST = setServerList(CURRENT_HTTP);
 
-  // Send the server list to the main process
-  IPC.send("save-crucible-server-list", CURRENT_SERVER_LIST);
-
-  // If the server list has been updated, re-authenticate
+  // If the server list has been updated, re-authentication is necessary (to get tokens for the updated server instances)
   let hasServerListUpdated = false;
   if (_GLOBAL_CRUCIBLE_SERVER_LIST.length !== CURRENT_SERVER_LIST.length) {
-    console.log("unequal");
     hasServerListUpdated = true;
   }
 
-  if (_GLOBAL_CRUCIBLE_SERVER_LIST.length === CURRENT_SERVER_LIST.length) {
-    _GLOBAL_CRUCIBLE_SERVER_LIST.forEach((element) => {
-      if (!CURRENT_SERVER_LIST.includes(element.instance)) {
-        hasServerListUpdated = true;
-      }
-    });
+  if (isGlobalAndCurrentMisMatched(CURRENT_SERVER_LIST)) {
+    hasServerListUpdated = true;
   }
 
-  // Launch login Modal
+  console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "saveServerInput()", "Has the Server list been updated:", hasServerListUpdated);
+
+  // Logout & launch the login modal if the Server list has been updated.
   if (hasServerListUpdated) {
-    console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "saveServerInput()", "Server List Updated.");
     // For a new/updated server list; authentication needs to happen again to refresh tokens.
-    // Instead of storing the password, clear out the User object neccesiating re-authentication.
-    _GLOBAL_USER = null;
+    // Unless this is the first time the App is launched, then we have not yet authenticated.
+    if (typeof _GLOBAL_USER !== "undefined" && _GLOBAL_USER !== null) {
+      IPC.send("logout", 1);
+      _GLOBAL_USER = null;
+    }
 
     // Clear existing data because new/updated data will be fetched from the updated server list.
     clearPendingReviewTable();
@@ -250,15 +247,30 @@ function saveServerInput() {
     clearChartData();
     clearTableData();
 
-    // Hide the Button & Review Containers (Will be re-enabled after successful authentication).
-    hideContentContainer();
-    hidePendingReviewDiv();
-    hideOpenReviewDiv();
-    hideReviewStatisticsDiv();
-
-    // Dismiss the Server Modal.
-    dismissServerModal();
+    // Send the server list to the main process.
+    IPC.send("save-crucible-server-list", CURRENT_SERVER_LIST);
+  } else {
+    // Remove the spinner from the "Save" button
+    removeSpinner(document.getElementById("saveServerIcon").classList);
   }
+
+  // Dismiss the Server Modal.
+  dismissServerModal();
+}
+
+/**
+ * Returns TRUE if there is a mis-match between the lists of the globally maintained & current Crucible server list.
+ *
+ * @param {*} CURRENT_SERVER_LIST
+ */
+function isGlobalAndCurrentMisMatched(CURRENT_SERVER_LIST) {
+  _GLOBAL_CRUCIBLE_SERVER_LIST.forEach((element) => {
+    if (!CURRENT_SERVER_LIST.includes(element.instance)) {
+      return true;
+    }
+  });
+
+  return false;
 }
 
 /**
@@ -279,26 +291,14 @@ function normalizeServerInput() {
 }
 
 /**
- * Returns TRUE if the Crucible Server Input is currently empty.
+ * Returns TRUE if the Crucible Server Input is currently empty (there are no crucible-server elements).
  */
 function isServerInputEmpty() {
-  // Return TRUE if there are no crucible-server elements.
   if (document.getElementsByClassName("crucible-server").length === 0) {
     return true;
   }
 
-  let doesNonEmptyServerExist = false;
-  Array.from(document.getElementsByClassName("crucible-server")).forEach((element) => {
-    if (element !== null && element.value !== null && element.value.trim().length > 0) {
-      doesNonEmptyServerExist = true;
-    }
-  });
-
-  if (doesNonEmptyServerExist) {
-    return false;
-  }
-
-  return true;
+  return false;
 }
 
 /**
@@ -314,7 +314,7 @@ function removeCurrentServerInput() {
  * @param {*} checkbox
  */
 function checkServerModalHTTPS(checkbox) {
-  if (checkbox.checked == true) {
+  if (checkbox.checked === true) {
     console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Switching to HTTPS.");
     Array.from(document.getElementsByClassName("server-modal-input-https-span")).forEach((element) => {
       element.innerHTML = "https://";

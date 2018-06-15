@@ -93,7 +93,7 @@ function logout() {
   _GLOBAL_USER = null;
 
   // Remove existing elements
-  removeServerInput();
+  clearServerInput();
 
   // Clear data
   clearPendingReviewTable();
@@ -144,7 +144,7 @@ function setUserInfo(userID, displayName, avatarURL) {
 /**
  * Sets the current Reviewer list.
  *
- * @param {*} currentReviewerList 
+ * @param {*} currentReviewerList
  */
 function setCurrentReviewerList(currentReviewerList) {
   console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Setting", currentReviewerList.length, "Reviewers.");

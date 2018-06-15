@@ -1,5 +1,5 @@
 /**
- * Reusable Functions
+ * Common/Reusable Functions
  */
 
 /**
@@ -37,29 +37,29 @@ function removeSyncIcon(elementClassList) {
 }
 
 /**
- * Removes the 'Sync' icon & adds the spinner to the provided button.
+ * Removes the "Sync" icon & adds the spinner to the provided element.
  *
- * @param {*} button
+ * @param {*} element
  */
-function startRetrievalSpinner(button) {
+function startRetrievalSpinner(element) {
   // Remove the Sync Icon
-  removeSyncIcon(document.getElementById(button).classList);
+  removeSyncIcon(document.getElementById(element).classList);
 
   // Add the spinner
-  addSpinner(document.getElementById(button).classList);
+  addSpinner(document.getElementById(element).classList);
 }
 
 /**
- * Adds the 'Sync' icon & removes the spinner to the provided button.
+ * Adds the "Sync" icon & removes the spinner from the provided element.
  *
- * @param {*} button
+ * @param {*} element
  */
-function endRetrievalSpinner(button) {
+function endRetrievalSpinner(element) {
   // Remove the spinner
-  removeSpinner(document.getElementById(button).classList);
+  removeSpinner(document.getElementById(element).classList);
 
   // Add back the Sync Icon
-  addSyncIcon(document.getElementById(button).classList);
+  addSyncIcon(document.getElementById(element).classList);
 }
 
 /**
@@ -78,7 +78,7 @@ function removeChildren(node) {
 }
 
 /**
- * Hides the Button & Review Div Containers
+ * Hides the content (Button & Review Div) Container.
  */
 function hideContentContainer() {
   document.getElementById("mainButtonContainer").style.display = "none";
@@ -86,7 +86,7 @@ function hideContentContainer() {
 }
 
 /**
- * Show the Button & Review Div Containers
+ * Show the Button (Button & Review Div) Container.
  */
 function showContentContainer() {
   document.getElementById("mainButtonContainer").style.display = "block";
@@ -136,7 +136,7 @@ function isHidden(element) {
 function populateCrucibleServerRadioDiv(crucibleServerRadioDiv) {
   console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Populating Crucible Server Table.");
 
-  // Remove existing
+  // Remove existing servers from the Div.
   const crucibleServerRadioDivNode = document.getElementById(crucibleServerRadioDiv);
   removeChildren(crucibleServerRadioDivNode);
 
