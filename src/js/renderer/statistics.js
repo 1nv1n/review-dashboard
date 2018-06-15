@@ -50,14 +50,16 @@ function statTableToggle() {
  * @param {*} optionFlag (0: Total Time, 1: Avg. Time, 2: Comment)
  */
 function setChart(optionFlag) {
-  console.log(new Date().toJSON(),
+  console.log(
+    new Date().toJSON(),
     _GLOBAL_APP_CONSTANTS.LOG_INFO,
     "setChart()",
     "Setting Chart for",
     statReviewerList.length,
     "Reviewers. (Option",
     optionFlag,
-    ").");
+    ")."
+  );
 
   document.getElementById("statChart").remove();
   const CHART_CANVAS = document.createElement("canvas");
@@ -147,6 +149,72 @@ function setChart(optionFlag) {
   }
 }
 
+function makeTimeReadable(timeInMilliSec) {
+  let readableTimeStr = "";
+
+  if (timeInMilliSec > 86400000) {
+    let dayCounter = 0;
+    while (timeInMilliSec > 86400000) {
+      dayCounter += 1;
+      timeInMilliSec -= 86400000;
+    }
+
+    readableTimeStr += dayCounter;
+    if (dayCounter === 1) {
+      readableTimeStr += " Day, ";
+    } else {
+      readableTimeStr += " Days, ";
+    }
+  }
+
+  if (timeInMilliSec > 3600000) {
+    let hourCounter = 0;
+    while (timeInMilliSec > 3600000) {
+      hourCounter += 1;
+      timeInMilliSec -= 3600000;
+    }
+
+    readableTimeStr += hourCounter;
+    if (hourCounter === 1) {
+      readableTimeStr += " Hour, ";
+    } else {
+      readableTimeStr += " Hours, ";
+    }
+  }
+
+  if (timeInMilliSec > 60000) {
+    let minCounter = 0;
+    while (timeInMilliSec > 60000) {
+      minCounter += 1;
+      timeInMilliSec -= 60000;
+    }
+
+    readableTimeStr += minCounter;
+    if (minCounter === 1) {
+      readableTimeStr += " Minute, ";
+    } else {
+      readableTimeStr += " Minutes, ";
+    }
+  }
+
+  if (timeInMilliSec > 1000) {
+    let secCounter = 0;
+    while (timeInMilliSec > 1000) {
+      secCounter += 1;
+      timeInMilliSec -= 1000;
+    }
+
+    readableTimeStr += secCounter;
+    if (secCounter === 1) {
+      readableTimeStr += " Second, ";
+    } else {
+      readableTimeStr += " Seconds.";
+    }
+  }
+
+  return readableTimeStr;
+}
+
 /**
  * Set statistics to the table.
  */
@@ -174,11 +242,17 @@ function setStatTable() {
     totalAvgTimeSpent += reviewer.avgTimeSpent;
   });
 
+  let totalTimeSpentStr = makeTimeReadable(totalTimeSpent);
+  let avgTimeSpentStr = makeTimeReadable(totalAvgTimeSpent);
+
+  console.log(totalTimeSpentStr);
+  console.log(avgTimeSpentStr);
+
   document.getElementById("statTableReviewCount").innerHTML = statReviewList.length;
   document.getElementById("statTableReviewerCount").innerHTML = statReviewerList.length;
   document.getElementById("statTableCommentCount").innerHTML = totalCommentCount;
-  document.getElementById("statTableTotalTimeSpent").innerHTML = totalTimeSpent;
-  document.getElementById("statTableAvgTimeSpent").innerHTML = totalAvgTimeSpent;
+  document.getElementById("statTableTotalTimeSpent").innerHTML = totalTimeSpentStr;
+  document.getElementById("statTableAvgTimeSpent").innerHTML = avgTimeSpentStr;
 }
 
 /**
