@@ -47,7 +47,7 @@ function dismissServerModal() {
 
 /**
  * Sets the provided server list as the main (global) server list.
- * @param {*} retrievedServerList 
+ * @param {*} retrievedServerList
  */
 function setCurrentServerList(retrievedServerList) {
   // If any saved Crucible server instances were sent up, populate them onto the modal.
@@ -61,7 +61,7 @@ function setCurrentServerList(retrievedServerList) {
     _GLOBAL_CRUCIBLE_SERVER_LIST = retrievedServerList;
 
     // Add elements from the database to the Modal
-    retrievedServerList.forEach(function (element) {
+    retrievedServerList.forEach(function(element) {
       addServerInstanceInput(element);
     });
   }
@@ -184,7 +184,7 @@ function getCurrentHTTP() {
  */
 function setServerList(hTTP) {
   const CURRENT_SERVER_LIST = [];
-  Array.from(document.getElementsByClassName("crucible-server")).forEach((element) => {
+  Array.from(document.getElementsByClassName("crucible-server")).forEach(element => {
     if (element.value.substring(0, 7) === "http://") {
       element.value = element.value.slice(7);
     } else if (element.value.substring(0, 8) === "https://") {
@@ -264,7 +264,7 @@ function saveServerInput() {
  * @param {*} CURRENT_SERVER_LIST
  */
 function isGlobalAndCurrentMisMatched(CURRENT_SERVER_LIST) {
-  _GLOBAL_CRUCIBLE_SERVER_LIST.forEach((element) => {
+  _GLOBAL_CRUCIBLE_SERVER_LIST.forEach(element => {
     if (!CURRENT_SERVER_LIST.includes(element.instance)) {
       return true;
     }
@@ -278,7 +278,7 @@ function isGlobalAndCurrentMisMatched(CURRENT_SERVER_LIST) {
  */
 function normalizeServerInput() {
   if (document.getElementsByClassName("crucible-server").length > 0) {
-    Array.from(document.getElementsByClassName("crucible-server")).forEach((element) => {
+    Array.from(document.getElementsByClassName("crucible-server")).forEach(element => {
       if (element === null || element.value === null || element.value.length <= 0) {
         element.parentNode.parentNode.removeChild(element.parentNode);
       }
@@ -295,6 +295,11 @@ function normalizeServerInput() {
  */
 function isServerInputEmpty() {
   if (document.getElementsByClassName("crucible-server").length === 0) {
+    return true;
+  }
+
+  // Also return TRUE if there's only one server element & that element is blank
+  if (document.getElementsByClassName("crucible-server").length === 1 && document.getElementsByClassName("crucible-server")[0].value.length === 0) {
     return true;
   }
 
@@ -316,12 +321,12 @@ function removeCurrentServerInput() {
 function checkServerModalHTTPS(checkbox) {
   if (checkbox.checked === true) {
     console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Switching to HTTPS.");
-    Array.from(document.getElementsByClassName("server-modal-input-https-span")).forEach((element) => {
+    Array.from(document.getElementsByClassName("server-modal-input-https-span")).forEach(element => {
       element.innerHTML = "https://";
     });
   } else {
     console.log(new Date().toJSON(), _GLOBAL_APP_CONSTANTS.LOG_INFO, "Switching to HTTP.");
-    Array.from(document.getElementsByClassName("server-modal-input-https-span")).forEach((element) => {
+    Array.from(document.getElementsByClassName("server-modal-input-https-span")).forEach(element => {
       element.innerHTML = "http://";
     });
   }
