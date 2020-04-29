@@ -125,7 +125,7 @@
     "chart.js": "^2.7.2",
     "electron-compile": "^6.4.2",
     "electron-squirrel-startup": "^1.0.0",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "jsgrid": "^1.5.3",
     "nedb": "^1.8.0",
     "popper.js": "^1.14.3",
