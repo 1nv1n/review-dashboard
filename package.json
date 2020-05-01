@@ -10,7 +10,9 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint src --color",
-    "build": "rimraf ReviewDashboard-* && electron-packager . --platform=win32,darwin,linux --arch=x64 --icon=app"
+    "build": "rimraf ReviewDashboard-* && electron-packager . --platform=win32,darwin,linux --arch=x64 --icon=app",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -125,11 +127,13 @@
     "chart.js": "^2.7.2",
     "electron-compile": "^6.4.2",
     "electron-squirrel-startup": "^1.0.0",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "jsgrid": "^1.5.3",
     "nedb": "^1.8.0",
     "popper.js": "^1.14.3",
     "request": "^2.87.0",
-    "request-promise": "^4.2.2"
-  }
+    "request-promise": "^4.2.2",
+    "snyk": "^1.316.1"
+  },
+  "snyk": true
 }
