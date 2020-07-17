@@ -129,7 +129,7 @@
     "jsgrid": "^1.5.3",
     "nedb": "^1.8.0",
     "popper.js": "^1.14.3",
-    "request": "^2.87.0",
+    "request": "^2.88.0",
     "request-promise": "^4.2.2"
   }
 }
