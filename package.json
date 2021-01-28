@@ -108,7 +108,7 @@
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-preset-env": "^1.7.0",
-    "electron": "2.0.8",
+    "electron": "9.4.0",
     "electron-forge": "^5.2.2",
     "electron-packager": "^12.1.0",
     "electron-prebuilt-compile": "2.0.2",
